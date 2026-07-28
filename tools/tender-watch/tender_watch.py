@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import datetime
 import glob
 import gzip
 import html as html_mod
@@ -246,6 +247,18 @@ DEADLINE_RE = re.compile(
     r"[^|]{0,40}?(\d{1,2}[.\-/]\d{1,2}[.\-/]\d{4}|\d{4}-\d{2}-\d{2})", re.I)
 
 
+CATEGORY_URL_RE = re.compile(
+    r"/(?:catalog|rubric|rubrika|category|kategoriya|by-region|tag|tags)(?:/|$)", re.I)
+
+
+def is_category_page(url: str, text: str) -> bool:
+    """Отсеивает рубрики и навигацию: это не лоты, а списки разделов."""
+    if CATEGORY_URL_RE.search(urllib.parse.urlparse(url).path):
+        return True
+    # у настоящего лота есть хотя бы одно из: срок, сумма, номер
+    return not (DATE_RE.search(text) or MONEY_RE.search(text) or LOTNO_RE.search(text))
+
+
 CUSTOMER_STOP_RE = re.compile(
     r"\s+(?:\d[\d\s.,]{3,}|окончан|оконч|до\s|срок|цена|стоимост|сум\b|so'm|muddat|price|deadline)",
     re.I)
@@ -331,8 +344,19 @@ def fetch(url: str, cookie_header: str = "", timeout: int = 40) -> str:
 def fetch_rendered(url: str, cookie_header: str = "", wait_ms: int = 3500) -> str:
     """JS-страницы через Playwright (Chromium уже стоит в окружении)."""
     from playwright.sync_api import sync_playwright  # импорт по требованию
+    # если версия Playwright не совпадает с уже установленным браузером,
+    # берём готовый Chromium вместо докачивания своего
+    launch_args = {"headless": True}
+    for candidate in (os.environ.get("CHROMIUM_PATH"), "/opt/pw-browsers/chromium"):
+        if candidate and os.path.exists(candidate):
+            launch_args["executable_path"] = candidate
+            break
+    # браузер, в отличие от urllib, не читает HTTPS_PROXY сам
+    proxy = os.environ.get("HTTPS_PROXY") or os.environ.get("https_proxy")
+    if proxy:
+        launch_args["proxy"] = {"server": proxy}
     with sync_playwright() as pw:
-        browser = pw.chromium.launch(headless=True)
+        browser = pw.chromium.launch(**launch_args)
         ctx = browser.new_context(user_agent=UA, locale="ru-RU")
         if cookie_header:
             host = urllib.parse.urlparse(url).hostname or ""
@@ -350,9 +374,23 @@ def fetch_rendered(url: str, cookie_header: str = "", wait_ms: int = 3500) -> st
 
 # ---------------------------------------------------------------- отчёты
 
+def parse_deadline(value: str) -> "datetime.date | None":
+    for fmt in ("%d.%m.%Y", "%d-%m-%Y", "%d/%m/%Y", "%Y-%m-%d"):
+        try:
+            return datetime.datetime.strptime(value, fmt).date()
+        except ValueError:
+            continue
+    return None
+
+
+def days_left(value: str) -> "int | None":
+    date = parse_deadline(value)
+    return None if date is None else (date - datetime.date.today()).days
+
+
 def write_csv(rows: list[dict], path: str) -> None:
     cols = ["profile", "score", "title", "lot_no", "customer", "price",
-            "deadline", "matched", "source", "url"]
+            "deadline", "days_left", "matched", "source", "url"]
     with open(path, "w", newline="", encoding="utf-8-sig") as fh:
         w = csv.DictWriter(fh, fieldnames=cols, extrasaction="ignore")
         w.writeheader()
@@ -373,13 +411,15 @@ def write_markdown(rows: list[dict], path: str, profiles: dict, stats: dict) -> 
         if not sub:
             lines += ["_Совпадений нет._", ""]
             continue
-        lines.append("| Балл | Лот | Заказчик | Сумма | Срок | Сработало | Ссылка |")
-        lines.append("|---:|---|---|---|---|---|---|")
+        lines.append("| Балл | Лот | Заказчик | Сумма | Срок | Осталось | Сработало | Ссылка |")
+        lines.append("|---:|---|---|---|---|---:|---|---|")
         for r in sub:
             title = r["title"].replace("|", "/")[:150]
+            left = r.get("days_left", "")
+            left = f"{left} дн." if left != "" else "—"
             lines.append(
                 f"| {r['score']} | {title} | {r['customer'][:60]} | {r['price']} | "
-                f"{r['deadline']} | {r['matched'][:60]} | [{r['source']}]({r['url']}) |")
+                f"{r['deadline']} | {left} | {r['matched'][:60]} | [{r['source']}]({r['url']}) |")
         lines.append("")
     with open(path, "w", encoding="utf-8") as fh:
         fh.write("\n".join(lines))
@@ -387,13 +427,19 @@ def write_markdown(rows: list[dict], path: str, profiles: dict, stats: dict) -> 
 
 # ---------------------------------------------------------------- main
 
-def collect(pages_html: list[tuple[str, str, str]], profiles: dict,
-            min_score: int, only_profile: str | None) -> tuple[list[dict], int]:
+def collect(pages_html: list[tuple[str, str, str]], profiles: dict, min_score: int,
+            only_profile: "str | None", hide_expired: bool = True) -> tuple[list[dict], int]:
     rows, total = [], 0
+    seen_urls: set[str] = set()
     for source, url, page_html in pages_html:
         records = extract_records(page_html, url)
         total += len(records)
         for rec in records:
+            if rec["url"] in seen_urls:  # один лот попадается на нескольких страницах
+                continue
+            if is_category_page(rec["url"], rec["text"]):
+                continue
+            seen_urls.add(rec["url"])
             matches = match_profiles(rec["text"], profiles)
             for m in matches:
                 if only_profile and m["profile"] != only_profile:
@@ -401,6 +447,10 @@ def collect(pages_html: list[tuple[str, str, str]], profiles: dict,
                 if m["score"] < min_score:
                     continue
                 fields = extract_fields(rec["text"])
+                left = days_left(fields["deadline"])
+                if left is not None and left < 0 and hide_expired:
+                    continue
+                fields["days_left"] = "" if left is None else left
                 rows.append({
                     "profile": m["profile"],
                     "score": m["score"],
@@ -428,6 +478,8 @@ def main() -> int:
     ap.add_argument("--profile", help="искать только по одному профилю")
     ap.add_argument("--keywords", default=os.path.join(HERE, "keywords.json"))
     ap.add_argument("--min-score", type=int, default=3)
+    ap.add_argument("--show-expired", action="store_true",
+                    help="показывать лоты с истёкшим сроком подачи")
     ap.add_argument("--cookies-file", help="Netscape cookies.txt для закрытых площадок")
     ap.add_argument("--render", action="store_true", help="рендерить JS через Playwright")
     ap.add_argument("--out", default=os.path.join(HERE, "out"))
@@ -504,7 +556,8 @@ def main() -> int:
         print("Нечего разбирать: ни одна страница не загрузилась.", file=sys.stderr)
         return 1
 
-    rows, total = collect(pages_html, profiles, args.min_score, args.profile)
+    rows, total = collect(pages_html, profiles, args.min_score, args.profile,
+                          hide_expired=not args.show_expired)
 
     os.makedirs(args.out, exist_ok=True)
     csv_path = os.path.join(args.out, "tenders.csv")
