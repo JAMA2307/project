@@ -432,7 +432,15 @@ def main() -> int:
     ap.add_argument("--render", action="store_true", help="рендерить JS через Playwright")
     ap.add_argument("--out", default=os.path.join(HERE, "out"))
     ap.add_argument("--delay", type=float, default=1.0, help="пауза между запросами, сек")
+    ap.add_argument("--timeout", type=int, default=20, help="таймаут запроса, сек")
     args = ap.parse_args()
+
+    # прогресс должен быть виден сразу, а не одним куском в конце
+    for stream in (sys.stdout, sys.stderr):
+        try:
+            stream.reconfigure(line_buffering=True)
+        except AttributeError:
+            pass
 
     with open(args.keywords, encoding="utf-8") as fh:
         profiles = json.load(fh)
@@ -470,14 +478,25 @@ def main() -> int:
                 pages_html.append((os.path.basename(path), base, fh.read()))
             print(f"[файл] {path}")
 
+    # Мёртвый хост не должен съедать таймаут на каждой странице: после двух
+    # подряд неудач пропускаем оставшиеся страницы этой площадки.
+    dead: dict[str, int] = {}
     for source, url in targets:
+        host = urllib.parse.urlparse(url).hostname or url
+        if dead.get(host, 0) >= 2:
+            print(f"[пропуск] {url} — {host} не отвечает", file=sys.stderr)
+            continue
         try:
-            page = fetch_rendered(url, cookie_header) if args.render else fetch(url, cookie_header)
+            page = (fetch_rendered(url, cookie_header) if args.render
+                    else fetch(url, cookie_header, timeout=args.timeout))
             pages_html.append((source, url, page))
-            print(f"[ок]  {url}  ({len(page)} байт)")
+            dead[host] = 0
+            print(f"[ок]  {url}  ({len(page)} байт)", flush=True)
         except urllib.error.HTTPError as exc:
+            dead[host] = dead.get(host, 0) + 1
             print(f"[{exc.code}] {url} — {exc.reason}", file=sys.stderr)
         except Exception as exc:
+            dead[host] = dead.get(host, 0) + 1
             print(f"[ошибка] {url} — {exc}", file=sys.stderr)
         time.sleep(args.delay)
 
