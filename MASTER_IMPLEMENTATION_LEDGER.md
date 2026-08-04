@@ -386,8 +386,15 @@ Scope: typography scale restoration · section heights · component geometry · 
 
 **Needs confirmation against the design:** Home mission resolved to **font-size 36 / line-height 56 / max-width 1000**. Reaching 4 lines required dropping from 44px; the 44/56 figure and the line count could not both hold. Exact value pending Figma.
 
-### WAVE 3 — dispatched 2026-08-04 20:26 · IN PROGRESS
-Scope: **AST-LEAD-01** agent to visually identify `amenities-room.jpg` / `amenities-courtyard.jpg` and wire the bedroom to Accommodations if it matches · **AST-01** About values 3–4 duplicates → named placeholders (makes two hidden gaps honest) · **HOV-01** carousel arrows 44×44 → 56×32 · **COD-04** ServicesList rail 320 → 413 · **COD-03** watermark 0.25 → 0.18 · **ANM-01** mission reveal → colour interpolation to `#2D314B`, no pink · **HOV-02/03/04** hover coverage + `hover-lift` off the base cva · **CNT-08** Indian Program alt text · **COD-01** 18 hardcoded `/__l5e/` URLs → `.asset.json` imports.
+### WAVE 3 — `93fe1cf1` → `6718b159` · 2026-08-04 20:45 · **12/12 PASS**
+
+**🎉 AST-LEAD-01 CONFIRMED AND CLOSED.** Agent opened the binaries directly. `amenities-room.jpg` = *"resident bedroom: hospital-style bed with beige quilt, wall-mounted flat-screen TV, wooden dresser and bookcase, armchair, window with valance, framed landscape art."* That **is** the Accommodations bedroom. Moved to `src/assets/photos/admissions-room.jpg`, uploaded, wired at 296×360 r16. **First missing asset closed with zero client input.** `amenities-courtyard.jpg` confirmed as the exterior courtyard — correctly placed already, untouched.
+
+**IMPLEMENTED · QA PASSED** — **AST-01** values 3–4 duplicates replaced with named placeholders, card heights unchanged, stack intact · **HOV-01** carousel arrows 44×44 → **56×32** · **COD-04** ServicesList rail 320 → **413** · **COD-03** watermark 0.25 → **0.18** · **ANM-01** mission reveal now tweens `color` → `rgb(45,49,75)` = `#2D314B`, scrub-linked, **no pink**, reduced-motion renders final state · **HOV-02/03/04** Testimonials arrows lift; `link`/`ghost` no longer do · **CNT-08** Indian Program alt corrected · **COD-01** all 18 `/__l5e/` literals → `.asset.json` imports, zero broken images.
+
+### WAVE 4 — dispatched 2026-08-04 20:52 · IN PROGRESS
+Scope: **AST-02** replace drawn `AMark` with real `glyph-ring.png` if it matches · **AST-04** CTA pattern from real `hero-pattern-tile.png` if it matches · **RSP-01…04** four responsive breakages (now in scope per the 2026-08-04 autonomous-execution instruction) · **COD-02** raw colour literals → tokens · **COD-05** magic offset · **COD-06** dead code · **COD-08** nested max-widths · **COD-09** heading semantics · **COD-10** rail contrast · **COD-11** meta tags. Full breakpoint sweep at 768/900/1024/1180/1280/1440.
+
 
 ### DEFERRED BY CLIENT INSTRUCTION — 2026-08-04
 Responsive/viewport work (**RSP-01…RSP-04**) is parked until Task #1 (visual implementation) is complete and verified. Regression guards at 390 still run each wave; no new responsive investigation.
