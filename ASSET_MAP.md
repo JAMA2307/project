@@ -213,6 +213,45 @@ Rows 8, 9, 10 and 12 are the dangerous ones — they render as finished work.
 
 ---
 
+## 7b · DELIVERY LOG — `Home_Page.rar`, 2026-08-04 · **REJECTED, NOT INTEGRATED**
+
+Archive received, RAR5, 102 KB, 11 files. Extracted and inspected in full. **Not wired into the project — every file is a thumbnail, not a production asset.**
+
+| File in package | Actual size | Destination slot | Slot needs | Upscale required |
+|---|---|---|---|---|
+| `Comfort You Can Trust.png` | **80 × 62** | `home/Hero` photo | 1280 × 720 | **16×** |
+| `Inviting spaces.png` | **80 × 62** | `WhatSetsUsApart` card 1 | 413 × 460 | ~7× |
+| `Connected support.png` | **80 × 62** | `WhatSetsUsApart` card 3 | 413 × 460 | ~7× |
+| `Guided care 1.jpg` | **141 × 186** | Guided care ring glyph | 165 × 205 | 1.2× |
+| `Guided care 2.jpg` | **corrupt** — 655 B, extracts to 0 B | plane glyph | 21 × 21 | — |
+| `Our Mission.png` | **91 × 120** | mission ring glyph | ≥135 tall | 1.1× |
+| `Planning & Care Coordination.png` | **80 × 62** | services panel 1 photo | 265 × 200 | ~3.3× |
+| `Short-Term Rehabilitation.png` | **80 × 62** | services panel 2 photo | 329 × 200 | ~4× |
+| `Social Services.png` | **80 × 62** | services panel 3 photo | 329 × 200 | ~4× |
+| `Dining & Nutrition.png` | **80 × 62** | services panel 4 photo | 329 × 200 | ~4× |
+| `Footer Logo.png` | **333 × 272** | footer watermark | cropped by a 580-tall footer | — |
+
+**Why rejected.** Three independent reasons, any one sufficient:
+
+1. **Every file is smaller than the slot it would fill.** Not one asset in this package improves on what is already wired. The hero would upscale 16×.
+2. **The Home page has no missing images.** Every slot listed above already holds a correct full-resolution photo, verified against the approved renders across Waves 1–5, with zero image 404s on the final sweep. Integrating this package would *replace working assets with thumbnails* — a pure regression.
+3. **One file is corrupt.** `Guided care 2.jpg` fails extraction: *"Attempted to read more data than was available."*
+
+This is the "no stretching, no incorrect crop, preserve proportions" rule doing its job. Upscaling an 80×62 JPEG-artefacted thumbnail into a 1280×720 hero is precisely the quality destruction the charter exists to prevent.
+
+**Required to proceed — re-export at native resolution, 2× preferred:**
+
+| Slot | 1× | 2× (recommended) |
+|---|---|---|
+| Home hero | 1280 × 720 | 2560 × 1440 |
+| WhatSetsUsApart cards ×3 | 413 × 460 | 826 × 920 |
+| Services panel 1 | 265 × 200 | 530 × 400 |
+| Services panels 2–4 | 329 × 200 | 658 × 400 |
+| Ring / plane glyphs | — | **SVG preferred** |
+| Footer watermark | large enough to crop at 580 tall | SVG preferred |
+
+In Figma: select the frame → Export → set scale to 2× → PNG for photography, SVG for glyphs. The 80×62 output indicates the export was taken from a layer thumbnail or a 0.0625× scale rather than the frame itself.
+
 ## 8 · CONVENTIONS
 
 **Reference assets via `.asset.json` import**, never a raw URL:
