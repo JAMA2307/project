@@ -392,8 +392,22 @@ Scope: typography scale restoration · section heights · component geometry · 
 
 **IMPLEMENTED · QA PASSED** — **AST-01** values 3–4 duplicates replaced with named placeholders, card heights unchanged, stack intact · **HOV-01** carousel arrows 44×44 → **56×32** · **COD-04** ServicesList rail 320 → **413** · **COD-03** watermark 0.25 → **0.18** · **ANM-01** mission reveal now tweens `color` → `rgb(45,49,75)` = `#2D314B`, scrub-linked, **no pink**, reduced-motion renders final state · **HOV-02/03/04** Testimonials arrows lift; `link`/`ghost` no longer do · **CNT-08** Indian Program alt corrected · **COD-01** all 18 `/__l5e/` literals → `.asset.json` imports, zero broken images.
 
-### WAVE 4 — dispatched 2026-08-04 20:52 · IN PROGRESS
-Scope: **AST-02** replace drawn `AMark` with real `glyph-ring.png` if it matches · **AST-04** CTA pattern from real `hero-pattern-tile.png` if it matches · **RSP-01…04** four responsive breakages (now in scope per the 2026-08-04 autonomous-execution instruction) · **COD-02** raw colour literals → tokens · **COD-05** magic offset · **COD-06** dead code · **COD-08** nested max-widths · **COD-09** heading semantics · **COD-10** rail contrast · **COD-11** meta tags. Full breakpoint sweep at 768/900/1024/1180/1280/1440.
+### WAVE 4 — 2026-08-04 21:06 · **ALL CHECKS PASS** (19-minute run; not stalled)
+
+**🎉 AST-02 CLOSED.** `glyph-ring.png` confirmed as the real ringed "A" brand mark. Now white-masked in the `/services` 24/7 badge, replacing the hand-drawn SVG. **`AMark` and `AGlyph` deleted** — the drawn substitute the spec forbade by name is gone from the codebase.
+
+**🎉 AST-04 CLOSED.** `hero-pattern-tile.png` confirmed as the diamond/logo pattern. Now the CTA card background at low opacity, replacing the tiled `glyph-white.png` workaround.
+
+**`brand/monogram-a.png` confirmed orphaned** — reported, not deleted, per instruction.
+
+**RSP-01…04 IMPLEMENTED · QA PASSED** — no horizontal overflow on all 9 routes at 390/768/900/1024/1180/1280/1440. Amenities heading wraps below 1280, one line above. Gallery stage gated to ≥1440 with a stacked layout below. About values cards no longer overlap at 390/768. About mission sizes to its tallest state. Additional fluid mid-width fixes applied to the Home gallery grid, Home contact grid, Services/Contact heroes and the insurance card.
+
+**COD-02/05/08/09/10/11 IMPLEMENTED** — all hex/HSL literals replaced with semantic tokens (new `--blue-50/150/200/250`, `--brand-olive`, `--divider`, `--surface-muted`) · `translate-y-[88px]` removed, button now structurally top-aligned · redundant carousel wrapper removed · footer labels de-headinged · mission headings promoted to `<h2>` · inactive rail colour `#4C5267` ≈ **8:1 contrast, AA pass** · amenities meta completed.
+
+**Regression at 1440 held** — h1 44/52, header 52, testimonials 847×440, carousel 846×450 with 56×32 arrows, rail 413, watermarks 0.18/0.07, About Team no FAQ, Services FAQ no Team, Home no CTA, mission 4 lines, zero console errors.
+
+### WAVE 5 — dispatched 2026-08-04 21:12 · IN PROGRESS
+Final full-project audit and fix pass across all 9 routes and 11 shared components: layout · spacing · typography · colours · responsive (8 widths) · animations · hover · accessibility · navigation · component consistency · duplicated code · dead code · asset references · performance. Explicit instruction to hunt for regressions introduced by Waves 1–4 rather than assume they were clean.
 
 
 ### DEFERRED BY CLIENT INSTRUCTION — 2026-08-04
