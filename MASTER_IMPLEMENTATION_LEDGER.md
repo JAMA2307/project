@@ -6,12 +6,12 @@ Single cumulative ledger. Supersedes audits v1–v3. **Never fork into v4/v5.** 
 |---|---|
 | Project | Amara Care Center — skilled nursing & rehab, 25 5th Avenue, Haskell NJ 07420, 973-839-6000 |
 | Implementation | Lovable `amara-care-site` · `63342c41-9fa9-4f01-81cb-7bab9030a9df` · workspace "AMIR's startup" |
-| Commit audited | `daae8f96fed07dc82eb336e99a2c2220f62f311d` |
+| Baseline commit | `daae8f96` → five implementation waves applied |
 | Live | https://amara-care-site.lovable.app (published) |
 | Figma | `Tm96OSYcEv6kdVzIqHYKeP` — *Amara x Mozart* |
 | Stack | TanStack Start · React · TypeScript · Tailwind v4 · shadcn/ui |
 | Ledger updated | 2026-08-04 |
-| Mode | **AUDIT ONLY** — no code modified, no assets uploaded, no Lovable prompts sent |
+| Mode | **AUTONOMOUS EXECUTION COMPLETE** — Waves 1–5 applied and verified |
 
 ---
 
@@ -406,8 +406,41 @@ Scope: typography scale restoration · section heights · component geometry · 
 
 **Regression at 1440 held** — h1 44/52, header 52, testimonials 847×440, carousel 846×450 with 56×32 arrows, rail 413, watermarks 0.18/0.07, About Team no FAQ, Services FAQ no Team, Home no CTA, mission 4 lines, zero console errors.
 
-### WAVE 5 — dispatched 2026-08-04 21:12 · IN PROGRESS
-Final full-project audit and fix pass across all 9 routes and 11 shared components: layout · spacing · typography · colours · responsive (8 widths) · animations · hover · accessibility · navigation · component consistency · duplicated code · dead code · asset references · performance. Explicit instruction to hunt for regressions introduced by Waves 1–4 rather than assume they were clean.
+### WAVE 5 — 2026-08-04 21:18 · **FINAL AUDIT — ALL ROUTES × ALL WIDTHS PASS**
+
+Full-project audit across 9 routes and 11 shared components.
+
+**FIXED** — `NotFoundPage` raw `#8FA8CE` → `bg-blue-300`, `min-h-screen` → `min-h-dvh` (mobile viewport-safe) · `ContactAdmissions` raw `#2C2E45` → `text-primary` · **new shared `CarouselArrow`** — three call-sites collapsed to one 56×32 component; `Testimonials.ArrowButton` and `amenities/CarouselArrow` deleted · `Testimonials` — all three cards shared one generic alt, now individually descriptive · `LegalPage` h3→h2 (skipped level under h1) · `AboutValues` card titles h4→h3 keeping `text-h4` styling, zero visual change.
+
+**RESPONSIVE SWEEP — 9 routes × 8 widths (390/768/900/1024/1180/1280/1440/1920): ALL PASS.** 0 console errors, 0 failed network responses, no image 404s.
+
+**REGRESSION AT 1440 — ALL HOLD** — h1 44/52 @ -0.44px Playfair · testimonial card 847×440 · carousel 846×450 + 56×32 arrows · rail 413 · Home mission 4 lines at 36/56, words scrubbing `rgb(169,176,194)` → `#2D314B`, **no pink** · About = Team, no FAQ · Services = FAQ, no Team · Home has no CTA · one h1 and no skipped heading levels on every route · every `<img>` has alt, every control has an accessible name · zero `<a href="/…">` and zero `/__l5e/` literals · CTA pattern and 24/7 badge still on real assets · all Wave-4 tokens in use · typecheck clean.
+
+**FOUND, DELIBERATELY NOT FIXED** — `brand/monogram-a.png` orphaned (reported, not deleted per instruction) · `@utility section-tall` unused in `styles.css` (left untouched — tokens are out of scope) · ~24 unused shadcn primitives (scaffolding, tree-shaken; deleting is out of scope for a no-redesign wave) · 179 Prettier-only lint errors (pure formatting; churning every file immediately before sign-off is worse than the finding) · Home/Services rails and the two Mission components are structurally similar but differ in spacing, content model and animation — merging would risk the signed-off 1440 composition.
+
+**HONESTLY NOT VERIFIED** — per-element WCAG contrast beyond the rail colour measured in Wave 4; GSAP ScrollTrigger cleanup confirmed by code review (`gsap.context().revert()` in teardown) rather than instrumented route-change leak testing.
+
+---
+
+## 14c · AUTONOMOUS EXECUTION — COMPLETE
+
+Five waves, `daae8f96` → Wave 5. **Every issue that could be closed without client input or Figma access is closed.**
+
+**Closed across the programme:** VIS-01…13 · TYP-01…12 · SPC-01…05 · RSP-01…04 · ANM-01/02 · HOV-01…04 · NAV-01/02 · STR-01 · NEW-01/03 · CNT-01/08 · COD-01…11 · **AST-02, AST-04 and AST-LEAD-01** (three hidden substitutions resolved using real assets already in the project) · plus six defects found and fixed during the final audit itself.
+
+**Closed as MATCHES DESIGN, not defects:** CNT-02, CNT-04, CNT-05 — the implementation was right and the ledger was wrong. Implementing them would have damaged a correct site.
+
+### REMAINING — all require client input or Figma access
+
+| ID | Blocker | Needs |
+|---|---|---|
+| **AST 1–10** | 10 assets still placeholdered | **Figma seat upgrade** — View (6 calls/month, exhausted) → Dev/Full (200/day) |
+| **NEW-02** | `careers-intro-couple.jpg` | same |
+| **CNT-03** | Testimonial card 3 duplicates Oliver W. | A real third testimonial. Cannot be invented |
+| **CNT-07** | Footer socials point at platform homepages | Amara's real LinkedIn and Facebook URLs |
+| **NEW-04** | Footer socials: Instagram vs Facebook | **The design contradicts itself** — Home/Privacy/Terms show Instagram, About/Amenities/Careers/Contact show Facebook. The authority rule cannot resolve a conflict inside the design |
+| **CNT-02** *(business, not code)* | MA insurance carriers on a NJ facility | Client confirmation — implementation matches the design |
+| **CNT-06** *(infra, not code)* | `amaracarecenter.com` does not resolve | Client DNS |
 
 
 ### DEFERRED BY CLIENT INSTRUCTION — 2026-08-04
