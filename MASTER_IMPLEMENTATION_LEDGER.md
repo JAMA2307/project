@@ -368,6 +368,22 @@ Frozen on **ВСЁ СКИДЫВАЙ**. Waves 1–7 and 10 need **no Figma access
 
 ---
 
+## 14b · WAVE LOG
+
+### WAVE 1 — `daae8f96` → `93fe1cf1` · 2026-08-04 20:07 · **15/16 PASS**
+
+Scope: typography scale restoration · section heights · component geometry · spacing · CNT-01.
+
+**IMPLEMENTED · QA PASSED** — TYP-01…TYP-11 (all component overrides deleted, scale restored; AboutMission now Playfair 32/40) · VIS-01 Testimonials 847×440 / photo 389×392 / h2 2 lines · VIS-02 ServicesHero 630×720 · VIS-03 AmenitiesCarousel 846×450 / photo 296×360 · VIS-04 CareApproach row 460 · VIS-05 monogram 68×68 gap 20 · VIS-06 WSUA 413×460 · VIS-07 panel photos · VIS-08 AboutIntro 630×380 · VIS-09 header 52 / logo 189×52 · VIS-10 FAQ columns · VIS-11 Cta 630×660 · VIS-13 section heights (no unstyled gaps) · SPC-01…SPC-05 · **CNT-01 invented employee testimonials deleted, Careers restored to the standard family testimonials**.
+
+**QA FAILED → carried to Wave 2** — VIS-12 / TYP-12 Home mission line count. Agent correctly refused to fudge it: *"3 lines at max-w 900 is geometrically impossible — that 211-character sentence wraps to 5 lines; 3 lines would need ≈1450px of measure."* The written "3 lines" was wrong. **[DA] The approved Home render shows 4 lines.** Design wins; corrected in Wave 2.
+
+### WAVE 2 — dispatched 2026-08-04 20:15 · IN PROGRESS
+Scope: **STR-01** About/Services composition inverted to match the design · **NEW-01** remove `<Cta>` from Home · **NEW-03** CareersTeam 8-up 3-column · **NEW-02** CareersIntro photo (existing asset or named placeholder — no substitution) · **NAV-01** `id="team"` on About, links verified not repointed · **NAV-02** three `<a href>` → `<Link>` · VIS-12 mission to 4 lines.
+
+### DEFERRED BY CLIENT INSTRUCTION — 2026-08-04
+Responsive/viewport work (**RSP-01…RSP-04**) is parked until Task #1 (visual implementation) is complete and verified. Regression guards at 390 still run each wave; no new responsive investigation.
+
 ## 15 · REGRESSION WATCH — verified correct, do not break
 
 Contact form: square checkbox `!rounded-[4px]` · Name field focus-only outline · no icon in any form field · newsletter spelling · "Schedule a Tour" · "on community" spaced · "Amara…" not "Brookwood" · Admissions carousel title break + centred arrows · Amenities hero one-line heading, 4-line paragraph, "Explore Amara Amenities" · values stack interaction · no-pink reveal · `prefers-reduced-motion` + `:focus-visible` · all VIS-PASS geometry · the full design system in §1 · Header "Admissions"→`/amenities` label.
