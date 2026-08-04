@@ -213,7 +213,40 @@ Rows 8, 9, 10 and 12 are the dangerous ones — they render as finished work.
 
 ---
 
-## 7b · DELIVERY LOG — `Home_Page.rar`, 2026-08-04 · **REJECTED, NOT INTEGRATED**
+## 7a · DELIVERY LOG — `Home_Page.rar` v2, 2026-08-04 22:11 · **7 INTEGRATED, 4 SKIPPED**
+
+Second archive, 15.8 MB, 11 files. Extracted, dimension-checked, and every photograph opened and visually verified against its destination before wiring. Integrated in **Wave 6** — all 9 checks pass.
+
+### ✅ REPLACED — 7 production photographs
+
+| Package file | Export | Destination | Replaced | Uplift |
+|---|---|---|---|---|
+| `Comfort You Can Trust (2).png` | **1672 × 941** | `home/Hero` — hero photo | `reception-signage.png` | slot 1280×720, AR 1.777 vs 1.778 — exact |
+| `Inviting spaces.png` | **1086 × 1448** | `WhatSetsUsApart` card 1 | `great-room-piano.webp` | slot 413×460 |
+| `Connected support.png` | **1086 × 1448** | `WhatSetsUsApart` card 3 | `care-team.webp` | slot 413×460 |
+| `Planning & Care Coordination.png` | **1086 × 1448** | `home/Services` panel 1 | `clinician-resident.webp` | slot 265×200 |
+| `Short-Term Rehabilitation.png` | **1254 × 1254** | `home/Services` panel 2 | `therapy-gym.webp` | slot 329×200 |
+| `Social Services.png` | **1672 × 941** | `home/Services` panel 3 | `family-album.webp` | slot 329×200 |
+| `Dining & Nutrition.png` | **1086 × 1448** | `home/Services` panel 4 | `lounge-dining.webp` | slot 329×200 |
+
+Wired via `.asset.json` imports. `object-cover`, `object-position`, radius and slot geometry all unchanged — source only. Intrinsic `width`/`height` added to each so nothing shifts on load. Alt text rewritten to describe the new photography. **The old `.webp` assets were retained** — About, Services, Careers and Contact still import them, so no other page's photography moved.
+
+Source images are portrait or square against landscape slots; that is expected — `object-cover` crops exactly as the Figma frame does. No stretching, no letterboxing, no aspect change.
+
+### ⏭️ SKIPPED — 4 files, byte-identical to the rejected first archive
+
+These were **not re-exported** between deliveries — same byte sizes as v1. Every one is *smaller* than the asset it would replace, so integrating them would breach "never replace a better asset with a worse one".
+
+| File | Size | Would replace | Current render size | Verdict |
+|---|---|---|---|---|
+| `Our Mission.png` | 91 × 120 | `glyph-ring.png` | 135 px tall | **smaller** → skipped |
+| `Guided care 1.jpg` | 141 × 186 | `glyph-white.png` | 165 × 205 | **smaller** → skipped |
+| `Footer Logo.png` | 333 × 272 | `footer-mark.png` | large, cropped by a 580-tall footer | **smaller** → skipped |
+| `Guided care 2.jpg` | 655 B | `plane-glyph.png` 21×21 | — | **corrupt** — extracts to 0 bytes, both deliveries |
+
+All four are brand glyphs. **Re-export as SVG** and they become resolution-independent, ending this class of problem permanently.
+
+## 7b · DELIVERY LOG — `Home_Page.rar` v1, 2026-08-04 · **REJECTED, NOT INTEGRATED**
 
 Archive received, RAR5, 102 KB, 11 files. Extracted and inspected in full. **Not wired into the project — every file is a thumbnail, not a production asset.**
 

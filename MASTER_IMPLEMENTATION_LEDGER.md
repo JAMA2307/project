@@ -422,6 +422,18 @@ Full-project audit across 9 routes and 11 shared components.
 
 ---
 
+### WAVE 6 — 2026-08-04 22:11 · **9/9 PASS** — Home Page production photography
+
+Second Home archive received (15.8 MB, 11 files). First archive was rejected as thumbnails; this one contains genuine full-resolution exports.
+
+**7 photographs integrated** — hero 1672×941 · WhatSetsUsApart cards 1 and 3 at 1086×1448 · all four `home/Services` panels (1086×1448, 1254×1254, 1672×941, 1086×1448). Wired through `.asset.json` imports, `object-cover`/`object-position`/radius/geometry untouched, intrinsic `width`/`height` added for zero CLS, alt text rewritten per photo.
+
+**Cross-page contamination avoided** — the seven replaced `.webp` assets are still imported by About, Services, Careers and Contact, so only Home's photography changed. Verified.
+
+**4 files skipped** — `Our Mission.png` (91×120), `Guided care 1.jpg` (141×186), `Footer Logo.png` (333×272) are each *smaller* than the asset they would replace; `Guided care 2.jpg` is corrupt in both deliveries. All four are brand glyphs and were not re-exported between archives. **SVG re-export requested.**
+
+**Verified** — 7/7 render, zero 404s, no distortion, Testimonials and Gallery untouched, no console errors, no CLS, responsive sweep clean at 390/768/1024/1280/1440/1728/1920, full Wave 1–5 regression intact, typecheck clean.
+
 ## 14c · AUTONOMOUS EXECUTION — COMPLETE
 
 Five waves, `daae8f96` → Wave 5. **Every issue that could be closed without client input or Figma access is closed.**
