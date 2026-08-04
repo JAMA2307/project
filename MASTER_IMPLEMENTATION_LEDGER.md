@@ -15,13 +15,33 @@ Single cumulative ledger. Supersedes audits v1–v3. **Never fork into v4/v5.** 
 
 ---
 
+## 0 · GOVERNING AUTHORITY — standing rule, 2026-08-04
+
+> **When written instructions conflict with the final approved design, the final approved design wins.**
+> The latest approved design overrides earlier written instructions unless explicitly told otherwise.
+
+Order of authority: **1.** Final approved design (Figma file / exported design archive) → **2.** Explicit designer override issued *against* the design → **3.** Earlier written specs → **4.** Implementation (never authoritative).
+
+### 0.0 · EXPLICIT OVERRIDES — the design is deliberately NOT followed here
+
+These three are mock typos the designer explicitly ruled on. They are level-2 authority and **outrank the design**. Never "restore" them to match the renders.
+
+| Design render shows | Ship instead | Ruling |
+|---|---|---|
+| `Shedule a Tour` | **`Schedule a Tour`** | 08-04 14:55 — *"mock's 'Shedule' is a typo"* |
+| `Enter email addres` | **`Enter email address`** | 08-03 20:03 mobile QA — supersedes the 08-01 "keep this exact spelling" |
+| `Brookwood provides a full spectrum…` | **`Amara provides a full spectrum…`** | 08-04 14:55 — *"NOT 'Brookwood', that is a mock typo"* |
+
+Also deliberate: `oncommunity` → **`on community`** (spaced).
+
 ## 0 · EVIDENCE CLASSIFICATION
 
 Per the honesty requirement, every finding carries its source.
 
 | Tag | Meaning | Coverage achieved |
 |---|---|---|
-| **[F]** | Verified from Figma | **Top-level page index ONLY** — 2 pages: `187:1361` *Design*, `369:17180` *UI kit* |
+| **[DA]** | **Verified from the design archive** — 18 approved full-page renders, desktop + mobile × 9 routes, received 2026-08-04 | **Complete page coverage.** Highest authority |
+| **[F]** | Verified from Figma MCP | **Top-level page index ONLY** — 2 pages: `187:1361` *Design*, `369:17180` *UI kit* |
 | **[LH]** | Verified from Lovable history | **Complete.** All 4 history pages, 07-29 → 08-04, `has_more: false` |
 | **[SRC]** | Verified from source code | 35 of 37 project files |
 | **[INF]** | Inferred — needs confirmation | flagged individually |
@@ -261,11 +281,11 @@ Header label "Admissions" → `/amenities` is **intentional** [LH]: *"That misma
 | ID | Page | Component | Defect | Priority |
 |---|---|---|---|---|
 | **CNT-01** | Careers | `routes/careers.tsx:11-30` | Three fabricated staff testimonials — "Maria, RN", "Daniel, PT", "Alicia" — under the code's own `// PLACEHOLDER: unverified marketing copy`. Live on a healthcare site | **Critical** |
-| **CNT-02** | Contact | `ContactInsurance.tsx:8-22` | Massachusetts carriers (Tufts, Harvard Pilgrim, **BCBS of Mass**, Neighborhood Health, Network Health, CCA, Senior Whole Health) listed for a **New Jersey** facility | **Critical** |
-| **CNT-03** | 3 pages | `Testimonials.tsx:34-40` | Card 3 repeats `— Oliver W. / March 2026` from card 1 — the duplication you ruled a typo | **Critical** |
-| **CNT-04** | Home, About, Careers | `Faq.tsx:22-25` | Default-open item asks about **insurance**, answers with a **services** description, duplicating item 0 | **Critical** |
-| **CNT-05** | Services, Careers | `AboutTeam:4`, `CareersTeam:8` | `"Motty Waxler"` vs your spec `"Metty Waxler"` | **Critical** |
-| **CNT-06** | Careers | `OpenPositions.tsx:25` | **`amaracarecenter.com` does not resolve** — DNS `ENOTFOUND`, tested. 5 `mailto:` links bounce | **Critical** |
+| ~~CNT-02~~ | Contact | `ContactInsurance.tsx:8-22` | **CLOSED — MATCHES DESIGN.** [DA] Contact render specifies this exact list: Tufts, Harvard Pilgrim, Commercial BCBS of Mass, Cigna, Humana, Senior Whole Health, UHC, CCA, Neighborhood Health Plan, Network Health, Medicare, Medicaid, Private Pay. Implementation faithful. *Business note for the client, not a code defect: these are Massachusetts-market carriers on a New Jersey facility.* **Do not change.** | — |
+| **CNT-03** | 3 pages | `Testimonials.tsx:34-40` | Card 3 repeats `— Oliver W. / March 2026` from card 1. [DA] Services render shows card 1 Oliver W. / card 2 Daniel R. Card 3 unverified in renders | **Major** |
+| ~~CNT-04~~ | Home, About, Careers | `Faq.tsx:22-25` | **CLOSED — MATCHES DESIGN.** [DA] Home, Services and Careers renders all show "Do you accept Medicare or private insurance?" expanded with the general services paragraph. Only the Brookwood→Amara substitution was required, and it is done. **Do not change.** | — |
+| ~~CNT-05~~ | Services, Careers | `AboutTeam:4`, `CareersTeam:8` | **CLOSED — MATCHES DESIGN.** [DA] About and Careers renders both read **"Motty Waxler"**. The 14:55 written spec's "Metty" was a typo in the message. **Do not change.** | — |
+| **CNT-06** | Careers | `OpenPositions.tsx:25` | **DOWNGRADED.** [DA] Privacy Policy and Terms renders print `info@amaracarecenter.com` — the domain is design-sanctioned. `ENOTFOUND` is client infrastructure, not an implementation defect. Do not invent a substitute domain | Minor |
 | **CNT-07** | all | `Footer.tsx` | Social → `linkedin.com` / `facebook.com` homepages | **Major** |
 | **CNT-08** | Services | `ServicesList` indian-program | `resident-son.webp` with `alt="Freshly prepared meal served in the dining room"` | **Major** |
 | **CNT-09** | Services, Careers | `AboutTeam:6` | `"QA - Staff Development"` vs spec `"QA- Staff Development"` | Minor |
@@ -273,6 +293,33 @@ Header label "Admissions" → `/amenities` is **intentional** [LH]: *"That misma
 **Resolved — not defects:** newsletter placeholder `"Enter email address"` ✓ (08-03 20:03 overrode the Aug-1 "keep the typo"); Footer social = LinkedIn + **Facebook** ✓ (08-04 spec overrode Aug-1 "Instagram").
 
 ---
+
+## 11b · STRUCTURE & NEW FINDINGS FROM THE DESIGN ARCHIVE — `STR` / `NEW`
+
+Added 2026-08-04 after merging the 18 approved renders. All **[DA]**.
+
+### STR-01 · About and Services section composition is inverted — **Critical · READY**
+
+**RESOLVED by the 2026-08-04 authority ruling: the final approved design wins.** Earlier written specs (14:55 and 15:03) are superseded.
+
+| Page | **Design [DA] — implement this** | Written spec (superseded) | Code today |
+|---|---|---|---|
+| `/about` | Hero → About Us → Our Mission → What We Value → **Meet the Team** → Testimonials → CTA → Footer · **no FAQ** | Testimonials → FAQ → CTA, no Team | follows the superseded spec |
+| `/services` | Hero → Care Approach → Our Services → Testimonials → **FAQ** → CTA → Footer · **no Meet the Team** | Team → Testimonials → CTA, no FAQ | follows the superseded spec |
+
+Root cause: the 14:55/15:03 restructure was applied against the design. Dependencies: **fixes NAV-01** — once Team returns to `/about`, `AboutHero`'s `/about#team` link and `CareersTeam`'s `/about` link resolve correctly and must NOT be repointed to `/services`.
+
+### NEW-01 · Home has no "Plan Your Visit" CTA section — **Major · READY**
+[DA] Home render: Gallery → FAQ → contact form → Footer. `routes/index.tsx` renders an extra `<Cta />` before `<Contact />`. Remove it from Home only — About, Services and Amenities all keep theirs.
+
+### NEW-02 · CareersIntro is missing its photo — **Major · READY**
+[DA] Careers render shows a photo (older couple embracing, outdoors) to the left of the "why Amara / Join a team that puts people first and inspires meaningful careers" text. `CareersIntro.tsx` renders text only. Asset likely already in `src/assets/photos` — verify against the render before wiring.
+
+### NEW-03 · CareersTeam roster and grid are wrong — **Major · READY**
+[DA] Careers render shows the **full 8-person roster in a 3-column grid**, identical to About. `CareersTeam.tsx` renders 4 people in `md:grid-cols-2`. Heading "Caring Professionals You Can Trust" is correct.
+
+### NEW-04 · Footer socials — design is internally inconsistent — **Minor · BLOCKED**
+[DA] Home, Privacy Policy, Terms renders show **Linkedin / Instagram**. About, Amenities, Careers, Contact renders show **Linkedin / Facebook**. The authority rule cannot resolve a conflict *inside* the design. Code currently ships Facebook. **Holding for a ruling — no change.** (CNT-07 still applies either way: both links point at platform homepages, not Amara profiles.)
 
 ## 12 · CODE QUALITY — `COD` *(lowest priority)*
 
@@ -312,8 +359,9 @@ Frozen on **ВСЁ СКИДЫВАЙ**. Waves 1–7 and 10 need **no Figma access
 | **3 · Spacing** | SPC-01…SPC-05 | No |
 | **4 · Responsive** | RSP-01…RSP-04, then check 14 at 390 on all 7 pages | No |
 | **5 · Animation & hover** | ANM-01 colour interpolation, ANM-02 consolidate; HOV-01…HOV-04 | ANM-04 blocked |
-| **6 · Navigation** | NAV-01 → `/services#team`; NAV-02 `<Link>` | No |
-| **7 · Content** | CNT-01…CNT-09 | §13 answers needed |
+| **1b · Structure** | **STR-01** move Team → `/about`, FAQ → `/services` · **NEW-01** drop `<Cta>` from Home · **NEW-02** CareersIntro photo · **NEW-03** CareersTeam 8-up 3-col | No |
+| **6 · Navigation** | NAV-01 — **after STR-01 the `/about#team` links resolve correctly; do NOT repoint to `/services`** · NAV-02 `<Link>` | No |
+| **7 · Content** | CNT-01 ✔ in Wave 1 · CNT-03 · CNT-07 · CNT-08 · CNT-09. CNT-02/04/05 closed, CNT-06 downgraded | NEW-04 needs a ruling |
 | **8 · Assets** | 12 inventory rows; remove AST-01…AST-04 | 🔒 **Figma seat** |
 | **9 · Code quality** | COD-01…COD-11 | No |
 | **10 · Verification** | All 14 spec checks @1440 + 390; desktop/tablet/mobile on all 11 routes | Partial |
@@ -322,7 +370,7 @@ Frozen on **ВСЁ СКИДЫВАЙ**. Waves 1–7 and 10 need **no Figma access
 
 ## 15 · REGRESSION WATCH — verified correct, do not break
 
-Contact form: square checkbox `!rounded-[4px]` · Name field focus-only outline · no icon in any form field · newsletter spelling · About = Testimonials→FAQ→CTA, no Meet the Team · Services = Meet the Team→Testimonials→CTA, no FAQ · "Schedule a Tour" · "on community" spaced · "Amara…" not "Brookwood" · Admissions carousel title break + centred arrows · Amenities hero one-line heading, 4-line paragraph, "Explore Amara Amenities" · values stack interaction · no-pink reveal · `prefers-reduced-motion` + `:focus-visible` · all VIS-PASS geometry · the full design system in §1 · Header "Admissions"→`/amenities` label.
+Contact form: square checkbox `!rounded-[4px]` · Name field focus-only outline · no icon in any form field · newsletter spelling · "Schedule a Tour" · "on community" spaced · "Amara…" not "Brookwood" · Admissions carousel title break + centred arrows · Amenities hero one-line heading, 4-line paragraph, "Explore Amara Amenities" · values stack interaction · no-pink reveal · `prefers-reduced-motion` + `:focus-visible` · all VIS-PASS geometry · the full design system in §1 · Header "Admissions"→`/amenities` label.
 
 ---
 
@@ -330,11 +378,13 @@ Contact form: square checkbox `!rounded-[4px]` · Name field focus-only outline 
 
 | | |
 |---|---|
-| Issues logged | **72** — VIS 13 · AST 4+12 · TYP 12 · SPC 5 · RSP 4 · ANM 4 · HOV 4 · NAV 2 · CNT 9 · COD 11 |
-| Critical | 12 |
-| Code modified | **none** |
+| Issues logged | **76** — VIS 13 · AST 4+12 · TYP 12 · SPC 5 · RSP 4 · ANM 4 · HOV 4 · NAV 2 · CNT 9 · STR/NEW 5 · COD 11 |
+| Closed as MATCHES DESIGN | **3** — CNT-02, CNT-04, CNT-05. Would have broken a correct site |
+| Downgraded | **1** — CNT-06 |
+| Critical | **10** (was 12) |
+| Code modified | Wave 1 dispatched to Lovable 2026-08-04 19:58 |
 | Assets uploaded | **none** |
-| Lovable prompts sent | **none** |
+| Lovable prompts sent | **1** — Wave 1 (typography + section heights + component geometry + spacing + CNT-01) |
 | Source coverage | 35/37 files — outstanding: `ui/checkbox.tsx`, `LegalPage.tsx`, `NotFoundPage.tsx`, `routes/$.tsx`, `privacy-policy.tsx`, `terms-of-use.tsx` |
 | History coverage | **complete** — 4/4 pages |
 | **Figma coverage** | **page index only. Zero frames, zero comments, zero layers, zero assets.** |
