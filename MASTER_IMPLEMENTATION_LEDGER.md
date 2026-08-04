@@ -378,8 +378,16 @@ Scope: typography scale restoration · section heights · component geometry · 
 
 **QA FAILED → carried to Wave 2** — VIS-12 / TYP-12 Home mission line count. Agent correctly refused to fudge it: *"3 lines at max-w 900 is geometrically impossible — that 211-character sentence wraps to 5 lines; 3 lines would need ≈1450px of measure."* The written "3 lines" was wrong. **[DA] The approved Home render shows 4 lines.** Design wins; corrected in Wave 2.
 
-### WAVE 2 — dispatched 2026-08-04 20:15 · IN PROGRESS
-Scope: **STR-01** About/Services composition inverted to match the design · **NEW-01** remove `<Cta>` from Home · **NEW-03** CareersTeam 8-up 3-column · **NEW-02** CareersIntro photo (existing asset or named placeholder — no substitution) · **NAV-01** `id="team"` on About, links verified not repointed · **NAV-02** three `<a href>` → `<Link>` · VIS-12 mission to 4 lines.
+### WAVE 2 — 2026-08-04 20:18 · **10/10 PASS**
+
+**IMPLEMENTED · QA PASSED** — **STR-01** About now renders Team and no FAQ; Services renders FAQ and no Team ✓ · **NEW-01** `<Cta>` removed from Home; Gallery → FAQ → Contact → Footer ✓ · **NEW-03** CareersTeam 8 cards in 3 columns ✓ · **NAV-01** `id="team"` added, `/about#team` scrolls to the grid (scrollY 8400), links *not* repointed ✓ · **NAV-02** three `<a href>` → `<Link>` ✓ · **VIS-12** Home mission now 4 lines ✓ · Wave 1 regression spot-check held (h1 44/52, header 52) ✓.
+
+**NEW-02 — BLOCKED, correctly.** Agent searched `src/assets/photos` for the couple photo, found no match, and rendered `<PlaceholderAsset name="careers-intro-couple.jpg" />` at 630×430 rather than substituting. Correct behaviour.
+
+**Needs confirmation against the design:** Home mission resolved to **font-size 36 / line-height 56 / max-width 1000**. Reaching 4 lines required dropping from 44px; the 44/56 figure and the line count could not both hold. Exact value pending Figma.
+
+### WAVE 3 — dispatched 2026-08-04 20:26 · IN PROGRESS
+Scope: **AST-LEAD-01** agent to visually identify `amenities-room.jpg` / `amenities-courtyard.jpg` and wire the bedroom to Accommodations if it matches · **AST-01** About values 3–4 duplicates → named placeholders (makes two hidden gaps honest) · **HOV-01** carousel arrows 44×44 → 56×32 · **COD-04** ServicesList rail 320 → 413 · **COD-03** watermark 0.25 → 0.18 · **ANM-01** mission reveal → colour interpolation to `#2D314B`, no pink · **HOV-02/03/04** hover coverage + `hover-lift` off the base cva · **CNT-08** Indian Program alt text · **COD-01** 18 hardcoded `/__l5e/` URLs → `.asset.json` imports.
 
 ### DEFERRED BY CLIENT INSTRUCTION — 2026-08-04
 Responsive/viewport work (**RSP-01…RSP-04**) is parked until Task #1 (visual implementation) is complete and verified. Regression guards at 390 still run each wave; no new responsive investigation.
