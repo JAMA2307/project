@@ -518,7 +518,33 @@ QA harness moved out of the sandbox to **`tools/qa/rqa.py`** in the repo (outsid
 Form at 960/720/320: inputs 50px (textarea 104) at 18px with real `<label>`s, Submit 52px full-width, checkbox row 44px at 320, no in-form horizontal scroll, focus rings inside field bounds.
 Non-defect noted: `/careers` testimonial photo `clinician-resident.webp` reports `naturalWidth 0` at load — it is `loading="lazy"` inside the horizontally scrolled track and resolves to `complete=true, naturalWidth=1086` on scroll-into-view.
 
-### WAVE R7 — LEGAL PAGES, 404, PROJECT-WIDE CASCADE SWEEP · dispatched 2026-08-05 11:39
+### WAVE R7 — LEGAL PAGES, 404, PROJECT-WIDE CASCADE SWEEP · 2026-08-05 12:15 · `86321fa9` · **198/198 PASS**
+
+**The cascade bug is closed.** A scanner was written (`tools/qa/`) that parses every `className` in `src/**/*.tsx`, maps each utility to a CSS-property family, and flags any element where a named variant and an arbitrary `min-[…]` variant set the same property. **Four occurrences across the entire codebase; all fixed; re-scan returns zero.**
+
+| File | Property | Before | After | Live bug? |
+|---|---|---|---|---|
+| `about/AboutTeam.tsx` | `grid-cols` | `sm:grid-cols-2` + `min-[1024px]:grid-cols-3` | `min-[640px]:` + `min-[1024px]:` | **yes** — never reached 3 columns |
+| `careers/CareersTeam.tsx` | `grid-cols` | same | same | **yes** — never reached 3 columns |
+| `amenities/AmenitiesCarousel.tsx` | `width` | `md:w-[min(846px,100%)]` + `min-[1280px]:w-[846px]` | `min-[768px]:` + `min-[1280px]:` | latent |
+| `home/Gallery.tsx` | `grid-cols` | `sm:` + `lg:` + `min-[1440px]:grid-cols-[394px_453px_394px]` | `min-[640px]:` + `min-[1024px]:` + `min-[1440px]:` | **yes** — the 1440 column spec never applied |
+
+**Running total for this bug class: 8 occurrences across R4–R7, of which 6 were silently killing real reference values.** None was visible in code review; every one failed only in the browser. This is the single most valuable finding of the responsive programme.
+
+**1440 reference-value verification — every recorded value across all 8 content routes measured in Chromium. One FAIL:**
+- **PASS** — Global: container 1280 · header 52 · logo 189×52 · footer 580 · h1 44/52 · h2 44/52 (all five instances). Home: hero photo 1280×720 · hero section 1200 · WSUA 413×460 ×3 · intro 774 · rail 413 · panels 847×500 pad 40 gap 32 · panel photos 265×200 / 329×200 r16 · Testimonials 847×440 photo 389×392 arrows 56×32 · Gallery 1280×458 cols 394/453/394 tiles 394×219 + 453×458 · Contact 780 · mission exactly 4 lines. About: hero 900 · intro photos 630×380 · values 847×440 · monograms 68×68 · CTA 630×660. Services: row 460 cols 306/621/313 · left cards 306×220 · 24/7 313×460 · hero 630×720 left col 413 · rail 413 · panel photos 300×320 r16. Amenities: hero 660×600 · cards 846×450 photos 296×360 arrows 56×32 · gallery centre 512×710 sides 255×406 at top 204. Careers: hero 900 · job rows 1280×148 · monograms 68×68 · intro photo 630×430. Contact: hero 630×720 left col **413** (R6 fix holding) · admissions 428 card 380 · insurance **500×410**.
+- **FAIL — Home FAQ 766 vs 752 (+14px).** `min-height` is correctly 752; the section is content-driven taller (120 padding ×2 + 526 accordion) since the R1 fluid type scale. Nothing clips or overlaps. The agent correctly declined to shave the padding to hit the number. **Referred to R8 for root-cause diagnosis** — at 1440 the `clamp()` scale must resolve to exactly the approved desktop endpoint, so either the accordion's internal spacing is off, an endpoint overshoots, or 752 was recorded against different content. Fix the cause, not the symptom.
+
+**Legal pages / 404** — `LegalPage.tsx` prose column gained `break-words`, links `break-all`, headings `text-balance`. `NotFoundPage.tsx` numeral `text-[120px] md:text-[200px]` → `text-[clamp(5rem,4rem+5vw,12.5rem)]`, so it scales continuously and cannot overflow at 320.
+**Correction to the R7 brief, reported rather than invented:** `LegalPage` has **no sticky/side table-of-contents box**. It is a single centred 780px column — capped, so line length stays readable at 2560 and gutters stay comfortable at 768. There was nothing to de-collide. The agent flagged this instead of building a ToC to satisfy the instruction.
+
+**Shared-component regression, measured on every page each component appears on** — Header: row exactly 52, 5 nav links, CTA present, **zero** tap targets under 44px, both variants. Footer: 580 on all 8 content routes, hidden on 404 by design, watermark no overflow. Cta: About/Services/Amenities only (About via `image` prop, others `garden-walk`), **absent from Home**. Testimonials: Home/About/Services/Careers. Faq: Home/Services/Careers. Contact form: Home/Careers/Contact. Container/Button/CarouselArrow all correct.
+
+**Content integrity** — zero broken images site-wide, zero `PlaceholderAsset` outside its own definition file, `oncommunity` absent, About has Team and no FAQ, Services has FAQ and no Team, Home has no CTA section, no copy or section-order changes.
+
+**NEW-04 confirmed still blocked.** Footer socials render LinkedIn + Instagram on all 9 pages; there is no Facebook variant in the code. The agent declined to add one without a design reference — correct. The design contradicts itself (Home/Privacy/Terms show Instagram; About/Amenities/Careers/Contact show Facebook), and the design-authority rule cannot resolve a conflict that exists *inside* the design. Client decision.
+
+### WAVE R8 — BROWSER-ZOOM QA, OVERLAP DETECTION, FULL VERIFICATION · dispatched 2026-08-05 12:19
 
 ## 14c · AUTONOMOUS EXECUTION — COMPLETE
 
