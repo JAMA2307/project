@@ -213,6 +213,20 @@ Rows 8, 9, 10 and 12 are the dangerous ones — they render as finished work.
 
 ---
 
+## 7 · DELIVERY LOG — `Logos_and_elements.rar`, 2026-08-05 07:35 · **5 INTEGRATED, 3 SKIPPED**
+
+| Package file | Export | Destination | Outcome |
+|---|---|---|---|
+| `Home page hero backgraund.png` | **1440 × 1200** RGBA | `home/Hero` background | ✅ **Integrated** — full-bleed no-repeat layer at `top center`, opacity .06. **CSS tiling of the 121×114 tile removed** — pattern rhythm now matches the design instead of being re-tiled |
+| `Guided care/elements (1).png` | 21 × 21 RGBA | `WhatSetsUsApart` — plane glyph | ✅ Integrated — exact match to the 21×21 render box |
+| `Personalized…(with text).png` | 19 × 24 RGBA | `home/Services` — rail active marker | ✅ Integrated — exact match to the 19×24 render box |
+| `Personalized….png` | **312 × 233** RGBA | `home/Services` — panel watermark | ✅ Integrated — **landscape at natural size, rotation removed.** Was a portrait glyph rendered 238×314 at `rotate(-15deg)`; now the official artwork bottom-right, cropped by the card edge, opacity .18 |
+| `Where Healing Feels Like Home.png` | 18 × 16 RGBA | `home/Hero` badge icon | ✅ Integrated **at natural size** — render box reduced 20×20 → 18×16 inside the unchanged 40×40 chip, so no upscale |
+
+**SKIPPED — 3, byte-identical to files already rejected twice.** Not re-exported in any delivery: `Our Mission.png` 91×120 (renders at 135), `footer logo.png` 333×272, `Guided care/Pattern (1).jpg` 141×186 (renders at 165×205). Each is smaller than the asset it would replace. **SVG re-export closes all three permanently.**
+
+**Open question for the designer:** the official panel watermark is white artwork. At opacity .18 on the `#E6EFFF` panel it reads as a very faint *lighter* mark, where the previous approximation was a darker ring. Confirm the intended tone/opacity.
+
 ## 7a · DELIVERY LOG — `Home_Page.rar` v2, 2026-08-04 22:11 · **7 INTEGRATED, 4 SKIPPED**
 
 Second archive, 15.8 MB, 11 files. Extracted, dimension-checked, and every photograph opened and visually verified against its destination before wiring. Integrated in **Wave 6** — all 9 checks pass.
