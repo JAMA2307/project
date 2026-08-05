@@ -490,7 +490,35 @@ Decorative audit clean: nurse icon 48×48, leaf 17×21, 24/7 panel 313×460, all
 
 **Harness improved twice** — now ignores `sr-only` nodes and elements inside horizontally scrollable ancestors (both false positives). Rebuilt after a fresh sandbox wiped `/tmp`.
 
-### WAVE R5 — AMENITIES · dispatched 2026-08-05 11:14
+### WAVE R5 — AMENITIES · 2026-08-05 11:23 · **22/22 PASS**
+
+`AmenitiesHero` photo `md:h-[600px]` → `aspect-[660/600]` · hero grid ladder made fully arbitrary (`min-[768px]` → `min-[1280px]` → `min-[1440px]:grid-cols-[560px_660px]`) · "Scroll to Explore" `md:mt-[140px]` → `mt-auto pt-14` below 1280 (removed tablet dead space) · `AmenitiesCarousel` card `md:w-[846px]` → `w-[min(846px,100%)]`, exact 846×450 restored at 1280+ · card photo → `aspect-[296/360] w-[35%] max-w-[296px]` · `AmenitiesGallery` stacked image `h-[420px]` → `aspect-[4/3] md:aspect-[16/9]`.
+
+**Cascade bug found here for the second time.** `md:grid-cols-[minmax(0,1fr)_48%]` was outranking `min-[1280px]:` and `min-[1440px]:` — **the 560/660 reference grid had never applied.** Same class as R4's panel photo.
+
+1440 composition verified: hero photo 660×600 (columns `560px 660px`, gap 60) · cards 846×450, photos 296×360, gap 20, radius 16 · arrows 56×32 centred below · track 1280 visible vs 2598 content (next card peeks, clipped by container — intentional) · gallery centre 512×710, sides 255×406 at stage `top-204`.
+Carousel track scrolls horizontally **by design**; its right edge sits inside the viewport at every width (1360<1440, 892<960, 307<320) and the harness excludes descendants of horizontally scrollable ancestors, so this is not page overflow. Keyboard at 960×900 / 720×900: all three in-card buttons reachable, focusing the last auto-scrolls the track, arrows overlap no card.
+
+### WAVE R6 — CAREERS + CONTACT · 2026-08-05 11:33 · **44/44 PASS**
+
+**The cascade bug turned out to be silently killing real reference values.** Three occurrences, all on `/contact`:
+
+| Element | Losing rule | What actually rendered at 1440 | Spec |
+|---|---|---|---|
+| `ContactHero` left column | `md:flex-1` beat `min-[1440px]:flex-none` | **562px** | 413px |
+| `ContactInsurance` photo | `md:w-[42%]` beat `min-[1440px]:w-[500px]` | **537px** | 500px |
+| `ContactHero` photo | `md:w-[48%]` beat `min-[1440px]:w-[630px]` | 630 by coincidence, height wrong | 630×720 |
+
+Every one passed code review and failed only in the browser. All mixed ladders on both pages were normalised to arbitrary `min-[…]` steps even where the properties did not collide.
+
+Also fixed: `CareersIntro` photo `md:h-[430px]` → `aspect-[630/430]`, text column `min-w-0` so it cannot collide with the photo 768–1280 · `OpenPositions` job row stays stacked to 1024 then `min-[1024px]:grid-cols-[64px_1fr_1fr_120px]`, `min-h-[148px]` deferred to 1280, "View job" now a 68×44 tap target · `CareersTeam` 3→2→1 · `ContactAdmissions` row `md:h-[428px]` → content-driven below 1280, card `38%`→380px, chip `w-fit max-w(100%-2rem)`.
+QA harness moved out of the sandbox to **`tools/qa/rqa.py`** in the repo (outside `src/`, never bundled) after `/tmp` was wiped twice.
+
+1440 composition verified — Careers: hero 900, job rows 1280×148, monograms 68×68, intro photo 630×430. Contact: hero photo 630×720 with left column now exactly 413, admissions row 1280×428 with 380 card, insurance photo 500×410.
+Form at 960/720/320: inputs 50px (textarea 104) at 18px with real `<label>`s, Submit 52px full-width, checkbox row 44px at 320, no in-form horizontal scroll, focus rings inside field bounds.
+Non-defect noted: `/careers` testimonial photo `clinician-resident.webp` reports `naturalWidth 0` at load — it is `loading="lazy"` inside the horizontally scrolled track and resolves to `complete=true, naturalWidth=1086` on scroll-into-view.
+
+### WAVE R7 — LEGAL PAGES, 404, PROJECT-WIDE CASCADE SWEEP · dispatched 2026-08-05 11:39
 
 ## 14c · AUTONOMOUS EXECUTION — COMPLETE
 
