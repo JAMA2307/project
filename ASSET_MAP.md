@@ -213,6 +213,33 @@ Rows 8, 9, 10 and 12 are the dangerous ones — they render as finished work.
 
 ---
 
+## 6 · WAVES 8–9 — VISIBILITY CORRECTIONS · 2026-08-05
+
+Wave 7 wired elements correctly and reported measurements — but three of them were **present in the DOM and invisible on screen**. "Wired" was the wrong pass condition; "renders visible pixels" is the right one. All three found and fixed.
+
+| Element | Failure | Fix |
+|---|---|---|
+| Hero pattern | `opacity: .06` carried over from the old solid 121×114 tile. The official asset is drawn at **max alpha 5/255 (≈2%)** — 2% × 6% ≈ 0.1%, below display quantisation, literally unrenderable | opacity → **1**, `background-size` `1440px 1200px` → **`cover`**. `Hero.tsx` only |
+| Plane glyph | positioned at `-bottom-30 -right-30` — **rendered outside the card bounds**, never on screen | repositioned inside the ring's lower-right, opacity 1, 21×21 |
+| Panel watermark | white artwork at opacity .18 on a near-white panel — effectively invisible | opacity → **0.85** |
+
+**Wave 8 also delivered:** `footer-logo-official.png` as both the footer lockup and a **557px bottom-cropped watermark**, footer height exactly 580 · **Facebook removed from the Home footer, LinkedIn + Instagram in its place**, via a configurable `socials` prop so the other six pages were untouched · `guided-care-ring-official.jpg` white-masked to transparent for the blue card · `our-mission-mark-official.png` above the Mission heading · `rail-marker-official.png` on the active rail item.
+
+### ⚠️ HERO PATTERN — the file is the ceiling
+
+Verified by rendered-pixel sampling at 1440, paired against the asset's own alpha map (35,484 motif px vs 158,328 bare px in the header band):
+
+- on-motif mean RGB **218.66, 227.32, 243.55**
+- bare background mean RGB **221.60, 230.27, 246.52**
+- **delta ≈ 2.95 per channel**
+
+The pattern is measurably present and no longer invisible. But **≈3 RGB levels is near the threshold of perception** on most displays. That is the *maximum* this file can produce: its artwork is authored at **alpha 5/255**, and opacity is already 1 with no filter, blend mode or tint.
+
+If the design intends a more discernible pattern, **the asset must be re-exported at the intended alpha** — it cannot be recovered by CSS without manipulating the artwork, which the brief forbids.
+
+### Known, deliberately left
+`Cta.tsx` still imports `hero-pattern-tile.png` — the documented stand-in for the still-missing `pattern-cta-bg.png`. Removing it would blank the CTA background on three pages.
+
 ## 7 · DELIVERY LOG — `Logos_and_elements.rar`, 2026-08-05 07:35 · **5 INTEGRATED, 3 SKIPPED**
 
 | Package file | Export | Destination | Outcome |
