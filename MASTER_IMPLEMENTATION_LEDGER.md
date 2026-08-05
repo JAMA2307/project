@@ -448,6 +448,30 @@ AST-01 About values 3–4 · AST-03 `blurred-card-placeholder` · AST-05 `icon-c
 
 **Legacy `.webp` still in use — 10 references, all legitimate**, in Home Gallery, Amenities Gallery, Testimonials, Contact hero and the shared CTA default. No official export was supplied for those slots.
 
+## 14d · TASK #2 — PROJECT-WIDE RESPONSIVE REBUILD · 2026-08-05
+
+### WAVE R1 — RESPONSIVE FOUNDATION · **158/162 PASS**
+
+**Root cause named.** The site was built to a fixed 1440 canvas: section heights like `md:min-h-[900px]` applied from **768px**, so a 900px-tall section rendered at 800px wide. That is the "excessive empty space" the agency kept reporting, and it is why **150% zoom on a 1440 screen (≈960 effective) looked broken**.
+
+**Changes:**
+- **Fluid typography** — the whole scale converted from two fixed steps with a hard 768 jump to `clamp()` in `rem`, interpolated 390→1440, line-height scaling with size. Endpoints are verified-from-design (foundation brief); the interpolation curve is inferred responsive behaviour.
+- **Container** — `px-4 md:px-20` → `padding-inline: clamp(1rem, 0.6095rem + 6.0952vw, 5rem)`. Content still 1280 at 1440, no growth on 1920/2560.
+- **Section heights** — all 25 re-gated `md:` → `min-[1280px]:`, paired `md:py-0` gated with them, so 768–1280 sizes to content. All remain `min-height`.
+- **Header breakpoint measured, not guessed** — logo 189.3×52 + centred nav 523 + CTA 153; centre-anchored nav means collision at ≈1067px viewport, ≈1000px with the new fluid nav gap. **Set to 1080px.** Nav links now 44px tap targets.
+- **Footer** — columns `auto-fit/minmax(180px,1fr)`; newsletter stacks below 400; watermark `w-[min(70vw,557px)]`, decorative, no overflow.
+- **Reusable QA harness** at `/tmp/browser/qa/rqa.py` — parameterised, covers page overflow, genuine overlap detection (intentional overlays excluded), out-of-viewport elements, clipped text, console errors, ≥400 responses.
+
+**Verified:** h1 44/52 at 1440 · header 52 · container 1280 · footer 580 · zero `PlaceholderAsset` renders · all Wave 6–14 assets intact · zero 404s · zero overlaps · zero clipped text · zero console errors.
+
+**Page-specific defects found and deferred (correctly not fixed in a foundation wave):**
+- `/about @320` — page scrollWidth 335 vs 320 → **R3**
+- Home Contact block @768 — address span and `tel:` link collapse to **zero width** in the squeezed 2-col grid; affects `/`, `/careers`, `/contact` → **R2**
+- `/services @768–912` — 4× `ServicesList` paragraph zero-height → **R4**
+
+### WAVE R2 — HOME · dispatched 2026-08-05 10:32
+Fixes the Contact-block collapse; makes the fixed-pixel layouts fluid below 1280 (Gallery's hard `394px 453px 394px` grid, the 413px sticky rail, WSUA's three 413×460 cards, Testimonials track, hero badge and photo aspect); adds debounced `ScrollTrigger.refresh()` so the mission reveal recalculates on resize; tests short viewports 1440×700 / 1280×620 and zoom equivalents 960×900 / 720×900. The 1440 composition is frozen.
+
 ## 14c · AUTONOMOUS EXECUTION — COMPLETE
 
 Five waves, `daae8f96` → Wave 5. **Every issue that could be closed without client input or Figma access is closed.**
