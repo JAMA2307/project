@@ -472,6 +472,26 @@ AST-01 About values 3–4 · AST-03 `blurred-card-placeholder` · AST-05 `icon-c
 ### WAVE R2 — HOME · dispatched 2026-08-05 10:32
 Fixes the Contact-block collapse; makes the fixed-pixel layouts fluid below 1280 (Gallery's hard `394px 453px 394px` grid, the 413px sticky rail, WSUA's three 413×460 cards, Testimonials track, hero badge and photo aspect); adds debounced `ScrollTrigger.refresh()` so the mission reveal recalculates on resize; tests short viewports 1440×700 / 1280×620 and zoom equivalents 960×900 / 720×900. The 1440 composition is frozen.
 
+### WAVES R2–R4 · 2026-08-05 · **all PASS**
+
+**R2 HOME — 66/66** (22 viewports × `/`, `/careers`, `/contact`).
+Fixed the R1 finding: at 768 the address span and `tel:` link were **0px wide** — `md:grid-cols-[1fr_630px]` reserved 630 and starved the left column. Now `minmax(320px,1fr)_minmax(360px,630px)`; address 607×24, phone 607×44.
+Made fluid below 1280: Gallery's hard `394px 453px 394px` grid (needed 1241px+, applied from 768) → `1→2→fr→exact px`, tile heights as `aspect-[394/219]` / `aspect-[453/458]` · Services rail `w-[413px]` → `w-[32.266%] max-w-[413px]` from `min-[1100px]:` · WSUA `md:grid-cols-3` → `1→2→3` with `items-stretch` · Testimonials cards → `min(847px, 100vw-160px)` · hero photo fixed height → `aspect-[3/2] sm:aspect-[16/9]`, badge absolute only from `lg:`.
+`ScrollRevealText` gained `invalidateOnRefresh` + debounced 150ms `ScrollTrigger.refresh()` on resize/orientation.
+
+**R3 ABOUT — 22/22.** *Root cause of two separate complaints turned out to be one bug.*
+`AboutHero` carried `aspect-ratio: 1440/900` on a flex section that also had `min-height: 560px`. With an aspect ratio present the browser resolves **width from height** — 560 × 1.6 = **896px** — forcing 896px page scrollWidth at every viewport below 896, *and* collapsing the hero's real height. This produced both the `/about @320` overflow and the agency's "hero too small and compressed" report.
+Fixed with `h-[62.5vw] max-h-[900px] min-h-[560px] w-full`. At 1440 the hero now renders exactly **900 tall, heading and CTA lower-left, full lower image area visible**. No `overflow-x:hidden` used. **No global value (header, logo, container, h1 scale) needed changing** — confirming it was right to refuse the earlier request to enlarge them across all 9 routes.
+Also: `AboutIntro` hard 413+630 row → fluid with `min-w-0` and `aspect-[630/380]` photos · `AboutTeam` 3→2→1 · `AboutValues` scroll-stack now gated by a JS `useStackEnabled` (min-width 768 **and** min-height 800, re-measured on resize) with the pinned region `h-[min(900px,100dvh)]` so it can never exceed the viewport.
+
+**R4 SERVICES — 22/22.** Zero-height paragraph cause: `flex-1` = `flex-basis:0%`; inside the `min-h-[560px]` flex row with the 300px photo reserved, basis resolved to **0**. Fixed with `basis-auto` + `min-w-0`; heights now 156/78/104/78 at 768 and non-zero at 820/912.
+`CareApproach`'s `306px 621px 313px` grid (1240px+, applied from 768) → `minmax`/`fr` below 1280, exact px at 1440. **Newly found:** the Comfort/Care/Compassion artwork was overflowing its own card between 768–1280 → `w-[68.63%] max-w-[210px]`.
+Decorative audit clean: nurse icon 48×48, leaf 17×21, 24/7 panel 313×460, all opacity 1 at 1440/1024/390.
+
+**Harness improved twice** — now ignores `sr-only` nodes and elements inside horizontally scrollable ancestors (both false positives). Rebuilt after a fresh sandbox wiped `/tmp`.
+
+### WAVE R5 — AMENITIES · dispatched 2026-08-05 11:14
+
 ## 14c · AUTONOMOUS EXECUTION — COMPLETE
 
 Five waves, `daae8f96` → Wave 5. **Every issue that could be closed without client input or Figma access is closed.**
