@@ -213,6 +213,42 @@ Rows 8, 9, 10 and 12 are the dangerous ones — they render as finished work.
 
 ---
 
+## 5 · FULL PRODUCTION ARCHIVE — WAVES 10–14 · 2026-08-05 · **32/32 INTEGRATED**
+
+Five archives (About, Services, Admissions, Careers, Contact), 32 files, all full-resolution official exports. **Every one integrated. Zero rejected.**
+
+### ✅ RESULT: ZERO PLACEHOLDERS SITE-WIDE
+`grep -rn "PlaceholderAsset" src/` returns **only the component definition** — no component renders one. DOM placeholder count = **0 across all 9 routes × all 7 widths**. Every gap opened in the original audit is closed.
+
+| Wave | Page | Files | Gaps closed |
+|---|---|---|---|
+| 10 | About | 10 | `about-values-3-recovery`, `about-values-4-dignity` · Lucide `HeartPulse`/`Pill` → official icons |
+| 11 | Services (hero + care approach) | 7 | `icon-comfort-care.svg`, `icon-leaf.svg`, **`blurred-card-placeholder.png`** |
+| 12 | Services (panels) | 4 | `service-short-term-rehab.jpg` · Indian Program alt-text mismatch |
+| 13 | Amenities | 4 | **`amenities-hero-woman-reading`** (open since 08-04), `admissions-salon`, `admissions-lounge` |
+| 14 | Careers + Contact | 4 | **`careers-intro-couple`** — the last placeholder in the project |
+
+### Content beat filename — three times
+The agent inspected artwork before wiring rather than trusting names:
+
+- **`Accommodations 2.png` is not an Accommodations photo.** It is a sunlit dayroom with sofas, dining tables and a **grand piano** → assigned to the **Community** card ("large dayrooms and lounges / musical entertainment"). Filename misleading; content decisive.
+- **`Comprehensive Care.png` has the pill baked in**, including rounded corners → the DOM pill span was removed so we don't ship two.
+- **`skilled nursing…png` contains only the blurred photograph** — no dark overlay, no circled "A" → both existing DOM layers kept rather than assumed redundant.
+
+### `admissions-room.jpg` superseded
+My Wave-3 find (an unused project file) was a bedroom but **had no bathroom door**. The official `admissions-accommodations.png` does, matching the charter spec exactly, and is portrait for the 296×360 slot. Replaced with reason. The old file remains on disk, unreferenced.
+
+### The alpha trap — caught twice more
+Three supplied assets are authored at 2–5% alpha (`hero-pattern-full` 5/255, `Comfort Care Compassion` 13/255). Applying the project's conventional low opacity on top renders them invisible — the Wave-9 hero failure. The agent now checks alpha extrema before wiring; both later cases were rendered at opacity 1 and are visible.
+
+### Legacy assets still in use — 10 `.webp`, all legitimate
+`family-album`, `resident-son`, `clinician-resident` (Testimonials) · `great-room-piano` ×2, `lobby-wide`, `lounge-dining` ×2, `therapy-gym` ×2, `reception-desk`, `reception-closeup` ×2 (Home Gallery, Amenities Gallery, Contact hero) · `garden-walk` (shared CTA default). **No official export was supplied for any of these slots.** Everything else on the site is now an official `.png`.
+
+### Verification
+63/63 responsive cells pass (9 routes × 7 widths, 390→1920). Zero 404s, zero console errors, no CLS, no distortion — natural vs rendered checked per photo, all `object-cover`. Full Wave 1–9 regression intact.
+
+*Noted, not a defect:* one headless run reported `naturalWidth 0` on the third Testimonials image; direct fetch returned HTTP 200, 80,996 bytes, decoding to 1086×1448. Transient headless decode.
+
 ## 6 · WAVES 8–9 — VISIBILITY CORRECTIONS · 2026-08-05
 
 Wave 7 wired elements correctly and reported measurements — but three of them were **present in the DOM and invisible on screen**. "Wired" was the wrong pass condition; "renders visible pixels" is the right one. All three found and fixed.

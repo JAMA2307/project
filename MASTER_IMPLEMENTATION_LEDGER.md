@@ -434,6 +434,20 @@ Second Home archive received (15.8 MB, 11 files). First archive was rejected as 
 
 **Verified** — 7/7 render, zero 404s, no distortion, Testimonials and Gallery untouched, no console errors, no CLS, responsive sweep clean at 390/768/1024/1280/1440/1728/1920, full Wave 1–5 regression intact, typecheck clean.
 
+### WAVES 10–14 — FULL PRODUCTION ASSET ARCHIVE · 2026-08-05 · **32/32 INTEGRATED**
+
+Five page archives received and integrated in order: About (10) · Services (7+4) · Amenities (4) · Careers + Contact (4).
+
+**ZERO PLACEHOLDERS SITE-WIDE.** `grep -rn "PlaceholderAsset" src/` returns only the component definition; DOM count is 0 on all 9 routes at all 7 widths. Every asset gap logged in the original audit is now closed:
+
+AST-01 About values 3–4 · AST-03 `blurred-card-placeholder` · AST-05 `icon-comfort-care` · AST-06 `icon-leaf` · AST-07 `service-short-term-rehab` · NEW-02 `careers-intro-couple` · the Amenities hero (open since 08-04) · `admissions-salon` · `admissions-lounge` · CNT-08 Indian Program alt text · plus two Lucide icons (`HeartPulse`, `Pill`) replaced with official artwork on About.
+
+**Judgement calls made and recorded:** `Accommodations 2.png` was assigned to the **Community** card, not Accommodations — its content is a dayroom with a grand piano and the filename is misleading. `Comprehensive Care.png` has the pill baked into the artwork, so the DOM pill was removed. The 24/7 export contains only the photograph, so the existing overlay and badge layers were kept. My own Wave-3 `admissions-room.jpg` was superseded by the official export, which has the bathroom door the spec calls for.
+
+**Verified:** 63/63 responsive cells pass, zero 404s, zero console errors, no CLS, no distortion, full Wave 1–9 regression intact.
+
+**Legacy `.webp` still in use — 10 references, all legitimate**, in Home Gallery, Amenities Gallery, Testimonials, Contact hero and the shared CTA default. No official export was supplied for those slots.
+
 ## 14c · AUTONOMOUS EXECUTION — COMPLETE
 
 Five waves, `daae8f96` → Wave 5. **Every issue that could be closed without client input or Figma access is closed.**
