@@ -224,3 +224,47 @@ The 18 that survive share one property: **every one is either a removal, a re-or
 ## 6 · VERIFICATION LOOP (unchanged)
 
 Per turn: read the changed files → confirm the change is present and nothing outside scope moved → check the rendered result against the mapped screenshot at the viewports the ticket names → re-measure the affected 1440 reference values → check console errors, image 404s, page overflow → for a shared component verify **every** route → only then close the Asana subtask with a verification comment. A Lovable report is never accepted as proof.
+
+---
+
+## 7 · STANDING ENGINEERING STANDARD — binding on every turn
+
+Issued 2026-08-06. Production project, zero tolerance for rework. This governs every dispatch from here on.
+
+### 7.1 · Pre-dispatch, before a single prompt is written
+
+Rev 2 required a source read before dispatch for **Q13 only**. That is now mandatory for **all 18**:
+
+1. Read the target file in full.
+2. Read every file it imports that the change touches.
+3. Identify the existing reusable component or token that already does the job — **never regenerate what exists**.
+4. Confirm the defect is still present exactly as the ticket describes. If the code has moved on, re-verify before spending anything.
+5. Write the prompt only after all four are done.
+
+A prompt written without this is a guess wearing a specification.
+
+### 7.2 · Every prompt must carry these constraints verbatim
+
+- **Minimum edit.** Change only the lines required. Do not rewrite a file for a small change. Do not reformat.
+- **Do not touch what works.** Named explicitly per turn: the 1440 reference values, the regression-watch list in `MASTER_IMPLEMENTATION_LEDGER.md` §15, and every fix from Waves 1–14 and R1–R7.
+- **No unrequested change** to spacing, typography, colour, responsiveness, animation or layout. If the ticket did not ask for it, it does not move.
+- **No component substitution**, no simplification, no removed functionality, no "improvement".
+- **Only files directly related to the task.** Unrelated files are a failed turn.
+
+### 7.3 · Required self-review, returned with every turn
+
+Lovable must confirm, item by item, before reporting done:
+
+`UI · responsiveness · animations · imports · console errors · runtime errors · TypeScript errors · broken layouts · existing functionality · visual consistency`
+
+Any failure is fixed inside the same turn, not reported as a caveat.
+
+### 7.4 · Our own verification is unchanged and still binding
+
+Their self-review does not replace §6. We independently read the diff, check the rendered result against the mapped screenshot at the ticket's viewports, re-measure the affected 1440 values, and verify every route for a shared component — before the Asana subtask is closed.
+
+### 7.5 · Why the blocked list is the point, not friction
+
+"Correct on the first attempt" and "never guess" are the same requirement viewed from two ends. An item with an unapproved value cannot be built correctly on the first attempt — only guessed at, then corrected, at the cost of two turns and the credibility of the pass.
+
+The 41 blocked items are what makes first-attempt-correct achievable for the 18. Each is blocked on a specific, answerable question, and every one of those questions is already posted in Asana.
