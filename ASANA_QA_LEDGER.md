@@ -837,3 +837,15 @@ Every Lovable wave to date either predates this QA board or addressed a differen
 | Careers | 3 |
 | Contact | 3 |
 | Auxiliary (Privacy / Terms / 404) | 3 |
+
+---
+
+## 14 · EXECUTION QUEUE BUILT · 2026-08-06
+
+Phase 3 complete. **`ASANA_EXECUTION_QUEUE.md`** holds the sequential queue: **39 dispatchable items in 38 turns**, plus 20 blocked items with the exact blocker and question GID for each.
+
+- Rule applied: **one Asana subtask = one Lovable turn.** The single exception is Q19, where ABOUT-14 and ADM-08 are the same defect in the same file (`sections/Cta.tsx` mobile proportions); both Asana items are still verified and closed separately.
+- Order: shared components first (FAQ, Header, Footer, form machinery, Testimonials — reach of 3 to 9 routes each), then Home, About, Services, Admissions, Careers/Contact/Auxiliary.
+- **Seven items have a dispatchable half and a blocked half** (HOME-13, HOME-21, ABOUT-02, ABOUT-03, ABOUT-09, ABOUT-12, SERV-03). Their subtask stays open after the dispatchable half is verified.
+- **Three queue items carry a flagged interpretation** rather than a measured target — Q5 (testimonials gap), Q13 (hero band terminus), Q36 (Careers scrim). Each prompt will state the assumption and require a before/after measurement so it can be corrected in one cheap follow-up rather than argued about later.
+- Nothing dispatches until the command `ВСЁ ОТПРАВЛЯЙ`.
