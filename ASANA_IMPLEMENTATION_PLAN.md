@@ -146,6 +146,27 @@ CAR-01 (hero scrim too dark) and CON-01 (left column vertical alignment) are act
 - **Expected turns:** **1**, plus **1** more for the legal copy once B2 clears
 - **Risk:** low, except that the legal pages currently have real structure but placeholder-length copy; dropping in the real text will change the page height and must be re-verified at 2560 and 768.
 
+### BATCH 7b — CONTACT-FORM STATES · *gated on B7*
+
+Added 2026-08-06. The agency has published four official form states in the Figma UI KIT — **FORM-S0** default, **FORM-SF** focus/filled (*"if shown"*), **FORM-S1** successful submission, **FORM-S2** failed submission. Full register in `ASANA_QA_LEDGER.md` §11.
+
+This resolves what **HOME-21** meant: *"take the one marked 1"* = **State 1, successful submission**. It also introduces **FORM-S2**, a failure state that has **no Asana ticket at all** — it exists only in the agency brief.
+
+**Do not dispatch while B7 stands.** Every visual attribute the agency asked for — heading and body copy, button copy, dimensions, spacing, typography, colours, card background, transition, retry/reset, responsive differences, desktop and mobile — sits in the UI KIT frame, and neither route to it is open (Figma seat quota; Asana egress 403). Building from guesswork would cost the turn twice.
+
+**Two-turn shape once unblocked:**
+
+| Turn | Content |
+|---|---|
+| **7b-i** | Make submission asynchronous, add the pending state and double-submit guard, add an inline validation surface (today only `issues[0]` reaches a toast), add the ARIA live region and focus management. **No visual state work** — this is the machinery S1/S2 need to exist at all, and none of it depends on the design |
+| **7b-ii** | Build FORM-S0/SF/S1/S2 to the UI KIT, desktop and mobile |
+
+**7b-i is design-independent and could be promoted into Batch 1** if the form machinery is wanted before the UI KIT opens. It is listed separately because it changes behaviour the agency has not yet seen, and shipping it alone would leave the form in a state neither the old design nor the new one describes.
+
+- **Routes:** `/`, `/careers`, `/contact` — one component, three verifications
+- **Regression:** the Home contact section is signed off at `min-h-[780px]` at 1440. If S1/S2 differ in height from the form, the section must not jump. Also: the checkbox stays square (`!rounded-[4px]`) — CON-03 authorises a colour change only
+- **Expected turns:** **2**
+
 ### BATCH 8 — FINAL REGRESSION
 
 Full 9-route × 22-viewport harness, the R7 1440 reference table re-measured end to end, browser-zoom QA at 8 steps, overlap detection, asset integrity, `oncommunity` absent, About-has-Team/Services-has-FAQ/Home-has-no-CTA composition intact.
@@ -178,10 +199,11 @@ Full 9-route × 22-viewport harness, the R7 1440 reference table re-measured end
 | **6a · Self-host fonts + type scale** | **2** | **B6** |
 | 6b · Brand assets | 1 | B2 |
 | 7 · Careers, Contact, Legal, 404 | 2 | B1 + B2 |
+| **7b · Contact-form states** | **2** | **B7** |
 | 8 · Final regression | 1 | all |
-| **Total** | **13** | |
+| **Total** | **15** | |
 
-*(Revised from 12 to 13: Batch 6 split into 6a fonts and 6b brand assets, which have different gates and must not share a turn.)*
+*(Revised 12 → 13 → 15: Batch 6 split into 6a fonts / 6b brand assets, which have different gates; Batch 7b added for the four official form states, of which turn 7b-i is design-independent.)*
 
 **Minimum to clear the entire Asana backlog: 12 Lovable turns**, against 59 QA items — roughly **5 items per turn**. Dispatching page-by-page as the board is organised would cost ~20 turns and would fix the shared components repeatedly.
 

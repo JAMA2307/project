@@ -485,6 +485,139 @@ Two questions must be answered by the agency before this can be built, and both 
 
 ---
 
+## 10 · RE-READ UNDER THE AGENCY'S PROTOCOL · 2026-08-06
+
+The agency specified the reading order: open each page task in QA → open every subtask → treat each subtask as an individual correction → read its description, comments and attachments → record genuine ambiguities as exact questions here, without posting them to Asana.
+
+**Protocol applied. Result: the board is unchanged for a third consecutive read.**
+
+| Page task | Subtasks | All opened individually | Descriptions | Comments | Attachments |
+|---|---|---|---|---|---|
+| Home `1217105105055942` | 21 | ✅ | 21/21 | 1 found (HOME-06) | 22 enumerated, **0 readable** |
+| About `1217105105055944` | 14 | ✅ | 14/14 | none | 16 enumerated, **0 readable** |
+| Services `1217105105055946` | 7 | ✅ | 7/7 | none | 7 enumerated, **0 readable** |
+| Admissions `1217105105055948` | 8 | ✅ | 8/8 | none | 8 enumerated, **0 readable** |
+| Careers `1217105105055950` | 3 | ✅ | 3/3 | none | 3 enumerated, **0 readable** |
+| Contact us `1217105105133465` | 3 | ✅ | 3/3 | none | 3 enumerated, **0 readable** |
+| Auxilliary `1217105105133467` | 3 | ✅ | 3/3 | none | 3 enumerated, **0 readable** |
+| **Total** | **59** | **59/59** | **59/59** | **1** | **60 / 0** |
+
+Every parent `modified_at` is byte-identical to the two previous reads; `num_subtasks` unchanged on all seven. Contact and newsletter subtasks were re-opened individually in case the new form-state material had been attached there — `CON-03` still `09:34:24.259Z`, `HOME-13` still `2026-08-03T12:28:50.308Z`, `HOME-21` still `07:54:09.684Z`. **No new subtask, no new comment, no new attachment anywhere.**
+
+**Figma re-tested, still blocked.** `whoami` confirms the account holds a **View** seat on the "Project" plan (it also holds a Full seat on an unrelated "Geek Brains" plan, which does not grant access to this file). A live `get_metadata` call on `Tm96OSYcEv6kdVzIqHYKeP` returned, verbatim:
+
+> *"You've reached the Figma MCP tool call limit for your View seat on the Professional plan. Upgrade your seat or plan for more tool calls."*
+
+Nothing complete was marked, nothing was moved, nothing was posted.
+
+### 10.1 · AMBIGUITY REGISTER — exact questions, held for the agency
+
+Recorded here, **not posted to Asana**, per instruction. Each is a question whose answer changes what gets built; none can be resolved from the text alone. Ordered by how much work they gate.
+
+| # | Item | The exact question |
+|---|---|---|
+| **Q1** | ADM-04 | The nav reads "Admissions" and routes to `/amenities`, which the code marks as deliberate per the design — but this board also calls the `/amenities` QA card "Admissions". Which is correct: **(a)** rename the route to `/admissions`, **(b)** relabel the nav to "Amenities", **(c)** retitle the page content to "Admissions" and keep the route, or **(d)** build a separate Admissions page? There is no `/admissions` route today. |
+| **Q2** | HOME-09 | The ticket says *"where images are missing you can put placeholders for now."* The standing client rule is *"never use placeholder images."* The site currently renders zero placeholders. **Confirm: leave the sections as they are and supply the real images, or authorise placeholders?** |
+| **Q3** | T3 (typography) | `text-label` is driven by **Poppins**, fetched from Google Fonts, but the official font delivery contains only Playfair Display and Satoshi. **Is Poppins intended — in which case please supply the source — or should labels be re-mapped to Satoshi?** |
+| **Q4** | D1 (typography) | The Satoshi zip contains ten `.otf` files and no licence. **Please confirm the Satoshi licence permits self-hosted webfont use**, and supply the licence file. Playfair's OFL 1.1 is included and unambiguous. |
+| **Q5** | HOME-05 / HOME-18 / ABOUT-10 / SERV-01 | All four report headings at the wrong weight, but none names a target. **Which Playfair weight should each heading level use — h1, h2, h3, h4?** The delivered family supports 400/500/600/700/800/900. |
+| **Q6** | HOME-02 | *"Spacing differs a lot from Figma"* — **which section, and which spacing** (section padding, gap between cards, or gap between text blocks)? |
+| **Q7** | HOME-04 | *"Reduce the end of the border here."* — **which element, and to what value?** "End of the border" does not map to a known property. |
+| **Q8** | HOME-15 | *"Add a View More here."* — **which section**, and does it paginate, expand in place, or link to another page? |
+| **Q9** | HOME-19 | *"All good except the card position — centre it on screen."* — **which card**, on which section? |
+| **Q10** | ABOUT-07 | *"Change this block and put what's in Figma."* — **which block**, and which Figma frame replaces it? |
+| **Q11** | ABOUT-13 | *"These segments shouldn't have cards."* — **which segments**, and what replaces the cards? |
+| **Q12** | ABOUT-14 | *"The sizes look swapped here."* — **which two elements** have exchanged sizes? |
+| **Q13** | ADM-05 | *"Wrong colour."* — **which element, and which target colour?** Neither is named. |
+| **Q14** | ADM-06 | *"Кнопку надо не лево"* is grammatically ambiguous in the original. **Should the button move to the left, or away from the left?** |
+| **Q15** | ADM-03 | *"It should have been 1 and 3."* — **1 and 3 of what** — gallery slots, image order, or column count? The caption copy ("Serene / Courtyard Retreat") is clear; the ordering is not. |
+| **Q16** | CAR-02 | *"The structure doesn't match."* — **which section of `/careers`**, and in what respect? |
+| **Q17** | CAR-03 | *"Remove the button here — on mobile too."* — **which button?** The action is unambiguous, the target is not. |
+| **Q18** | SERV-04 | *"Why does this block differ from the others?"* — **which block**, and which "others" is it meant to match? |
+| **Q19** | SERV-06 | *"They should be on the right."* — **which elements?** |
+| **Q20** | AUX-03 | *"The 404 doesn't look like Figma — add the missing elements."* — **which elements are missing?** |
+| **Q21** | HOME-14 | The copy requested is already live verbatim (§8.2). **Does this ticket refer to the Home contact section, or to a different section showing the same copy?** |
+| **Q22** | FORM-S0…S2 | See §11 — the entire visual specification of the four form states. |
+
+**Q6–Q20 would all be answered by the screenshots.** They are not really fifteen questions; they are one blocked resource. Only **Q1–Q5, Q21 and Q22** need a human decision even with the images in hand.
+
+---
+
+## 11 · CONTACT-FORM STATES FROM THE FIGMA UI KIT — requirements register
+
+The agency has added official contact-form states to the Figma UI KIT and asked for them to be recorded precisely.
+
+### 11.1 · What is now known — from the agency's written brief
+
+This is new information and it **decodes a previously ambiguous ticket.** Asana **HOME-21** reads *"In the UI KIT section they added [states] for when messages are sent — take the one marked 1."* Until now "the one marked 1" was unidentified. It is now resolved:
+
+| ID | State | Trigger — stated by the agency |
+|---|---|---|
+| **FORM-S0** | Default form | initial render |
+| **FORM-SF** | Focus / filled | *"if shown"* — the agency is not certain this state exists in the kit |
+| **FORM-S1** | **Successful submission** | *"Use State 1 only after the form has been submitted successfully"* |
+| **FORM-S2** | **Failed submission / message not sent** | *"Use State 2 when submission fails"* |
+
+Both **desktop and mobile** versions exist and must both be documented.
+
+**FORM-S2 is entirely new.** No Asana ticket mentions a failure state — the board only ever referred to messages being sent. This requirement exists solely in the agency's brief, so it is registered here rather than against an Asana ID.
+
+### 11.2 · What cannot be recorded — the visual specification
+
+The agency asked for eleven attributes per state. **None can be filled in.** The UI KIT is a Figma frame, and both routes to it are closed:
+
+| Route | Status |
+|---|---|
+| Figma MCP | **View seat, monthly call limit reached.** Re-tested 2026-08-06; error quoted verbatim in §10 |
+| Asana screenshot `1217234006576131` | **`403 CONNECT` on `asanausercontent.com`** — session egress policy |
+
+The specification matrix below is therefore a **template with every visual cell unfilled**. Writing plausible values into it would be fabrication, and would be indistinguishable from real measurements once committed.
+
+| Attribute | FORM-S0 default | FORM-SF focus/filled | FORM-S1 success | FORM-S2 failure |
+|---|---|---|---|---|
+| Heading copy | ⛔ | ⛔ | ⛔ | ⛔ |
+| Body copy | ⛔ | ⛔ | ⛔ | ⛔ |
+| Button copy | ⛔ | ⛔ | ⛔ | ⛔ |
+| Dimensions (desktop) | ⛔ | ⛔ | ⛔ | ⛔ |
+| Dimensions (mobile) | ⛔ | ⛔ | ⛔ | ⛔ |
+| Spacing | ⛔ | ⛔ | ⛔ | ⛔ |
+| Typography | ⛔ | ⛔ | ⛔ | ⛔ |
+| Colours | ⛔ | ⛔ | ⛔ | ⛔ |
+| Card background | ⛔ | ⛔ | ⛔ | ⛔ |
+| Transition from the form | ⛔ | ⛔ | ⛔ | ⛔ |
+| Retry / reset behaviour | ⛔ | ⛔ | ⛔ | ⛔ |
+| Responsive differences | ⛔ | ⛔ | ⛔ | ⛔ |
+
+⛔ = requires the UI KIT frame. **Either unblock fills the whole matrix.**
+
+### 11.3 · Exact questions for the agency — Q22 expanded
+
+Only needed if the UI KIT itself does not answer them:
+
+1. Does **FORM-SF** exist in the kit as a distinct state, or is focus/filled only implied? The brief says *"if shown"*.
+2. On **FORM-S1**, does the card **replace** the form entirely, or does a confirmation panel appear above or below a still-present form?
+3. Is there a way back from **FORM-S1** — a "Send another message" affordance — or is the success state terminal until reload?
+4. On **FORM-S2**, are the user's entered values **preserved** so they can retry, or is the form cleared?
+5. Does **FORM-S2** distinguish *network/server failure* from *validation failure*? The current build treats only validation, and does so via a toast.
+6. Is there a **loading / submitting** state between the form and S1/S2? None is listed among the four, but every real submission has one.
+7. Do S1 and S2 keep the card at the **same height** as the form, or does the section reflow? This determines whether the surrounding layout shifts — and the Home contact section carries a `min-h-[780px]` reference value at 1440.
+
+### 11.4 · Engineering requirements that hold regardless of the visuals
+
+Derived from the **stated behaviour**, not from the unseen design — recorded so this work is not re-derived later. Clearly separated from §11.2, which is blocked.
+
+- **Submission must become asynchronous.** `onSubmit` in `home/Contact.tsx` is fully synchronous today; there is no way to reach a failure state without a real request.
+- **A pending state is required** between submit and S1/S2, with a **double-submit guard** — the current button can be pressed repeatedly.
+- **Failure must be recoverable.** S2 implies a retry path; entered values should survive unless the design says otherwise (Q4 above).
+- **Validation errors need an inline surface.** Today only `parsed.error.issues[0]` is shown, as a transient toast — five invalid fields report one. Independent of S1/S2, and needed before either is meaningful.
+- **State changes must be announced.** S1 and S2 change content without navigation, so they need an ARIA live region and focus moved to the new heading.
+- **The transition must honour `prefers-reduced-motion`**, which the project already enforces globally.
+- **The 1440 reference value must survive.** The Home contact section is signed off at `min-h-[780px]`. If S1/S2 are shorter or taller than the form, the section must not jump — this is a regression check, not a nice-to-have.
+- **Three routes are affected**, not one: the form component renders on `/`, `/careers` and `/contact`. One implementation, three verifications.
+- **The checkbox is on the regression watch** — `!rounded-[4px]` square. CON-03 authorises a colour change only.
+
+---
+
 ## 9 · PAGE INDEX
 
 | Page | Items |
