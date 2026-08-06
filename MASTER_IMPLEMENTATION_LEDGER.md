@@ -546,6 +546,18 @@ Non-defect noted: `/careers` testimonial photo `clinician-resident.webp` reports
 
 ### WAVE R8 — BROWSER-ZOOM QA, OVERLAP DETECTION, FULL VERIFICATION · dispatched 2026-08-05 12:19
 
+## 14e · AGENCY QA BACKLOG COLLECTED FROM ASANA · 2026-08-06
+
+Full collection recorded in **`ASANA_QA_LEDGER.md`**; batching in **`ASANA_IMPLEMENTATION_PLAN.md`**. Cross-references that change facts recorded elsewhere in this ledger:
+
+- **The R7 FAQ FAIL is solved.** `sections/Faq.tsx` opens item index 1 on mount (`useState<number | null>(1)`). The open answer is worth 82px: 240 padding + 444 closed accordion = 684 → `min-h-[752px]` governs → **752 exactly**. With the item open it is 240 + 526 = **766** — the precise numbers R7 measured. Asana **HOME-12** independently orders the FAQ collapsed on mount. One line closes both. **No padding shaving required**, confirming R7 was right to refuse it.
+- **§15 Regression Watch, `Header "Admissions"→/amenities`: now contested.** Asana **ADM-04** reports it as a defect. Design authority (#2) is outranked by a later agency decision (#1), but the resolution is not derivable — rename route, rename label, retitle page, or build a new page. **Escalated, not decided.**
+- **ABOUT-09 is the 2026-08-05 "ABOUT HERO — QA FAILED" report**, now with its screenshot attached in Asana. It is a **mobile** defect. R3 fixed the desktop fault (`aspect-ratio` resolving width from height) with no global value changed. The mobile hero remains open. The earlier refusal to rebuild blind stands vindicated.
+- **NEW-04 / AST 1–10 corroborated.** Asana reports wrong or duplicated logos in five places (HOME-01, HOME-13, ABOUT-01, ABOUT-03, SERV-02 ×2) and missing official icons in three (ABOUT-02, ABOUT-11, CON-02). Same root cause as our open asset gap: **Figma seat quota**.
+- **New standing conflict:** Asana **HOME-09** instructs *"where images are missing you can put placeholders for now"*, which contradicts the client's standing rule *"Never use placeholder images."* The project currently renders zero `PlaceholderAsset`. Recommendation is to uphold the client rule; flagged for a ruling.
+- **Proposed fourth typo override** (alongside `Shedule`→`Schedule`, `addres`→`address`, `Brookwood`→`Amara`): Asana HOME-14 specifies *"Contact **out** team"*; ship **"Contact our team"**.
+- **Attachments blocked.** All 60 Asana screenshots are enumerated but unreadable — session egress returns `403` on `asanausercontent.com`, `app.asana.com` and `asana.com`. 35 of 59 QA items therefore carry **NEEDS VISUAL VERIFICATION** and must not be implemented until the images are available.
+
 ## 14c · AUTONOMOUS EXECUTION — COMPLETE
 
 Five waves, `daae8f96` → Wave 5. **Every issue that could be closed without client input or Figma access is closed.**
