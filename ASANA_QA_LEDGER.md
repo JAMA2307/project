@@ -618,6 +618,181 @@ Derived from the **stated behaviour**, not from the unseen design — recorded s
 
 ---
 
+## 12 · SCREENSHOT ARCHIVE MAPPED · 2026-08-06
+
+The agency supplied `Скрины Asana.rar` — 55 PNGs in 7 page folders plus `README.txt`. **This unblocks the 35 items previously marked NEEDS VISUAL VERIFICATION.** Archive preserved at `design-sources/asana-qa-screenshots/`.
+
+### 12.1 · Mapping rule applied
+
+Per the README: folder = page, numeric filename prefix = subtask position, `(1)` suffix = additional image for the same subtask, `ChromeSafari`/`SafariChrome` = desktop, `mobile` = mobile. Mapped by **folder + numeric prefix + existing subtask order/GID**, never by visual similarity.
+
+| Metric | Count |
+|---|---|
+| Files in archive | **55** + README |
+| Distinct images opened | **54** |
+| Byte-identical duplicate confirmed by md5, not re-opened | **1** (`Auxilliary pages/2` = `Auxilliary pages/1`) |
+| Additional upscaled crops derived (UI KIT) | 6 |
+| Files mapped to a subtask GID | **55 / 55** |
+| Subtasks now carrying a screenshot | **55 of 59** |
+
+### 12.2 · Coverage — and the pattern in what is missing
+
+| Page | Subtasks | Files | Numbers present | Missing |
+|---|---|---|---|---|
+| Home | 21 | 17 | 2–9, 13–21 | **1, 10, 11, 12** |
+| About | 14 | 16 | 1–14 (3 and 4 have two each) | none |
+| Services | 7 | 5 | 3–7 | **1, 2** |
+| Admissions | 8 | 8 | 1–8 | none |
+| Careers | 3 | 3 | 1–3 | none |
+| Contact us | 3 | 3 | 1–3 | none |
+| Auxilliary | 3 | 3 | 1–3 | none |
+
+**HOME-11 and HOME-12 are not gaps** — neither has an attachment in Asana either (both are text-only tickets). Verified against the attachment register in §6.
+
+**The four genuinely absent screenshots — HOME-01, HOME-10, SERV-01, SERV-02 — are exactly the four subtasks marked `completed` in Asana.** That is not a coincidence: the agency's export appears to exclude closed items. Combined with §5-C4 (three of those four were *edited after closure*), these four remain **unverifiable** and must not be treated as fixed.
+
+A fifth attachment is also absent: **HOME-06's comment image** (`1217213785962831`, the 2026-08-06 *"these animations aren't here"* follow-up). Asana holds 2 attachments for HOME-06; the archive supplies 1. 55 archive files + 5 absent = 60, reconciling exactly with the Asana attachment count.
+
+### 12.3 · Ambiguities found in the archive — recorded, not guessed
+
+| # | Issue |
+|---|---|
+| **A1** | `Auxilliary pages/1 Privacy and Policy.png` and `2 Term and Appliance.png` are **byte-identical** (md5 `fc12ea16…`), and the image shows the **Terms of Use** page (sections *Acceptance of Terms*, *Use of the Site*, *Contact*) — not Privacy Policy. This independently confirms the Asana-side finding that both subtasks point at one asset. **No Privacy Policy screenshot exists.** |
+| **A2** | `Services/6 mobile` — the ticket says elements should be *"справа"* (on the right); the annotation arrow appears to point **left**, and the parallel Home ticket (HOME-20) explicitly asks for **left**. Unresolved. |
+| **A3** | `About/13 mobile` — *"these segments shouldn't have cards"*, but the red arrow points at the dark **icon badge**, not the card container. Two readings. |
+| **A4** | `Admissions/2` — *"the card that should come next appeared in the middle"*; three cards are visible with the middle one struck through. The target arrangement is not derivable without the Figma carousel frame. |
+| **A5** | `Home/3` — a red **X sits over the AMARA reception signage inside the photo**. The instruction asks for this photo *on* the hero, so the X's meaning is unclear (a photo's contents cannot be edited). |
+| **A6** | `Careers/2` — **no annotation at all** and no Figma reference. *"The structure doesn't match"* cannot be resolved. **Q16 stands.** |
+
+### 12.4 · Questions the archive ANSWERED
+
+Seven of the twenty-two open questions are now closed by direct visual evidence.
+
+| Was | Now resolved |
+|---|---|
+| **Q13** ADM-05 *"wrong colour"* — element and target both unnamed | **The `Cta` panel background.** Live renders dark navy `--primary` #2C2E45; the Figma CTA frames (`About/5`, `About/7`) show a **lighter slate blue-grey ≈ #56677F**. Affects About, Services, Amenities |
+| **Q15** ADM-03 *"should have been 1 and 3"* | **The gallery side-image counters.** They currently read **05** (left) and **02** (right); with the centre at 02 the neighbours must read **01 and 03**. Side images also need a caption beneath, as the centre has |
+| **Q17** CAR-03 *"remove the button"* | **"View Full Team"** at the foot of `CareersTeam` — desktop and mobile |
+| **Q20** AUX-03 *"add the missing elements"* | Full 404 target captured from two Figma frames — see §12.5 |
+| **Q14** ADM-06 (grammatically ambiguous) | Resolved by cross-page pattern: `Admissions/6`, `Services/5` and `About/9` **all** show a full-width mobile CTA the agency wants changed. Target = **auto-width, left-aligned** |
+| **Q8** HOME-15 *"add a View More"* | **The Gallery button** — relabel **"View Amenities" → "View More"** |
+| **Q9** HOME-19 *"centre the card"* | **The testimonial card on mobile**, currently flush-left with the next card peeking |
+
+**Q1 (Admissions vs Amenities) is now sharper but still needs a human decision.** `Admissions/4` shows the URL bar reading `/amenities` underlined *and* the nav item "Admissions" underlined. But `Admissions/1` is a Figma frame **titled "Amenities Page | Desktop" whose own nav bar also reads "Admissions"** — so the design contains the same mismatch it is now reporting as a bug. Four sources, two names: route `/amenities`, nav label "Admissions", Figma frame title "Amenities Page", H1 "Life at Amara Care Center". **The authority rule cannot resolve a contradiction inside the design.**
+
+### 12.5 · VISUAL ACCEPTANCE CRITERIA
+
+Desktop = D, mobile = M. Annotations (red/orange/yellow strokes, X marks, numbers), Figma selection borders, comment avatars, browser chrome, iOS status bars and Lovable badges are **excluded** — none is a website element.
+
+#### Home
+| ID | View | Acceptance criterion |
+|---|---|---|
+| HOME-02 | D | Hero vertical rhythm matches Figma at two marked gaps: **header→H1** and **buttons→hero photo**. |
+| HOME-03 | D | Hero photo = the **AMARA reception-desk** shot (M already uses it; D uses a different ceiling/room photo). Heading colour moves off `#0F0F0F` to the **bluish `#2C2E45`**. Figma hero background is a diamond lattice; live is A-chevron tiles. *(A5 open.)* |
+| HOME-04 | D | The `--blue-100` hero background band **ends higher** — excess blue currently sits between the photo's bottom and the white section. |
+| HOME-05 | D | Intro paragraph and the `what sets us apart` eyebrow render **larger and heavier** (Satoshi; 500 is available). |
+| HOME-06 | D | All three WSUA cards default to **photo + white pill label**. On hover the card becomes **blue with a paragraph at top, large A monogram watermark, pill retained**. The middle card must stop rendering the hover state permanently and needs a thematically-matched Figma photo. Cards stay 413×460. |
+| HOME-07 | D | Mission reveal follows the **5-frame storyboard**: monogram ring fades up across frames 1–3, then heading + paragraph reveal in 4–5. |
+| HOME-08 | D | The services section **pins with the rail *and* the active panel visible** (today only shrunken headings show). Rail entries become **non-interactive** — no click, no scroll-jump. |
+| HOME-09 | D | **Every** testimonial card carries a photo (only card 1 does). Carousel **loops infinitely**. Cards 847×440, photo 389×392, arrows 56×32. *Confirms CNT-03: cards 2 and 3 are both "Oliver M."* |
+| HOME-13 | D | Newsletter submit produces a **visible response**. The **large faint footer watermark is the wrong mark** (red X) and must be replaced. |
+| HOME-14 | D | Heading renders on **exactly three lines** — `Contact our team / to learn more about / our services`. Live wraps to four because `max-w-[380px]` pushes "about" down. **See §12.6 — this reverses an earlier call.** |
+| HOME-15 | D | Gallery button reads **"View More"**. |
+| HOME-16 | M | The two hero CTAs sit **side by side**, not stacked. |
+| HOME-17 | M | The "Where Healing Feels Like Home" badge **overlays inside the hero photo**, not below it. *(Reverses the R2 decision that made the badge absolute only from `lg:` — the fix must avoid overflow.)* |
+| HOME-18 | M | Section headings render at the **Figma weight** — blocked by T1/T2 until heavier Playfair is loaded. |
+| HOME-19 | M | Active testimonial card is **centred** in the viewport. |
+| HOME-20 | M | Gallery eyebrow, heading and paragraph are **left-aligned**, not centred. |
+| HOME-21 | D+M | The four form states — **see §12.7**. |
+
+#### About
+| ID | View | Acceptance criterion |
+|---|---|---|
+| ABOUT-01 | D | "Get Started" and "Meet Our Team" gain **hover states**. The **large faint A monogram in the hero centre is a duplicate of the header logo and is removed** (red X). |
+| ABOUT-02 | D | Heading + paragraph block **shifts right** per Figma. Both pill icons replaced with the official assets (already in the repo). Pill label weight → **regular**. |
+| ABOUT-03 | D | Mission paragraph **alternates between two variants on scroll**: ① *"At Amara Care Center, our mission is to provide compassionate, personalized care in an environment focused on healing and comfort."* ② *"Through attentive support and coordinated rehabilitation services, we are committed to helping residents feel supported, respected, and cared for every step of the way."* Paragraph renders **sans-serif** per Figma — live uses Playfair. Monogram = correct official mark, **visible** (currently near-invisible). |
+| ABOUT-04 | D | Values cards **rise and cover the previous** on scroll. **Card 2 "Comfort & Wellbeing" currently has no background at all** and vanishes into the page blue — every card needs a background distinct from the page. Cards 847×440. |
+| ABOUT-05 | D | CTA rebuilt to the Figma frame: **left slate panel + right photo, equal height, radius 24**; panel content centred — eyebrow `contact us`, h2 `Plan Your Visit`, body *"Contact our team to learn more about our services or schedule a tour of our community."*, white pill button. CTA image 630×660. **Ship "Schedule a Tour" — the Figma shows the "Shedule" typo (§0.0 override holds).** |
+| ABOUT-06 | D | **Increase the gap** between the testimonials heading and the card track. |
+| ABOUT-07 | D | **DUPLICATE of ABOUT-05** — same Figma CTA frame. Merge; do not implement twice. |
+| ABOUT-08 | D | Values card internals: **icon top-left, heading + paragraph anchored lower-left, photo flush right**. Live floats the icon with dead space beneath the text and insets the photo. |
+| ABOUT-09 | M | Hero **taller**; "Meet Our Team" becomes **auto-width, left-aligned to the heading** (currently full-width); heading placement per Figma. |
+| ABOUT-10 | M | Intro block family/weight/size per Figma. **Also: the pill overflows past the photo's bottom edge.** |
+| ABOUT-11 | M | **Both pill icon slots render empty** — the official icons must actually load. |
+| ABOUT-12 | M | Mission paragraph → **sans-serif, reduced size** (live renders oversized Playfair). Smooth the transition. |
+| ABOUT-13 | M | Values segments drop the card treatment. *(A3 — "cards" vs the icon badge is ambiguous.)* |
+| ABOUT-14 | M | CTA panel/photo proportions per Figma — the dark panel carries **dead space below the button**. **Same defect as ADM-08 → one fix in `Cta`.** |
+
+#### Services
+| ID | View | Acceptance criterion |
+|---|---|---|
+| SERV-03 | D+M | CareApproach: monogram, "24/7" heading, supporting line and the Comfort/Care/Compassion lockup **repositioned per Figma**. **The 24/7 supporting text is currently clipped at the card's right edge.** Row 460 / 306·621·313 preserved. |
+| SERV-04 | D | The **Indian Program** card uses chips while the other three use **bulleted lists** — make it consistent. *(Answers Q18.)* |
+| SERV-05 | M | Add **top spacing between header and H1** (currently zero); **reduce H1** so it stops running to four lines; CTA **auto-width, left-aligned**; **"Scroll to Explore" repositioned**. |
+| SERV-06 | M | Services-overview eyebrow/h2/paragraph re-aligned. *(A2 — ticket says right, arrow reads left.)* |
+| SERV-07 | M | "Plan Your Visit" moves to the **end of the section**; the **"Therapy" chip is removed** — not present in the design. |
+
+#### Admissions (`/amenities`)
+| ID | View | Acceptance criterion |
+|---|---|---|
+| ADM-01 | D | Hero left column **vertically centred**; "Scroll to Explore" bottom-left; photo 660×600 right. |
+| ADM-02 | D | Carousel arrangement corrected. *(A4 — target not derivable.)* Third card currently clips mid-word. |
+| ADM-03 | D | Gallery side counters read **01 and 03** around the centre 02 (today: 05 and 02); **side images gain captions**. Centre 512×710, sides 255×406 at `top-204`. |
+| ADM-04 | — | Route/label mismatch — **blocked on Q1**. |
+| ADM-05 | D | `Cta` panel background → the **lighter slate blue-grey** of the Figma frames, not `--primary`. Applies to About, Services, Amenities. |
+| ADM-06 | M | "Explore Amara Amenities" → **auto-width, left-aligned**; "Scroll to Explore" moves **down** to the hero foot. |
+| ADM-07 | M | Carousel card places the **photo above** the text content. |
+| ADM-08 | M | Same as ABOUT-14 — shared `Cta` fix. |
+
+#### Careers / Contact / Auxiliary
+| ID | View | Acceptance criterion |
+|---|---|---|
+| CAR-01 | D | **Lighten the hero scrim** — the photo goes nearly black at the bottom. Text contrast must hold. Hero 900. |
+| CAR-02 | D | *(A6 — no annotation, no reference. **Q16 stands.**)* |
+| CAR-03 | D+M | **Remove the "View Full Team" button.** Monograms 68×68. |
+| CON-01 | D | Hero left column **vertically centred** — it is top-anchored and the heading collides with the header row. Column 413, photo 630×720. |
+| CON-02 | D | Replace the icon inside the **"Supported Transition"** pill on the admissions photo. |
+| CON-03 | D | Insurance checkmarks → **white filled circle with a slate-blue tick** per Figma; panel is a **medium slate blue**, photo 500×410, two-column list, "Verify Your Coverage" top-right. *MA carriers appear in the design — CNT-02 remains "matches design".* |
+| AUX-01/02 | D | **Still blocked.** The screenshot shows the live placeholder (*"Content coming soon — full text will be provided by Amara Care Center"*), **not the Figma copy.** Confirms single centred column, no ToC. |
+| AUX-03 | D+M | 404 rebuilt to the two Figma frames: **full-bleed slate blue-grey background**; header with light logo, nav and **white "Get Started" pill**; large white Playfair **"404"**; "Page was not found"; body *"The page you're looking for couldn't be found. / Let's get you back on track."*; **white "Back to Home Page" pill**; **large faint A monogram watermarks bleeding off the left and right edges** (mobile: one bottom-centre). |
+
+### 12.6 · CORRECTION — HOME-14 is not "already fixed"
+
+In §8.2 I reclassified HOME-14 **OPEN → ALREADY FIXED** because the copy in `home/Contact.tsx` matches the ticket verbatim. **The screenshots show that was wrong.**
+
+The words are correct. The **line breaks** are not. The Figma left column (`Home/21`, upscaled) renders exactly three lines; the live site (`Home/14`) renders four, because `max-w-[380px]` on the `h2` is too narrow for *"to learn more about"* at 44px Playfair, so "about" drops to its own line — the `<br>` tags are present but a second, unwanted wrap occurs after them.
+
+**HOME-14 → OPEN.** Fix: widen the heading's max-width so the second line holds. Conflict **C3** was correctly retired — the copy needed no typo override — but the ticket itself is live.
+
+### 12.7 · FORM STATES — the UI KIT, now read
+
+`Home/21 Mobile.png` **is the UI KIT frame**. It was previously unreadable; the archive supplies it. At 342×610 native, six regions were cropped and upscaled 8× to read the content. **The red "1" and "2" digits obscure part of each card**, so some body copy remains partially illegible — marked ⚠ below.
+
+**Layout.** Desktop shows two full-width frames (State 1 above, State 2 below), each with the standard two-column contact section: left = eyebrow, 3-line heading, address and phone; right = the state card. Mobile shows three frames side by side: default form, State 1, State 2.
+
+| Attribute | FORM-S0 default | FORM-SF focus | FORM-S1 success | FORM-S2 failure |
+|---|---|---|---|---|
+| Heading | "Plan Your Visit" (serif) | — | **"Thank you!"** (serif, dark) | **"Message not sent."** (serif, dark) |
+| Body | — | — | 2 lines, small, grey ⚠ *"…sent successfully… back to you shortly"* | 2 lines, small, grey ⚠ |
+| Icon | none | — | **envelope/mail outline**, rounded-square, centred above the heading | not visible behind the "2" ⚠ |
+| Button copy | "Submit" | — | **"Got it"** | **"Try again"** |
+| Button width | full-width (M) | — | **full-width on M**, auto-width centred on D | **full-width on M**, auto-width centred on D |
+| Card background | light grey (≈ `--surface-muted` #F4F4F6), rounded ≈24 | same | **same card, same tone** | **same card, same tone** |
+| Content alignment | left | — | **centred** | **centred** |
+| Field treatment | borderless, card-toned | **white fill + dark navy rounded border** | — | — |
+| Transition | — | — | card **replaces the form in place** (heading/address column unchanged) | same |
+| Retry | — | — | "Got it" | **"Try again"** |
+
+**FORM-SF is confirmed to exist** — the agency's *"if shown"* is resolved. In the mobile default frame the **Name\*** field renders with a distinctly darker border and lighter fill than the other three, which are borderless. Today the live build gives *every* field a white fill and only adds a border on focus.
+
+**Two further mismatches visible in the same frame:**
+- **Contact icons are rounded squares in the design**; live uses `rounded-full` circles (`bg-blue-200`).
+- **The address and phone sit low in the left column**, roughly aligned with the card's lower area; live places them directly beneath the heading via `mt-10 md:mt-14`.
+
+**Still unanswered** (the digits obscure the text, and no loading frame exists in the kit): exact body copy for both states; whether S2 preserves the user's input; whether S2 distinguishes network from validation failure; and whether a loading state exists between submit and S1/S2. These carry forward as **Q22-a…d**.
+
+---
+
 ## 9 · PAGE INDEX
 
 | Page | Items |

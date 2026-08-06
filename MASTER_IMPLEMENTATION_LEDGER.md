@@ -576,6 +576,25 @@ Full analysis in **`TYPOGRAPHY_AND_FORM_STATES.md`**. Sources preserved at `desi
 - **Form states remain blocked.** The only reference is HOME-21, pointing at a Figma UI KIT frame; unreachable via Figma (seat quota) and via the Asana screenshot (`403 CONNECT` on `asanausercontent.com`). The eight requested states cannot be specified. Current implementation documented as the baseline instead.
 - **§15 Regression Watch correction.** Wave R6 reported the contact form's fields as having *"a real `<label>`"*. They do not — accessible names come from **`aria-label` attributes**; only the checkbox sits in a real `<label>`. Naming works either way, so no assistive-technology defect follows, but **the form has no visible labels at all**, which directly affects the filled and error states still to be designed.
 
+## 14g · AGENCY QA SCREENSHOT ARCHIVE MAPPED · 2026-08-06
+
+55 PNGs across 7 page folders, mapped to 55 of the 59 subtasks. Full mapping, ambiguity register and per-item visual acceptance criteria in **`ASANA_QA_LEDGER.md` §12`**. Archive preserved at `design-sources/asana-qa-screenshots/`. Facts that change what is recorded elsewhere:
+
+- **CORRECTION — HOME-14 is OPEN, not ALREADY FIXED.** §14e recorded it as already fixed because `home/Contact.tsx` matches the requested copy verbatim. The screenshots show the ticket is about **line breaks**: the Figma renders three lines, the live site four, because `max-w-[380px]` on the `h2` cannot hold *"to learn more about"* at 44px Playfair. The words were never the issue. Conflict **C3** stays retired; the ticket does not.
+- **§15 Regression Watch — R2's badge decision is reversed by the design.** R2 made the Home hero badge absolute only from `lg:`. **HOME-17 requires it to overlay inside the photo on mobile too.** The fix must achieve that without reintroducing overflow.
+- **A live defect nobody had logged: About values card 2 is invisible.** "Comfort & Wellbeing" renders with **no card background at all** and dissolves into the page blue. Found in `About/4 ChromeSafari (1)`, not described in any ticket text.
+- **A second unlogged defect: the Services 24/7 panel clips its own text.** In `Services/3` the supporting line is cut at the card's right edge.
+- **`Cta` colour is wrong on three routes.** Live renders `--primary` #2C2E45; the Figma CTA frames show a **lighter slate blue-grey ≈ #56677F**. Affects About, Services and Amenities through one shared component.
+- **The Figma contradicts itself on Admissions/Amenities, confirmed visually.** `Admissions/1` is a frame titled **"Amenities Page | Desktop"** whose own nav bar reads **"Admissions"**. Route `/amenities`, nav "Admissions", frame title "Amenities Page", H1 "Life at Amara Care Center" — four sources, two names. **Q1 remains a client decision; the authority rule cannot resolve a contradiction inside the design.**
+- **CNT-03 confirmed visually** — `Home/9` shows testimonial cards 2 and 3 both attributed to "Oliver M.", and only card 1 carries a photo.
+- **CNT-02 reconfirmed as matching design** — the Figma insurance frame (`Contact us/3`) lists Tufts, Harvard Pilgrim, Commercial BCBS of Mass and Senior Whole Health. Business question only.
+- **CNT-05 reconfirmed** — `Careers/3` shows "Motty Waxler", as implemented.
+- **The §0.0 "Shedule a Tour" override is vindicated twice** — both Figma CTA frames (`About/5`, `About/7`) carry the typo; the live site correctly ships "Schedule a Tour".
+- **AUX-01/02 are still blocked.** The supplied screenshot is byte-identical for both, shows the **Terms** page (not Privacy), and contains the live placeholder — *not* the Figma copy. It also confirms the R7 finding that `LegalPage` has no table of contents.
+- **The four Asana-completed items remain unverifiable.** HOME-01, HOME-10, SERV-01 and SERV-02 are exactly the four screenshots **absent** from the export — the agency's export appears to exclude closed items. Three of the four were edited *after* closure (§5-C4). Do not treat them as fixed.
+- **The form-state designs are now readable.** `Home/21` *is* the UI KIT frame; 8× upscaled crops yielded the state inventory, headings ("Thank you!" / "Message not sent."), button copy ("Got it" / "Try again"), the envelope icon, card treatment and the confirmation that **FORM-SF exists**. Recorded in `ASANA_QA_LEDGER.md` §12.7.
+- **Two further design mismatches found in that frame:** contact icons are **rounded squares** in the design (live uses `rounded-full`), and the address/phone block sits **low** in the left column (live places it directly under the heading).
+
 ## 14c · AUTONOMOUS EXECUTION — COMPLETE
 
 Five waves, `daae8f96` → Wave 5. **Every issue that could be closed without client input or Figma access is closed.**

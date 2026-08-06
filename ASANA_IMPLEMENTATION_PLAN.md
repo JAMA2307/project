@@ -27,13 +27,14 @@ So this plan is built on three rules:
 
 | # | Blocker | Blocks | Needed |
 |---|---|---|---|
-| **B1** | Egress policy denies `asanausercontent.com` (403 CONNECT) | **35 items** across all 7 pages | Allow the host, or export the 60 PNGs into the repo |
+| ~~**B1**~~ | ~~Egress policy denies `asanausercontent.com`~~ | ~~35 items~~ | ✅ **CLEARED 2026-08-06** — the agency exported the archive. 55 screenshots mapped to 55 subtasks; acceptance criteria in `ASANA_QA_LEDGER.md` §12.5. Four items remain unverifiable (HOME-01, HOME-10, SERV-01, SERV-02 — the four the agency closed, whose screenshots were excluded from the export) |
 | **B2** | Figma seat quota exhausted (View seat, 6 calls/month) | Legal copy (AUX-01/02), UI-KIT success state (HOME-21), "correct icons" (ABOUT-02/11, CON-02), replacement photography (HOME-03, HOME-09) | Dev/Full seat — 200 calls/day |
 | **B3** | Lovable credits at zero | **all implementation** | Credit top-up |
 | **B4** | IA decision on Admissions vs Amenities (§5-C1 of the ledger) | ADM-04, and the nav on all 9 routes | Client/agency decision |
 | **B5** | Placeholder policy conflict (§5-C2) | HOME-09 | Client ruling — recommend upholding the no-placeholder rule |
 | **B6** | Poppins has no official source; Satoshi ships no licence file | **Batch 6a** (fonts) | Agency answer on both, see `TYPOGRAPHY_AND_FORM_STATES.md` T3 and D1 |
-| **B7** | Form-state designs live in a Figma UI KIT frame reachable neither via Figma (quota) nor via the Asana screenshot (egress 403) | HOME-21, and all form work | **B1 or B2** — either one unblocks it |
+| ~~**B7**~~ | ~~Form-state designs unreachable~~ | ~~HOME-21~~ | ✅ **LARGELY CLEARED** — `Home/21` *is* the UI KIT frame. Read via 8× upscaled crops; states, copy, icon, button labels and card treatment captured in `ASANA_QA_LEDGER.md` §12.7. Residual **Q22-a…d** only: exact body copy (obscured by the annotation digits), whether S2 preserves input, network-vs-validation failure, and whether a loading state exists |
+| **B8** | `Cta` target colour, hero photo swap, WSUA hover photo, "correct icons" — all need assets or values only Figma holds | ADM-05, HOME-03, HOME-06, ABOUT-02/11, CON-02 | **B2** (Figma seat). The *intent* is now known from the screenshots; the exact token values and image files are not |
 
 **B1 is the cheap one and it unlocks the most.** Opening one host converts 35 items from guesswork into work.
 
@@ -64,7 +65,24 @@ The only batch that needs neither a screenshot nor a Figma call. Every item was 
 
 ---
 
-### BATCH 2 — HOME · *gated on B1*
+### BATCH 1b — SHARED COMPONENTS, SECOND PASS · **unblocked by the screenshot archive**
+
+Added 2026-08-06. The archive turned four scattered page tickets into three shared-component fixes, each with a known target.
+
+| Asana | Fix | File | Routes |
+|---|---|---|---|
+| **ADM-05** | `Cta` panel background → the **lighter slate blue-grey** of the Figma CTA frames, not `--primary` #2C2E45 | `sections/Cta.tsx` | About, Services, Amenities |
+| **ABOUT-14 + ADM-08** | `Cta` on mobile — panel/photo proportions per Figma; remove the dead space below the button. **One fix, two tickets** | `sections/Cta.tsx` | About, Services, Amenities |
+| **ABOUT-05 + ABOUT-07** | Rebuild the CTA to the Figma frame: left slate panel + right photo, equal height, radius 24, centred content, white pill button. **ABOUT-07 is a duplicate of ABOUT-05** | `sections/Cta.tsx` | About, Services, Amenities |
+| **ABOUT-06** | Increase the gap between the Testimonials heading and the card track | `sections/Testimonials.tsx` | Home, About, Services, Careers |
+| **CAR-03** | Remove the "View Full Team" button | `careers/CareersTeam.tsx` | Careers |
+| **HOME-14** | Widen the contact heading's `max-w-[380px]` so it renders on **three** lines, not four | `home/Contact.tsx` | Home, Careers, Contact |
+
+- **Gate:** the exact `Cta` colour token needs **B2** to sample from Figma; everything else is ready now. If B2 stays shut, ship the rest and hold the colour.
+- **Regression:** CTA image stays 630×660; Testimonials 847×440 / photo 389×392 / arrows 56×32; contact section keeps `min-h-[780px]` at 1440.
+- **Expected turns:** **1**
+
+### BATCH 2 — HOME · ~~gated on B1~~ **ready**
 
 18 remaining Home items. Actionable-from-text now: HOME-03 (heading colour → bluish), HOME-05 + HOME-18 (type weights), HOME-08 (pin end-state + disable in-section buttons), HOME-06 (card hover animation — **re-reported by the agency on 2026-08-06 after the first report, the only item in the project with a follow-up comment**).
 Needs screenshots: HOME-02, 04, 07, 15, 16, 17, 19, 20. Needs Figma: HOME-09 photography, HOME-21 UI-KIT success state.
@@ -192,18 +210,21 @@ Full 9-route × 22-viewport harness, the R7 1440 reference table re-measured end
 | Batch | Turns | Gate |
 |---|---|---|
 | 1 · Shared components | **1** | none — **ready now** |
-| 2 · Home | 2 | B1 |
-| 3 · About | 2 | B1 |
-| 4 · Services | 1 | B1 |
-| 5 · Admissions | 1 | B1 + B4 |
+| **1b · Shared components, 2nd pass** | **1** | **ready** (colour token needs B2) |
+| 2 · Home | 2 | ~~B1~~ **ready** |
+| 3 · About | 2 | ~~B1~~ **ready** |
+| 4 · Services | 1 | ~~B1~~ **ready** |
+| 5 · Admissions | 1 | ~~B1~~ **B4 only** |
 | **6a · Self-host fonts + type scale** | **2** | **B6** |
 | 6b · Brand assets | 1 | B2 |
-| 7 · Careers, Contact, Legal, 404 | 2 | B1 + B2 |
-| **7b · Contact-form states** | **2** | **B7** |
+| 7 · Careers, Contact, Legal, 404 | 2 | AUX-01/02 still need B2 |
+| **7b · Contact-form states** | **2** | ~~B7~~ **ready** (residual Q22-a…d) |
 | 8 · Final regression | 1 | all |
-| **Total** | **15** | |
+| **Total** | **16** | |
 
-*(Revised 12 → 13 → 15: Batch 6 split into 6a fonts / 6b brand assets, which have different gates; Batch 7b added for the four official form states, of which turn 7b-i is design-independent.)*
+*(Revised 12 → 13 → 15 → 16: Batch 6 split into 6a fonts / 6b brand assets; Batch 7b added for the four form states; Batch 1b added after the screenshot archive collapsed four page tickets into three shared-component fixes.)*
+
+**What the archive changed.** Before it, 35 of 59 items could not be implemented at any price. Now **10 of the 16 turns are dispatchable the moment credits return** — Batches 1, 1b, 2, 3, 4, 7b and most of 7. What remains gated is genuinely small: the Figma seat (**B2**) for asset files and two colour tokens, the IA decision (**B4**), the font questions (**B6**), and the legal copy.
 
 **Minimum to clear the entire Asana backlog: 12 Lovable turns**, against 59 QA items — roughly **5 items per turn**. Dispatching page-by-page as the board is organised would cost ~20 turns and would fix the shared components repeatedly.
 
