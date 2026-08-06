@@ -414,3 +414,84 @@ Signed download URLs are archived at `scratchpad/asana/manifest.txt`. They carry
 | Careers | 3 |
 | Contact | 3 |
 | Auxiliary (Privacy / Terms / 404) | 3 |
+
+---
+
+## 8 · RE-READ 2026-08-06 (post font delivery) — NO NEW ASANA ITEMS
+
+The agency reported an updated backlog. **The board is unchanged from the collection recorded above.**
+
+| Check | Earlier collection | Re-read | |
+|---|---|---|---|
+| Subtask counts | 21 / 14 / 7 / 8 / 3 / 3 / 3 = **59** | 21 / 14 / 7 / 8 / 3 / 3 / 3 = **59** | identical |
+| Home parent `modified_at` | `2026-08-06T07:53:56.742Z` | same | identical |
+| About / Services / Admissions | `08:08:54.876` / `08:23:18.747` / `09:00:51.466` | same | identical |
+| Careers / Contact / Auxiliary | `09:24:05.162` / `09:34:43.923` / `09:37:16.006` | same | identical |
+| Home subtask GID list | 21 GIDs | same 21 GIDs, same order | identical |
+| Project `modified_at` | `2026-08-05T07:20:49.287Z` | same | identical |
+
+The newest modification anywhere on the board is **09:37:34 UTC**, which predates the original collection run. **The agency's update is the material already captured in §2** — including the form-state item.
+
+### 8.1 · The form-state designs are HOME-21, and they are blocked
+
+The only form-state reference in the entire project is **HOME-21** (`1217234006576129`): *"In the UI KIT section they added [states] for when messages are sent — take the one marked 1."* It points at a **Figma UI KIT frame**, with screenshot `1217234006576131`.
+
+Both are unreachable — Figma by seat quota, the screenshot by the `403 CONNECT` egress denial on `asanausercontent.com`. **The eight requested states (default, focus, filled, error, disabled, loading, success, hover) cannot be documented as designed.** The current implementation is documented instead, state by state, in `TYPOGRAPHY_AND_FORM_STATES.md` §4.2, as the baseline the designs will be diffed against.
+
+### 8.2 · One item can now be closed — HOME-14 is ALREADY FIXED
+
+HOME-14 asks for the copy *"Contact **out** team / to learn more about / our services"*. `home/Contact.tsx` already renders, verbatim:
+
+```
+Contact our team
+to learn more about
+our services
+```
+
+The copy matches on all three lines, with "our" already correct in place of the ticket's "out" typo. **Reclassified OPEN → ALREADY FIXED**, pending screenshot confirmation that the ticket refers to this section and not another. Conflict **C3** is resolved by the existing implementation and needs no override after all.
+
+### 8.3 · Four Asana items now have a named root cause — see `TYPOGRAPHY_AND_FORM_STATES.md` §3
+
+**HOME-05, HOME-18, ABOUT-10 and SERV-01** all report headings at the wrong weight. They are one defect, not four:
+
+> Playfair Display is loaded as `wght@400` **only**, so every heavier heading is a browser-synthesised fake bold — *and* all four heading utilities hard-code `font-weight: 400`, so no heading can render heavier even once the files are present.
+
+These four items merge into shared issue **SH-6**, whose fix is now precisely specified rather than exploratory. **SERV-05 and ABOUT-12** ("sizes differ", "description font wrong") remain separate — they are size complaints, not weight, and still need the screenshots.
+
+### 8.4 · New shared issue — SH-12 · self-host the official fonts
+
+| | |
+|---|---|
+| Trigger | Agency delivered the official Playfair Display and Satoshi sources, 2026-08-06 |
+| Sources | preserved at `design-sources/fonts/` — 26 files, 3.2 MB, all 22 binaries validated |
+| Absorbs | HOME-05, HOME-18, ABOUT-10, SERV-01 (via SH-6) |
+| Affected routes | **all 9** |
+| Blocked on | **T3** — Poppins has no official source; **D1** — Satoshi ships no licence file |
+
+Two questions must be answered by the agency before this can be built, and both are recorded in `TYPOGRAPHY_AND_FORM_STATES.md`:
+1. **Poppins** drives `text-label` and is fetched from Google Fonts, but is not in the official delivery. Keep it, or re-map labels to Satoshi?
+2. **Satoshi's licence file is absent** from the zip. Self-hosted webfont use must be confirmed as permitted before deployment. Playfair's OFL is included and unambiguous.
+
+### 8.5 · Totals after this re-read
+
+| | Before | After |
+|---|---|---|
+| QA items | 59 | **59** — no change |
+| Already fixed | 0 | **1** (HOME-14) |
+| Open | 20 | **19** |
+| Shared issues | 11 | **12** (SH-12 added) |
+| Conflicts | 5 | **4** — C3 resolved by existing code |
+| Items with a named root cause | 3 | **7** (+HOME-05, 18, ABOUT-10, SERV-01) |
+
+---
+
+## 9 · PAGE INDEX
+
+| Page | Items |
+|---|---|
+| About | 14 |
+| Admissions (`/amenities`) | 8 |
+| Services | 7 |
+| Careers | 3 |
+| Contact | 3 |
+| Auxiliary (Privacy / Terms / 404) | 3 |

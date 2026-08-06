@@ -32,6 +32,8 @@ So this plan is built on three rules:
 | **B3** | Lovable credits at zero | **all implementation** | Credit top-up |
 | **B4** | IA decision on Admissions vs Amenities (§5-C1 of the ledger) | ADM-04, and the nav on all 9 routes | Client/agency decision |
 | **B5** | Placeholder policy conflict (§5-C2) | HOME-09 | Client ruling — recommend upholding the no-placeholder rule |
+| **B6** | Poppins has no official source; Satoshi ships no licence file | **Batch 6a** (fonts) | Agency answer on both, see `TYPOGRAPHY_AND_FORM_STATES.md` T3 and D1 |
+| **B7** | Form-state designs live in a Figma UI KIT frame reachable neither via Figma (quota) nor via the Asana screenshot (egress 403) | HOME-21, and all form work | **B1 or B2** — either one unblocks it |
 
 **B1 is the cheap one and it unlocks the most.** Opening one host converts 35 items from guesswork into work.
 
@@ -92,7 +94,38 @@ Needs screenshots: HOME-02, 04, 07, 15, 16, 17, 19, 20. Needs Figma: HOME-09 pho
 - **Expected turns:** **1**
 - **Risk:** highest of any batch. Dispatching before B4 is resolved risks doing the work twice.
 
-### BATCH 6 — BRAND, LOGOS, ICONS, TYPOGRAPHY · *gated on B2*
+### BATCH 6 — BRAND, LOGOS, ICONS, TYPOGRAPHY · *partly gated on B2 and B6*
+
+**Revised 2026-08-06 after the official font delivery.** The typography half of this batch is now precisely specified rather than exploratory — see `TYPOGRAPHY_AND_FORM_STATES.md`. It splits into **6a (fonts)** and **6b (brand assets)**, which have different gates and should not be dispatched together.
+
+#### 6a · Self-host the official fonts — closes HOME-05, HOME-18, ABOUT-10, SERV-01
+
+Root cause, now named: **Playfair Display is loaded at `wght@400` only**, so every heavier heading is a browser-synthesised fake bold — **and** `text-h1/h2/h3/h4` each hard-code `font-weight: 400`, so no heading can render heavier even once the files exist. Both must change together; either alone is a no-op.
+
+| Step | Detail |
+|---|---|
+| 1 | Convert `design-sources/fonts/` to WOFF2, Latin subset. **Mandatory** — the raw TTF/OTF are 4–5× larger than the CDN files they replace |
+| 2 | Ship the **variable** Playfair (`wght 400–900`, ~60–70 KB as WOFF2) — one file covers all six weights and beats shipping six statics |
+| 3 | Satoshi as statics: 300/400/500/700/900 + italics as needed. **No 600 exists — forbid `font-semibold` on `--font-sans`** |
+| 4 | Add real `@font-face` rules. There are none in the codebase today |
+| 5 | Remove the Google Fonts and Fontshare `<link>`s from `__root.tsx`; drop the four now-dead `preconnect`s |
+| 6 | Un-hardcode `font-weight` in the four heading utilities and the base `h1–h6` rule |
+| 7 | Point buttons at `text-button` instead of the inline `font-sans text-[18px] font-medium` in `ui/button.tsx` (T6) |
+| 8 | Fix the no-op `clamp()` on `text-label` (T8) |
+
+- **Gate B6 — needs an agency answer first:** (i) **Poppins** drives `text-label` but is not in the official delivery — keep or re-map to Satoshi? (ii) **Satoshi ships no licence file** — confirm self-hosted webfont use is permitted. Playfair's OFL is included and clear.
+- **Do not dispatch 6a before B6 is answered.** Building it twice costs more than waiting.
+- **Regression — this is the highest-risk batch in the programme.** The `clamp()` scale interpolates 390→1440 and drives **every section height**. Changing a weight changes glyph widths, which changes wrapping, which changes heights. After 6a, re-measure the **entire** R7 reference table, not a sample — and confirm the Home FAQ still reads 752 after Batch 1.
+- **Side benefit:** self-hosting removes T7, the silent fallback to `system-ui` when a font CDN is slow or blocked. That failure mode is invisible in code review and looks exactly like "typography is inconsistent".
+- **Expected turns:** **1** for the font layer, **1** for the scale/consumer cleanup.
+
+#### 6b · Brand assets — *gated on B2 (Figma seat)*
+
+Wrong or duplicated logos (HOME-01, HOME-13, ABOUT-01b, ABOUT-03, SERV-02 ×2) and missing official icons (ABOUT-02, ABOUT-11, CON-02).
+
+- **Expected turns:** **1**
+
+### BATCH 6-OLD — superseded, retained for reference · *gated on B2*
 
 The cross-cutting asset batch, pulled out of every page batch above so the same asset is never fixed twice.
 
@@ -142,10 +175,13 @@ Full 9-route × 22-viewport harness, the R7 1440 reference table re-measured end
 | 3 · About | 2 | B1 |
 | 4 · Services | 1 | B1 |
 | 5 · Admissions | 1 | B1 + B4 |
-| 6 · Brand / type | 2 | B2 |
+| **6a · Self-host fonts + type scale** | **2** | **B6** |
+| 6b · Brand assets | 1 | B2 |
 | 7 · Careers, Contact, Legal, 404 | 2 | B1 + B2 |
 | 8 · Final regression | 1 | all |
-| **Total** | **12** | |
+| **Total** | **13** | |
+
+*(Revised from 12 to 13: Batch 6 split into 6a fonts and 6b brand assets, which have different gates and must not share a turn.)*
 
 **Minimum to clear the entire Asana backlog: 12 Lovable turns**, against 59 QA items — roughly **5 items per turn**. Dispatching page-by-page as the board is organised would cost ~20 turns and would fix the shared components repeatedly.
 

@@ -558,6 +558,24 @@ Full collection recorded in **`ASANA_QA_LEDGER.md`**; batching in **`ASANA_IMPLE
 - **Proposed fourth typo override** (alongside `Shedule`→`Schedule`, `addres`→`address`, `Brookwood`→`Amara`): Asana HOME-14 specifies *"Contact **out** team"*; ship **"Contact our team"**.
 - **Attachments blocked.** All 60 Asana screenshots are enumerated but unreadable — session egress returns `403` on `asanausercontent.com`, `app.asana.com` and `asana.com`. 35 of 59 QA items therefore carry **NEEDS VISUAL VERIFICATION** and must not be implemented until the images are available.
 
+## 14f · OFFICIAL FONT DELIVERY · 2026-08-06 — analysis only, nothing implemented
+
+Full analysis in **`TYPOGRAPHY_AND_FORM_STATES.md`**. Sources preserved at `design-sources/fonts/` (26 files, 3.2 MB, all 22 binaries validated — non-zero, valid `sfnt`). Facts that change what is recorded elsewhere in this ledger:
+
+- **§1 Design System is corrected.** It records "Playfair Display 400 headings, Satoshi body, Poppins labels" as **verified correct**. The families are right; the *loading* is not. `__root.tsx` requests **`Playfair+Display:wght@400` only**, and all four heading utilities plus the base `h1–h6` rule hard-code `font-weight: 400`. **Every heavier heading on the site is a browser-synthesised fake bold.** This is the single named root cause of four separate agency complaints — HOME-05, HOME-18, ABOUT-10, SERV-01.
+- **Poppins has no official source.** The agency's delivery is Playfair Display + Satoshi only. Poppins drives `text-label` and is fetched from Google Fonts. Either its source was omitted or labels belong in Satoshi. **Agency ruling required — do not re-map silently.**
+- **Satoshi has no SemiBold.** The archive jumps 500 → 700. `font-weight: 600` on `--font-sans` will always synthesise; one instance already ships in `__root.tsx`'s error component.
+- **Satoshi ships no licence file.** Ten `.otf` files, nothing else. Self-hosted webfont use must be confirmed as permitted. Playfair's OFL 1.1 is included and unambiguous.
+- **Neither archive contains WOFF2.** All 22 files are desktop TTF/OTF, 4–5× the size of the CDN files they would replace. Conversion with Latin subsetting is mandatory. The variable Playfair (`wght 400–900`) covers all six weights in one file.
+- **Archive integrity — corrected finding.** Two Playfair files extracted as 0 bytes under `unar`; `unrar-free` recovered both intact. **The archive is sound; the extractor was at fault.** Not a repeat of the Wave-6 corrupt-file situation.
+- **Silent-fallback risk (T7).** `--font-sans` falls back to `system-ui`. If Fontshare is slow or blocked, all body text renders at different metrics — invisible in code review, and indistinguishable from the agency's "typography is inconsistent" report. Self-hosting eliminates it.
+
+**Asana re-read the same day: no new items.** Subtask counts unchanged at 21/14/7/8/3/3/3 = 59; every parent `modified_at` byte-identical; newest board change 09:37:34 UTC, before the original collection ran.
+
+- **HOME-14 reclassified OPEN → ALREADY FIXED.** `home/Contact.tsx` already renders "Contact our team / to learn more about / our services" verbatim. **Conflict C3 needs no typo override after all** — the code was already right.
+- **Form states remain blocked.** The only reference is HOME-21, pointing at a Figma UI KIT frame; unreachable via Figma (seat quota) and via the Asana screenshot (`403 CONNECT` on `asanausercontent.com`). The eight requested states cannot be specified. Current implementation documented as the baseline instead.
+- **§15 Regression Watch correction.** Wave R6 reported the contact form's fields as having *"a real `<label>`"*. They do not — accessible names come from **`aria-label` attributes**; only the checkbox sits in a real `<label>`. Naming works either way, so no assistive-technology defect follows, but **the form has no visible labels at all**, which directly affects the filled and error states still to be designed.
+
 ## 14c · AUTONOMOUS EXECUTION — COMPLETE
 
 Five waves, `daae8f96` → Wave 5. **Every issue that could be closed without client input or Figma access is closed.**
