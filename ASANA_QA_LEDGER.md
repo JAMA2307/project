@@ -793,6 +793,40 @@ The words are correct. The **line breaks** are not. The Figma left column (`Home
 
 ---
 
+## 13 · ASANA MUTATION AUDIT TRAIL · 2026-08-06 12:20–12:26 UTC
+
+First write access to the board. Full narrative in **`ASANA_STATUS_SYNC_REPORT.md`**. Every mutation, in order:
+
+| # | Task GID | Subtask | Prev | New | Action | Evidence | Comment GID | Confidence |
+|---|---|---|---|---|---|---|---|---|
+| 1 | `1217105105133471` | HOME-01 | complete | **incomplete** | Reopened | Screenshot absent from archive; task edited 2026-08-06 *after* closure | `1217246106377602` | High |
+| 2 | `1217108466019428` | HOME-10 | complete | **incomplete** | Reopened | Same two disqualifiers | `1217234107583248` | High |
+| 3 | `1217108466019451` | SERV-01 | complete | **incomplete** | Reopened | Same two disqualifiers; weight half also globally blocked by `wght@400` | `1217231593330481` | High |
+| 4 | `1217108466019455` | SERV-02 | complete | **incomplete** | Reopened | Same two disqualifiers; 4 sub-requirements, 2 need Figma brand files | `1217234107740723` | High |
+| 5 | `1217108466019431` | ABOUT-01 | open | open | Partial comment | `ui/button.tsx` hover verified present; `about/AboutHero.tsx` still renders `glyph-ring.png` at `opacity-[0.10]` | `1217239076043987` | High |
+| 6 | `1217108466019447` | ABOUT-05 | open | open | Partial comment | `sections/Cta.tsx` structure now matches Figma; `bg-primary` colour does not | `1217239076201709` | High |
+| 7 | `1217108466019468` | ADM-04 | open | open | Question | Figma frame titled "Amenities Page" with nav "Admissions" — design self-contradicts | `1217243625850198` | — |
+| 8 | `1217108466019425` | HOME-09 | open | open | Question | Placeholder instruction vs standing client rule | `1217231593814836` | — |
+| 9 | `1217213785962849` | HOME-18 | open | open | Question | Playfair weight table; root cause named | `1217234108090689` | — |
+| 10 | `1217234006576135` | ABOUT-10 | open | open | Question | Poppins source missing; Satoshi licence missing | `1217239076714225` | — |
+| 11 | `1217234006576129` | HOME-21 | open | open | Question | S1/S2 copy hidden by digits; retry, failure type, loading state | `1217239076858549` | — |
+| 12 | `1217234006576180` | CAR-02 | open | open | Question | Screenshot carries no annotation | `1217243626461861` | — |
+| 13 | `1217234006576159` | SERV-06 | open | open | Question | Text says right, arrow reads left | `1217250865276284` | — |
+| 14 | `1217234006576196` | AUX-01 | open | open | Question | One image for two pages; shows Terms; shows our placeholder not Figma copy | `1217231594199034` | — |
+| 15 | `1217108334767499` | HOME-03 | open | open | Question | Red X over signage inside the photo; lattice vs chevron | `1217246107747272` | — |
+| 16 | `1217234006576144` | ABOUT-13 | open | open | Question | "cards" vs the icon badge the arrow points at | `1217243630734808` | — |
+| 17 | `1217108466019476` | HOME-13 | open | open | Question | Which footer mark — we already ship `footer-logo-official.png` | `1217231594623979` | — |
+| 18 | `1217108466019462` | ADM-02 | open | open | Question | Carousel target arrangement | `1217239077596681` | — |
+| 19 | `1217105105055928` | **DEV → Home** | incomplete | incomplete | Status comment | Five shared blockers gating all 7 DEV cards | `1217231594950310` | — |
+
+**Totals:** 4 completion-state changes (all `true → false`) · 13 comments · **0 tasks marked complete** · 0 deletions, renames, reassignments, date changes, description edits or structural changes · **0 other Asana projects touched.**
+
+### 13.1 · Why zero completions
+
+Every Lovable wave to date either predates this QA board or addressed a different problem class — Waves 1–14 were asset integration, R1–R7 were responsive geometry. **No QA item has been implemented.** Twelve were re-checked line-by-line against current source and each defect is still present; the evidence table is in `ASANA_STATUS_SYNC_REPORT.md` §3. Marking anything complete here would have been false.
+
+---
+
 ## 9 · PAGE INDEX
 
 | Page | Items |
