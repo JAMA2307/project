@@ -1,265 +1,226 @@
-# ASANA EXECUTION QUEUE — Amara
+# ASANA EXECUTION QUEUE — Amara (REVISION 2)
 
 | | |
 |---|---|
-| Built | 2026-08-06 |
-| Source | 59 QA subtasks, all opened and classified · `ASANA_QA_LEDGER.md` §12 (acceptance criteria) · §13 (mutation audit) |
-| Rule | **ONE ASANA SUBTASK = ONE LOVABLE TURN.** Only exact duplicates inside one shared component share a turn, and each Asana item is still verified and closed separately |
-| Status | **HELD.** Nothing dispatches until the command `ВСЁ ОТПРАВЛЯЙ` |
-| Asana project | Amara `1217105105055924`, workspace `1210357482925157` — no other project touched |
-
-**Base URL for every item:** `https://app.asana.com/1/1210357482925157/task/<GID>`
+| Revised | 2026-08-06 — after the "no guessed visual values" ruling |
+| Previous | Rev 1 claimed 39 dispatchable in 38 turns. **That count was too loose.** See §4 |
+| Now | **18 dispatchable items · 18 Lovable turns** |
+| Status | **HELD.** Nothing dispatches until `ВСЁ ОТПРАВЛЯЙ` |
+| Rule | One Asana subtask = one Lovable turn. **No merges remain** — the only merge candidate (Cta mobile) is now blocked |
 
 ---
 
-## 0 · SUMMARY
+## 0 · THE TEST APPLIED
 
-| | Count |
+Every item had to pass all five. One failure blocks it.
+
+1. Target stated in the Asana text **or** visible in a mapped screenshot
+2. **No invented numeric or visual value** — no px, no hex, no opacity, no duration, no scroll distance we chose ourselves
+3. All affected routes enumerated
+4. Acceptance criteria that are objectively checkable
+5. Independently verifiable after implementation without asking the agency
+
+**A change is allowed to be structural** (move, remove, re-order, align, stop clipping, use an asset already in the repo) because none of those requires a number we invented. **A change is blocked if it needs a value nobody approved** — a gap size, a hex, a height, a timing, a scroll trigger point.
+
+That single distinction is what took the queue from 39 to 18.
+
+---
+
+## 1 · THE 18 DISPATCHABLE TURNS
+
+### Shared components first
+
+**Q1 · FAQ collapsed on load** — `1217108466019458` (HOME-12)
+`sections/Faq.tsx` · routes `/`, `/services`, `/careers`
+Defect: `useState<number | null>(1)` opens item 2 on mount. Target: no item open; accordion still toggles.
+Accept: zero `[aria-expanded="true"]` on load on all 3 routes · all six answers absent from the DOM · click opens exactly one · **Home FAQ measures 752 at 1440** (closed accordion 444 + 240 padding = 684, so `min-h-[752px]` governs).
+No value invented — one boolean.
+
+**Q2 · Header reveals on scroll up** — `1217108466019450` (HOME-11)
+`Header.tsx` · routes **all 9**
+Defect: header is `absolute inset-x-0 top-6`; no scroll listener exists. Target: scrolling down hides it, any upward scroll reveals it pinned to the top.
+Accept: down 400px → off-screen · up 50px → visible and fixed · no layout shift · reduced-motion disables the transition · row still 52, logo 189×52, 1080 breakpoint intact · verified on all 9.
+Geometry is unchanged and the transition uses the existing `--ease-premium` / `--dur-hover` tokens, so nothing is invented.
+**⚠ Reaches `/amenities`** because the header is global. This is behaviour, not page identity, so it does not touch the IA question — but say the word and I will hold it too.
+
+**Q3 · Testimonials loop infinitely** — `1217108466019425` (HOME-09, *loop half only*)
+`sections/Testimonials.tsx` · routes `/`, `/about`, `/services`, `/careers`
+Ticket: *"make infinite scroll in this section — the pages rotate."* Target: the track wraps past the last card and before the first.
+Accept: continuous in both directions on all 4 routes · cards still 847×440, arrows 56×32 · keyboard focus still advances the track.
+**Card-structure half stays blocked** — adding a photo slot to cards that have no photo would render empty boxes. Ticket remains open.
+
+### Home
+
+**Q4 · Contact heading on three lines** — `1217213785962834` (HOME-14)
+`home/Contact.tsx` · routes `/`, `/careers`, `/contact`
+Defect: `max-w-[380px]` cannot hold "to learn more about" at 44px Playfair, so it wraps to four lines. Figma shows three.
+Accept: exactly 3 line boxes at 1440 · no fourth wrap 1280–1920 · copy unchanged ("our") · section still 780 at 1440.
+Target is a line count, not a width — the implementation widens until three lines hold and reports the value.
+
+**Q5 · Gallery button label** — `1217213785962837` (HOME-15)
+`home/Gallery.tsx` · route `/`
+"View Amenities" → **"View More"**. Link and geometry unchanged.
+
+**Q6 · Services rail is not clickable** — `1217108466019422` (HOME-08, *non-clickable half only*)
+`home/Services.tsx` · route `/`
+Ticket: *"make the buttons in this section non-clickable — the scroll to the card isn't smooth and is basically unnecessary."*
+Accept: rail entries have no click handler, no pointer cursor, no scroll-jump · active item still dark with the ∧ marker, others muted · rail 413 and panels 847×500 at 1440 unchanged.
+**Pinning half blocked** — "should stick in this state" needs a scroll release point nobody has specified.
+
+**Q7 · Hero CTAs side by side on mobile** — `1217213785962843` (HOME-16)
+`home/Hero.tsx` · route `/`
+Stacked → one row. Accept: both buttons on one row at 390 and 320 · each ≥44px tall · no overflow at 320 · desktop unchanged.
+
+**Q8 · Hero badge inside the photo on mobile** — `1217213785962846` (HOME-17)
+`home/Hero.tsx` · route `/`
+Ticket: *"the panel should be inside the image."* Reuses the **existing desktop** absolute placement, so no new value.
+Accept: badge bounds inside the photo bounds at 390 and 320 · no overflow, no clipping, text legible over the image.
+⚠ Reverses R2's decision to make the badge absolute only from `lg:` — the overflow R2 was avoiding must not return.
+
+**Q9 · Testimonial card centred on mobile** — `1217213785962852` (HOME-19)
+`sections/Testimonials.tsx` · route `/`
+Flush-left with the next peeking → centred. Accept: equal margins both sides at 390 and 320 · scroll-snap intact · desktop unchanged.
+
+**Q10 · Gallery text left-aligned on mobile** — `1217213785962855` (HOME-20)
+`home/Gallery.tsx` · route `/`
+`items-center text-center` applies at every width → left-aligned on mobile. Accept: left at 390/320 · centred from the desktop breakpoint up · tile grid untouched.
+
+### About
+
+**Q11 · Remove the duplicate hero monogram** — `1217108466019431` (ABOUT-01, *second half*)
+`about/AboutHero.tsx` · route `/about`
+`glyph-ring.png` renders centred at `opacity-[0.10]`, duplicating the header logo. Remove it.
+Accept: no monogram in the hero · hero 900 at 1440 · scrim and heading placement unchanged.
+Hover half already verified done (comment `1217239076043987`) — this closes the ticket.
+
+**Q12 · Values card internal layout** — `1217213785962840` (ABOUT-08)
+`about/AboutValues.tsx` · route `/about`
+Defect: icon floats top with dead space below the text; photo inset with padding. Figma frame `About/4 ChromeSafari.png` shows icon top-left, heading and paragraph anchored lower-left, photo flush to the card's right/top/bottom edges.
+Accept: matches that frame structurally · card 847×440 at 1440 · no dead space below the paragraph.
+**Structural only — no padding or gap values are to be changed to numbers we chose.**
+
+**Q13 · About pill icons must render** — `1217234006576138` (ABOUT-11)
+`about/AboutIntro.tsx` · route `/about`
+Defect: **both icon slots render empty on mobile** — nothing loads. The official files are already in the repo (`about-icon-skilled-nursing.png.asset.json`, `about-icon-medication-management.png.asset.json`).
+Also: the pill overflows past the photo's bottom edge (`About/10`, `About/12`) — contain it.
+Accept: both icons `naturalWidth > 0` at 390, 320 and 1440 · pill fully inside the photo bounds.
+**Pre-dispatch check required:** read `AboutIntro.tsx` first and confirm those two files are the ones being referenced. If it points at Lucide icons instead, this becomes an asset question and gets blocked.
+
+### Services
+
+**Q14 · Indian Program list consistency** — `1217234006576153` (SERV-04)
+`services/ServicesList.tsx` · route `/services`
+Defect: this card uses chips; the other three use bulleted lists — visible side by side in the same screenshot.
+Accept: same list treatment as the other three · all ten items retained verbatim · panel 847×500 at 1440.
+
+**Q15 · Services CTA to the end; remove the Therapy chip** — `1217234006576162` (SERV-07)
+`services/ServicesList.tsx` · route `/services`
+Ticket: *"the button should be at the end of the section, and there's no such chip."*
+Accept: "Plan Your Visit" moved below the cards · "Therapy" chip removed · no other chip removed without instruction.
+
+**Q16 · 24/7 panel stops clipping its text** — `1217234006576150` (SERV-03, *clipping half only*)
+`services/CareApproach.tsx` · route `/services`
+Defect: the supporting line is cut at the card's right edge — a real overflow bug.
+Accept: no clipped text at any of the 22 viewports · row 460 with columns 306/621/313 at 1440 unchanged.
+**Repositioning half blocked** — no measured target for the monogram / 24/7 / Comfort-Care-Compassion placement.
+
+### Careers · Contact
+
+**Q17 · Remove "View full Team"** — `1217234006576183` (CAR-03)
+`careers/CareersTeam.tsx` · route `/careers`
+Red X on the button; ticket says remove it on desktop and mobile.
+Accept: button gone at all viewports · eight monograms 68×68 retained · section spacing closes without a gap.
+
+**Q18 · Contact hero left column vertically centred** — `1217234006576186` (CON-01)
+`contact/ContactHero.tsx` · route `/contact`
+Defect: the column is top-anchored and the h1 collides with the header row.
+Accept: column vertically centred in the hero · no collision with the header at any width · column exactly 413 and photo 630×720 at 1440 (both R6 fixes — must not move).
+
+---
+
+## 2 · DROPPED FROM REV 1 — 21 items, and why
+
+### Blocked by your ruling — 3
+
+| Item | Reason |
 |---|---|
-| QA subtasks total | **59** |
-| **Dispatchable now** | **39** |
-| Turns needed for those 39 | **38** (one duplicate pair shares a turn) |
-| Blocked — cannot be dispatched at any price | **20** |
-| Already complete before execution | **0** |
+| ABOUT-06 (was Q5) | Testimonials gap — no approved value |
+| HOME-04 (was Q13) | Hero band terminus — the annotation marks the current state, not a target |
+| CAR-01 (was Q36) | Careers scrim — no Figma frame for that hero |
 
-**Nothing is merged for convenience.** The single shared turn is Q19, where About-14 and Admissions-8 are the *same* defect in the *same* file (`sections/Cta.tsx` mobile proportions). Both Asana items are verified and closed independently.
+### Admissions / Amenities — 5
 
-### Blocked, by cause
+ADM-01, ADM-03, ADM-06, ADM-07 and the ADM-08 half of the shared Cta turn. Held until the IA question is answered (`1217243625850198`).
 
-| Cause | Items | GIDs |
+### Typography — 2
+
+ABOUT-12 (mission paragraph family and size) and the ABOUT-02 label-weight half. Held for the Playfair weight table (`1217234108090689`) and the Poppins/Satoshi decision (`1217239076714225`).
+
+### Newly blocked on the same test — 11
+
+These passed Rev 1 but fail criterion 2. Listing them because dropping them silently would be the exact failure this protocol exists to prevent.
+
+| Item | Rev 1 turn | Value we would have invented |
 |---|---|---|
-| Screenshot absent from the export (all 4 reopened) | 4 | HOME-01, HOME-10, SERV-01, SERV-02 |
-| Playfair weight table not supplied | 3 | HOME-05, HOME-18, ABOUT-10 |
-| Legal body copy not supplied | 2 | AUX-01, AUX-02 |
-| CTA panel hex not supplied | 3 | ABOUT-05, ABOUT-07 *(dup)*, ADM-05 |
-| Question posted, awaiting answer | 5 | ABOUT-13, SERV-06, ADM-02, ADM-04, CAR-02 |
-| Figma asset file needed | 2 | HOME-06 *(card copy + photo)*, CON-02 *(icon)* |
-| Target value not derivable | 1 | HOME-02 |
-| **Total** | **20** | |
+| HOME-13 footer newsletter response | Q3 | The confirmation's appearance. The ticket reports broken *function*, but implementing it creates an undesigned UI element. **If you class this as functional rather than visual, say so and it returns to the queue** |
+| HOME-21 form machinery | Q4 | Nothing visual — but it is invisible plumbing for S1/S2, which are blocked. **Deferred deliberately to share the S1/S2 turn and save a credit** |
+| HOME-09 card structure | Q6 | Empty photo boxes on cards with no photo |
+| HOME-07 Mission 5-stage reveal | Q11 | Scroll distances and per-stage opacities — the frames show end states, not the interpolation |
+| HOME-03 heading colour + hero photo | Q12 | The colour half changes a **global** `--heading` token from one page ticket, and contradicts §1 of our own design system (`#0F0F0F`). The photo half is contaminated — the red X sits on the very photo we would adopt |
+| HOME-08 pinning | Q10 | The scroll release point |
+| ABOUT-14 + ADM-08 Cta mobile | Q19 | "Sizes seem swapped" gives no target proportions |
+| ABOUT-04 values scroll-stack | Q20 | Scroll distances, plus the card-2 background hex |
+| ABOUT-03 mission variant swap | Q22 | The scroll trigger point for the swap |
+| ABOUT-09 mobile hero | Q25 | Hero height. *(The button-alignment half alone was too thin to justify a turn while the main complaint stays unaddressed)* |
+| ABOUT-02 paragraph shift | Q26 | How far right |
+| SERV-05 mobile hero | Q28 | Header→H1 gap, and the H1 size reduction is typography-blocked |
+| CON-03 checkmarks | Q38 | The tick hex — cannot be sampled reliably from the screenshot |
+| AUX-03 404 rebuild | Q39 | Background hex, "404" size, watermark size and opacity. Copy and structure are fully known; the values are not |
+
+**AUX-03 is the most frustrating of these.** Structure and copy are completely specified by the two Figma frames. It is held on four colour and size values. One reply with those unblocks a whole page.
 
 ---
 
-## 1 · TIER 1 — SHARED COMPONENTS (highest reach, dispatch first)
+## 3 · BLOCKED REGISTER — 41 of 59
 
----
-
-### Q1 · FAQ must be fully collapsed on load
-| | |
+| Cause | Count |
 |---|---|
-| **GID** | `1217108466019458` · HOME-12 · "12 safari/chrome" |
-| **Page / component** | Home → `src/components/sections/Faq.tsx` |
-| **Routes** | `/`, `/services`, `/careers` |
-| **Screenshot** | none (text-only ticket — correctly has no attachment) |
-| **Current defect** | `const [open, setOpen] = useState<number \| null>(1)` opens item 2 on mount |
-| **Target** | No item open on first render. Accordion still toggles on click; clicking an open item closes it |
-| **Responsive** | All viewports |
-| **Acceptance** | On `/`, `/services`, `/careers`: zero `[aria-expanded="true"]` on load · all six answers absent from the DOM · clicking a question opens exactly one · **Home FAQ section measures 752px at 1440** |
-| **Regression** | The 752 reference value. Closed accordion = 6×64 + 5×12 = 444; 444 + 240 padding = 684, so `min-h-[752px]` governs and the section lands on 752 naturally |
-| **Clarification** | none needed |
-| **Note** | This one line also closes the last outstanding FAIL from the responsive programme (R7 measured 766 vs 752). No padding is to be shaved |
+| Value not approved (the new test) | 14 |
+| Awaiting a posted question | 5 |
+| Screenshot absent from the export (4 reopened) | 4 |
+| Admissions/Amenities IA | 5 |
+| Playfair weights / Poppins / Satoshi | 5 |
+| Legal body copy | 2 |
+| Figma asset file needed | 2 |
+| Ruled blocked by you | 3 |
+| No derivable target at all (HOME-02) | 1 |
+| **Total** | **41** |
+
+18 + 41 = 59 ✓
 
 ---
 
-### Q2 · Header reveals on scroll up
-| | |
-|---|---|
-| **GID** | `1217108466019450` · HOME-11 · "11 safari/chrome" |
-| **Page / component** | Home (global) → `src/components/Header.tsx` |
-| **Routes** | **all 9** |
-| **Screenshot** | none (text-only) |
-| **Current defect** | Header is `absolute inset-x-0 top-6`. **No scroll listener of any kind exists** — this is new behaviour, not a repair |
-| **Target** | Scrolling down past the header's own height hides it; any upward scroll reveals it, pinned to the viewport top |
-| **Layout** | Row height stays **52px**; logo **189×52**; nav gap keeps `clamp(1.5rem, 0.5rem+1.667vw, 2.5rem)`; the 1080px content-fit breakpoint is unchanged |
-| **Responsive** | All viewports. The mobile menu overlay must be unaffected |
-| **Prohibited** | Do not change nav labels, routes, the CTA, the 1080 breakpoint, or the header's transparent background over heroes. Do not make the header `sticky` inside a transformed ancestor |
-| **Acceptance** | Scroll down 400px → header off-screen · scroll up 50px → header visible, fixed to top · no layout shift when it appears · `prefers-reduced-motion` disables the transition · verified on all 9 routes · zero sub-44px tap targets retained |
-| **Regression** | Hero overlays on `/about`, `/careers`, `/contact`, `/amenities`; the mobile menu; header 52 on all 9 |
-| **Clarification** | none needed |
+## 4 · WHY REV 1 WAS WRONG
+
+Rev 1 counted an item dispatchable if I could describe the target in a sentence. That is a lower bar than being able to *build* it without choosing a number.
+
+Three items I had already flagged as carrying "a flagged interpretation" — and eleven more had the same defect without my flagging it, because each individual guess looked small: a gap, a hex, a scroll trigger. Small guesses are exactly how a QA backlog gets re-opened after implementation, and each would have cost a turn to make and a turn to correct.
+
+The 18 that survive share one property: **every one is either a removal, a re-order, an alignment, a boolean, an overflow fix, or the use of an asset already in the repo.** None requires a value the agency has not approved.
 
 ---
 
-### Q3 · Footer newsletter must respond on submit
-| | |
-|---|---|
-| **GID** | `1217108466019476` · HOME-13 · "13 safari/chromr" — *first half only* |
-| **Page / component** | Home (global) → `src/components/Footer.tsx` |
-| **Routes** | **all 9** |
-| **Screenshot** | `Home/13 safarichromr.png` — red circle around the input + Submit with an address typed in |
-| **Current defect** | `handleSubmit` calls `event.preventDefault()` and **nothing else**. No success, no error, no pending state |
-| **Target** | Submitting a valid address shows a confirmation in place of, or beneath, the field. Invalid input shows an inline error. The button shows a pending state while submitting and cannot be double-fired |
-| **Visual** | Stay inside the existing pill: `rounded-full`, `bg-brand-white/10`, `ring-1 ring-brand-white/20`. Confirmation text in `text-brand-white`, error legible on the dark footer |
-| **Responsive** | The pill stacks below 400px — feedback must not break that |
-| **Prohibited** | **Do not touch the watermark** — that is the second half of this ticket and is awaiting an answer (comment `1217231594623979`). Do not change footer links, socials or the copyright line |
-| **Acceptance** | Valid address → visible confirmation · invalid → inline error · pending state present · no double-submit · verified on all 9 routes · footer still 580 at 1440 · watermark unchanged |
-| **Regression** | Footer height 580 · `auto-fit` columns · watermark no overflow · Home socials = LinkedIn + Instagram |
-| **Clarification** | Second half (which watermark) **blocked** — this Asana item stays open until both halves land |
+## 5 · WHAT UNBLOCKS THE MOST, PER REPLY
+
+1. **Playfair weight table** (`1217234108090689`) → 5 items
+2. **Admissions/Amenities IA** (`1217243625850198`) → 5 items, plus the page's identity
+3. **The four missing screenshots** → 4 reopened items, possibly closable on sight
+4. **404 colours and sizes** → a whole page in one turn
+5. **CTA panel hex** (`1217239076201709`) → 3 items across 3 routes
+6. **Testimonial photos** (`1217231593814836`) → completes HOME-09
 
 ---
 
-### Q4 · Contact-form machinery — async, pending, inline errors
-| | |
-|---|---|
-| **GID** | `1217234006576129` · HOME-21 · "21 Mobile" — *design-independent half* |
-| **Page / component** | Home (global) → `src/components/home/Contact.tsx` |
-| **Routes** | `/`, `/careers`, `/contact` |
-| **Screenshot** | `Home/21 Mobile.png` — the UI KIT frame (read at 8× magnification, `ASANA_QA_LEDGER.md` §12.7) |
-| **Current defect** | `onSubmit` is fully synchronous. No pending state, no double-submit guard, and only `parsed.error.issues[0]` reaches the user — as a transient toast. Five invalid fields report one. There is therefore **no code path that can reach a failure state at all** |
-| **Target** | Submission becomes async with a pending state; every invalid field gets an inline message and `aria-invalid`; the submit button is disabled while pending; state changes announce via an ARIA live region and move focus |
-| **Typography** | Fields stay Satoshi 18/24; error text Satoshi 16/22 in `--destructive` |
-| **Prohibited** | **Do not build the S1/S2 visual states yet** — their body copy is still unread (question `1217239076858549`). Do not change the checkbox shape `!rounded-[4px]` — CON-03 authorises a colour change only. Do not alter field order or labels |
-| **Acceptance** | Submit is async with a pending state · double-click submits once · all invalid fields show inline errors simultaneously · `aria-invalid` set · live region announces · focus managed · verified on all 3 routes · **Home contact section still 780 at 1440** |
-| **Regression** | `min-h-[780px]` at 1440 · square checkbox · form field heights 50 / textarea 104 / submit 52 |
-| **Clarification** | S1/S2 copy, retry behaviour, failure type and loading state — **Q22-a…d posted**. This Asana item stays open until the visual states land |
+## 6 · VERIFICATION LOOP (unchanged)
 
----
-
-### Q5 · Testimonials — heading-to-track gap
-| | |
-|---|---|
-| **GID** | `1217154780337210` · ABOUT-06 · "6 Chrome/Safari" |
-| **Page / component** | About → `src/components/sections/Testimonials.tsx` |
-| **Routes** | `/`, `/about`, `/services`, `/careers` |
-| **Screenshot** | `About/6 ChromeSafari.png` — underline beneath "About Our Care" and a vertical stroke marking the gap |
-| **Current defect** | The card track sits close under the section heading |
-| **Target** | Increase the vertical gap between the heading block and the track |
-| **⚠ Interpretation flagged** | The ticket says *"more spacing"* without a value and no Figma frame was supplied for this section. **Proposed target: raise the gap to 64px at 1440, scaling fluidly to 40px at 390.** This is a derived value, not a measured one — flag it in the prompt and have Lovable report the before/after so it can be adjusted in one cheap follow-up |
-| **Responsive** | Fluid between the two endpoints |
-| **Acceptance** | Gap increased and measured on all 4 routes · cards still 847×440, photo 389×392, arrows 56×32 · no overflow at any of the 22 viewports |
-| **Regression** | All four routes carrying Testimonials |
-
----
-
-### Q6 · Testimonials — card structure and infinite loop
-| | |
-|---|---|
-| **GID** | `1217108466019425` · HOME-09 · "9 safari/chrome" — *structure half* |
-| **Page / component** | Home → `src/components/sections/Testimonials.tsx` |
-| **Routes** | `/`, `/about`, `/services`, `/careers` |
-| **Screenshot** | `Home/9 safarichrome.png` — bracket around card 1, the only one with a photo |
-| **Current defect** | Card 1 has a photo; cards 2 and 3 have none. The carousel does not loop |
-| **Target** | Every card uses card 1's structure — photo 389×392 + quote + attribution + date. The track loops infinitely in both directions |
-| **Prohibited** | **Do not insert placeholder images** for the two empty slots — that is the open question on this ticket (comment `1217231593814836`) and it conflicts with a standing rule. Build the slot; leave it empty until the photos arrive. Do not invent a third testimonial |
-| **Acceptance** | Photo slot present on every card · loop verified past the last and before the first card · cards 847×440 · arrows 56×32 · keyboard focus still advances the track · verified on all 4 routes |
-| **Clarification** | Photos **blocked**; this Asana item stays open until they arrive |
-
----
-
-### Q7 · Header/Footer nav label — *held*
-Not queued. `ADM-04` (`1217108466019468`) is blocked on the Admissions-vs-Amenities decision (comment `1217243625850198`). It changes the header on all 9 routes and the footer Company column, so it must not be guessed.
-
----
-
-## 2 · TIER 2 — HOME
-
-| # | GID | Title | Defect → Target | Files | Acceptance |
-|---|---|---|---|---|---|
-| **Q8** | `1217213785962834` | HOME-14 "14 safari/desktop" | Heading wraps to **4** lines; Figma shows **3**. `max-w-[380px]` cannot hold "to learn more about" at 44px Playfair → widen so the three `<br>`-defined lines hold exactly | `home/Contact.tsx` | Exactly 3 lines at 1440 · no 4th wrap between 1280–1920 · copy unchanged ("our", not "out") · section still 780 |
-| **Q9** | `1217213785962837` | HOME-15 "15 safary/desktop" | Gallery button reads "View Amenities" → **"View More"** | `home/Gallery.tsx` | Label exact · link still `/amenities` · button geometry unchanged |
-| **Q10** | `1217108466019422` | HOME-08 "8 safari/chrome" | Services section unpins too early (only shrunken rail headings visible) and rail entries scroll-jump on click → pin with **rail + active panel both visible**; rail entries **non-interactive** | `home/Services.tsx` | Pinned state matches the screenshot · rail items have no click handler and no pointer cursor · active item dark with ∧, others muted · rail 413 and panels 847×500 at 1440 · unpins cleanly at 1100 and below |
-| **Q11** | `1217108334767511` | HOME-07 "7 Safari/Chrome" | Mission reveal does not follow the storyboard → 5-stage sequence: monogram ring fades 0→1 across frames 1–3, then heading and paragraph reveal in 4–5, scroll-driven | `home/Mission.tsx`, `ScrollRevealText.tsx` | All 5 stages observable while scrolling · reduced-motion shows the end state immediately · mission paragraph still 4 lines at 1440 · `ScrollTrigger.refresh()` still debounced on resize |
-| **Q12** | `1217108334767499` | HOME-03 "3 Safari/Chrome" | ① h1 renders `#0F0F0F`; Figma is bluish `#2C2E45` ② desktop hero photo differs from the AMARA reception-desk shot mobile already uses | `styles.css` (`--heading`), `home/Hero.tsx` | Heading token `#2C2E45` · desktop hero = reception-desk photo, matching mobile · hero photo 1280×720 at 1440 · **do not touch the pattern layer** (`opacity-100`, `backgroundSize: cover` — hard-won, see ledger) |
-| **Q13** | `1217108334767502` | HOME-04 "4 SafariChrome" | The `--blue-100` hero band extends well past the hero photo before the white section starts → band terminates at the photo's bottom edge. **⚠ Interpretation** — the annotation marks the current boundary, not a target offset; have Lovable report the before/after in px | `home/Hero.tsx` | No blue visible below the hero photo · hero section still 1200 at 1440 · no overflow |
-| **Q14** | `1217213785962843` | HOME-16 "16 Mobile" | Hero CTAs stack full-width on mobile → **side by side in a row** | `home/Hero.tsx` | Two buttons on one row at 390 and 320 · both ≥44px tall · no overflow at 320 · desktop unchanged |
-| **Q15** | `1217213785962846` | HOME-17 "17 Mobile" | "Where Healing Feels Like Home" badge sits **below** the photo on mobile → overlays **inside** the photo, as on desktop | `home/Hero.tsx` | Badge inside the photo bounds at 390 and 320 · no overflow, no clipping, text legible over the image · **reverses the R2 decision** that made the badge absolute only from `lg:` — the overflow it was avoiding must not return |
-| **Q16** | `1217213785962852` | HOME-19 "19 Mobile" | Testimonial card is flush-left with the next peeking → **centred** in the viewport | `sections/Testimonials.tsx` | Equal margins both sides at 390 and 320 · scroll-snap still works · desktop unchanged |
-| **Q17** | `1217213785962855` | HOME-20 "20 Mobile" | Gallery eyebrow, heading and paragraph are centred (`items-center text-center` at every width) → **left-aligned on mobile** | `home/Gallery.tsx` | Left-aligned at 390 and 320 · centred from the desktop breakpoint up · tile grid untouched |
-
----
-
-## 3 · TIER 3 — ABOUT
-
-| # | GID | Title | Defect → Target | Files | Acceptance |
-|---|---|---|---|---|---|
-| **Q18** | `1217108466019431` | ABOUT-01 "1 Chrome/Safari" | `glyph-ring.png` renders centred in the hero at `opacity-[0.10]`, duplicating the header logo → **remove it** | `about/AboutHero.tsx` | No monogram in the hero · hero 900 at 1440 · scrim and heading placement unchanged · *(hover half already verified done — see comment `1217239076043987`)* |
-| **Q19** | `1217234006576147` **+** `1217234006576173` | ABOUT-14 + ADM-08 — **shared turn** | `Cta` on mobile: panel `min-h-[440px]` vs photo `h-[320px]`, with dead space below the button → proportions per Figma, dead space removed | `sections/Cta.tsx` | Panel and photo heights corrected on `/about`, `/services`, `/amenities` at 390 and 320 · no dead space below the button · **CTA image still 630×660 at 1440** · **do not change the panel colour** — that is blocked on the hex |
-| **Q20** | `1217108466019442` | ABOUT-04 "4 Chrome/Safari" | ① Values cards do not rise and cover on scroll ② **card 2 "Comfort & Wellbeing" has no background at all** and vanishes into the page blue | `about/AboutValues.tsx` | Each card rises and covers the previous while scrolling · every card has a background distinct from the page · cards 847×440 at 1440 · **the `useStackEnabled` gate (min-width 768 AND min-height 800) must survive**, and the pinned region must never exceed the viewport |
-| **Q21** | `1217213785962840` | ABOUT-08 "8 chromesafari" | Card internals broken — icon floats top, dead space below the text, photo inset with excess padding → icon top-left, heading and paragraph anchored lower-left, photo flush right per the Figma frame | `about/AboutValues.tsx` | Matches `About/4 ChromeSafari.png` layout · card 847×440 · no dead space |
-| **Q22** | `1217108466019437` | ABOUT-03 "3 Chrome/Safari" | Mission shows one static paragraph in **Playfair**; Figma shows **two variants that swap on scroll**, set in Satoshi | `about/AboutMission.tsx` | Both variants present verbatim (§12.5) and swapping on scroll · paragraph in Satoshi, not Playfair · reduced-motion shows variant 1 statically · **monogram replacement is blocked** — leave the current mark and keep this item open |
-| **Q23** | `1217234006576138` | ABOUT-11 "11 mobile" | **Both pill icon slots render empty** on mobile — the icons do not load at all | `about/AboutIntro.tsx` | `about-icon-skilled-nursing` and `about-icon-medication-management` render at 390 and 320 · `naturalWidth > 0` for both · **also fix the pill overflowing past the photo's bottom edge**, seen in `About/10` and `About/12` |
-| **Q24** | `1217234006576141` | ABOUT-12 "12 mobile" | Mission paragraph renders oversized Playfair on mobile; Figma is smaller and sans → Satoshi, reduced size, smoother transition | `about/AboutMission.tsx` | Sans-serif on mobile · size reduced · transition smoothed · reduced-motion honoured |
-| **Q25** | `1217234006576132` | ABOUT-09 "9 mobile" | ① Hero too short ② "Meet Our Team" is `w-full` on mobile → auto-width, left-aligned to the heading | `about/AboutHero.tsx` | Button auto-width and left-aligned at 390/320 · heading placement per Figma · **hero height target is not supplied** — increase and report the measurement so it can be tuned in one follow-up · desktop 900 unchanged |
-| **Q26** | `1217108466019434` | ABOUT-02 "2 Chrom/safari" | Pill icons wrong and label weight wrong → official icons, regular weight. *(The "shift the paragraph right" half has no measured target and stays open)* | `about/AboutIntro.tsx` | Both official icons render · label weight regular · **do not shift the column** until a target is supplied |
-
----
-
-## 4 · TIER 4 — SERVICES
-
-| # | GID | Title | Defect → Target | Files | Acceptance |
-|---|---|---|---|---|---|
-| **Q27** | `1217234006576153` | SERV-04 "4 safari chrome" | The Indian Program card lists items as **chips**; the other three use **bulleted lists** → make it consistent | `services/ServicesList.tsx` | Indian Program uses the same list treatment as the other three · all 10 items retained verbatim · panel 847×500 at 1440 |
-| **Q28** | `1217234006576156` | SERV-05 "5 mobile" | Four defects: no gap between header and H1; H1 too large (runs to 4 lines); CTA full-width; "Scroll to Explore" misplaced | `services/ServicesHero.tsx` | Top spacing added · H1 fits in ≤3 lines at 390 · CTA auto-width, left-aligned · "Scroll to Explore" at the hero foot · all four verified at 390 and 320 |
-| **Q29** | `1217234006576162` | SERV-07 "7 mobile" | "Plan Your Visit" sits directly after the intro; the "Therapy" chip is not in the design | `services/ServicesList.tsx` | Button moved to the **end** of the section · "Therapy" chip removed on mobile · other category chips reviewed for the same treatment |
-| **Q30** | `1217234006576150` | SERV-03 "3 safari chrome" | **The 24/7 panel clips its own supporting text at the card's right edge** — a real overflow bug | `services/CareApproach.tsx` | 24/7 text no longer clipped at any viewport · row 460 with columns 306/621/313 at 1440 · **element repositioning is blocked** (no measured target) and this item stays open for that half |
-
----
-
-## 5 · TIER 5 — ADMISSIONS (`/amenities`)
-
-| # | GID | Title | Defect → Target | Files | Acceptance |
-|---|---|---|---|---|---|
-| **Q31** | `1217108466019459` | ADM-01 "1 safarichrome" | Hero left column is not vertically centred; the Figma frame shows it centred | `amenities/AmenitiesHero.tsx` | Left column vertically centred · "Scroll to Explore" bottom-left · photo 660×600 and grid `560px 660px` gap 60 at 1440 · h1 one line at 1440 |
-| **Q32** | `1217108466019465` | ADM-03 "3 Safarichrome" | Gallery side counters read **05** and **02**; with the centre at 02 they must read **01** and **03**. Side images also need captions | `amenities/AmenitiesGallery.tsx` | Counters sequential around the centre · side captions present · centre 512×710, sides 255×406 at `top-204` |
-| **Q33** | `1217234006576167` | ADM-06 "6 mobile" | CTA full-width; "Scroll to Explore" too high | `amenities/AmenitiesHero.tsx` | Button auto-width, left-aligned at 390/320 · "Scroll to Explore" at the hero foot |
-| **Q34** | `1217234006576170` | ADM-07 "7 mobile" | Card renders text then photo → **photo above the text** | `amenities/AmenitiesCarousel.tsx` | Photo first at 390/320 · desktop 846×450 with 296×360 photo unchanged |
-
----
-
-## 6 · TIER 6 — CAREERS · CONTACT · AUXILIARY
-
-| # | GID | Title | Defect → Target | Files | Acceptance |
-|---|---|---|---|---|---|
-| **Q35** | `1217234006576183` | CAR-03 "3 ChromeSafari" | "View full Team" button present → **remove it**, desktop and mobile | `careers/CareersTeam.tsx` | Button gone at all viewports · 8 monograms 68×68 retained · section spacing closes cleanly |
-| **Q36** | `1217234006576177` | CAR-01 "1 ChromeSafari" | Hero scrim so dark the photo is nearly black at the bottom | `careers/CareersHero.tsx` | Scrim lightened, photo legible at the bottom · heading/paragraph/button keep ≥4.5:1 contrast · hero 900 at 1440 · **⚠ no Figma frame supplied for this hero** — report the before/after opacity so it can be tuned |
-| **Q37** | `1217234006576186` | CON-01 "1 SafariChrome" | Hero left column is top-anchored and the h1 collides with the header row | `contact/ContactHero.tsx` | Left column vertically centred · no collision with the header · column exactly 413 and photo 630×720 at 1440 (both are R6 fixes — must not move) |
-| **Q38** | `1217234006576192` | CON-03 "3 safarichrome" | Insurance checkmarks the wrong colour; the Figma shows a white filled circle with a slate-blue tick on a medium slate panel | `contact/ContactInsurance.tsx` | Checkmarks match the Figma frame · photo still 500×410 at 1440 (R6 fix) · two-column list preserved · **do not change the checkbox in the contact form** — different component, different ticket |
-| **Q39** | `1217234006576202` | AUX-03 "3 404" | 404 lacks nearly every element in the design | `NotFoundPage.tsx` | Full-bleed slate blue-grey background · header with light logo, nav and white "Get Started" pill · large white Playfair "404" · "Page was not found" · body *"The page you're looking for couldn't be found. / Let's get you back on track."* · white "Back to Home Page" pill · **A monogram watermarks bleeding off the left and right edges** (mobile: one bottom-centre) · no overflow at 320 · works at short viewport heights |
-
----
-
-## 7 · BLOCKED — 20 items, not queued
-
-| GID | Item | Blocker | Question posted |
-|---|---|---|---|
-| `1217105105133471` | HOME-01 | Screenshot absent from export; edited after closure | `1217246106377602` |
-| `1217108466019428` | HOME-10 | Same | `1217234107583248` |
-| `1217108466019451` | SERV-01 | Same | `1217231593330481` |
-| `1217108466019455` | SERV-02 | Same | `1217234107740723` |
-| `1217108334767496` | HOME-02 | Hero gap targets not derivable — annotation marks the current state, not a target | — |
-| `1217108334767505` | HOME-05 | Playfair weight table | via `1217234108090689` |
-| `1217213785962849` | HOME-18 | Playfair weight table | `1217234108090689` |
-| `1217234006576135` | ABOUT-10 | Poppins source + Satoshi licence | `1217239076714225` |
-| `1217108334767508` | HOME-06 | WSUA card copy and the middle card's photo live in Figma | — |
-| `1217108466019447` | ABOUT-05 | CTA panel hex | `1217239076201709` |
-| `1217154780337213` | ABOUT-07 | **Duplicate of ABOUT-05** — closes with it, but its own route is verified separately | via ABOUT-05 |
-| `1217108466019473` | ADM-05 | Same CTA hex | via ABOUT-05 |
-| `1217234006576144` | ABOUT-13 | "cards" vs icon badge | `1217243630734808` |
-| `1217234006576159` | SERV-06 | Text says right, arrow reads left | `1217250865276284` |
-| `1217108466019462` | ADM-02 | Carousel target arrangement | `1217239077596681` |
-| `1217108466019468` | ADM-04 | Admissions vs Amenities IA — gates the whole page's identity | `1217243625850198` |
-| `1217234006576180` | CAR-02 | Screenshot has no annotation | `1217243626461861` |
-| `1217234006576189` | CON-02 | Correct "Supported Transition" icon file | — |
-| `1217234006576196` | AUX-01 | Privacy Policy body copy | `1217231594199034` |
-| `1217234006576199` | AUX-02 | Terms of Use body copy | via AUX-01 |
-
-**Four items appear in both the queue and this list** — HOME-13, HOME-21, ABOUT-02, ABOUT-03, SERV-03, ABOUT-09, ABOUT-12 have a dispatchable half and a blocked half. Their Asana subtask stays **open** until both halves land, even after the dispatchable half is verified.
-
----
-
-## 8 · POST-EXECUTION VERIFICATION LOOP
-
-For every turn, without exception:
-
-1. Read the changed files from Lovable (`read_file` — free, no credit).
-2. Confirm the change is present in source **and** that nothing outside the stated scope moved.
-3. Check the rendered result against the mapped screenshot at the exact viewports the ticket names.
-4. Re-measure the affected 1440 reference values.
-5. Check console errors, image 404s, page-level horizontal overflow.
-6. For a shared component, verify **every** route it appears on.
-7. Only then mark the Asana subtask complete and post a verification comment naming what changed, the file, the routes, and the viewports checked.
-8. Update this queue and `ASANA_QA_LEDGER.md`.
-
-**A Lovable report is never accepted as proof.** If verification fails: do not close the item, do not advance, do not dispatch a parallel run — write a corrective prompt for the same task and re-verify.
-
-## 9 · DEV PAGES
-
-None can be evaluated until its page-specific items **and** every shared item reaching it are verified. On current evidence all 7 stay open; the gating table is in `ASANA_STATUS_SYNC_REPORT.md` §4.
+Per turn: read the changed files → confirm the change is present and nothing outside scope moved → check the rendered result against the mapped screenshot at the viewports the ticket names → re-measure the affected 1440 reference values → check console errors, image 404s, page overflow → for a shared component verify **every** route → only then close the Asana subtask with a verification comment. A Lovable report is never accepted as proof.

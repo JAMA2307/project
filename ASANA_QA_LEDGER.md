@@ -849,3 +849,16 @@ Phase 3 complete. **`ASANA_EXECUTION_QUEUE.md`** holds the sequential queue: **3
 - **Seven items have a dispatchable half and a blocked half** (HOME-13, HOME-21, ABOUT-02, ABOUT-03, ABOUT-09, ABOUT-12, SERV-03). Their subtask stays open after the dispatchable half is verified.
 - **Three queue items carry a flagged interpretation** rather than a measured target — Q5 (testimonials gap), Q13 (hero band terminus), Q36 (Careers scrim). Each prompt will state the assumption and require a before/after measurement so it can be corrected in one cheap follow-up rather than argued about later.
 - Nothing dispatches until the command `ВСЁ ОТПРАВЛЯЙ`.
+
+### 14.1 · Queue revision 2 · 2026-08-06 — 39 → 18
+
+Client ruling: no Lovable turn may be spent on an interpretation without an approved visual target. Applying that strictly removed far more than the three items named.
+
+- **Blocked by direct instruction (3):** ABOUT-06, HOME-04, CAR-01.
+- **Admissions/Amenities held (5)** pending the IA answer; **typography held (2)** pending the Playfair weights and the Poppins/Satoshi decision.
+- **Newly blocked on the same test (11+):** each would have required a value we chose ourselves — a gap, a hex, a height, a scroll trigger, an animation timing. Listed individually in `ASANA_EXECUTION_QUEUE.md` §2 rather than dropped silently.
+- **Rev 1's error, recorded plainly:** it counted an item dispatchable if the target could be *described*, which is a lower bar than being buildable without inventing a number. Three items were flagged as interpretations; eleven more had the same defect unflagged because each individual guess looked small.
+
+**The 18 survivors share one property:** every one is a removal, a re-order, an alignment, a boolean, an overflow fix, or the use of an asset already in the repo. None needs an unapproved value.
+
+`HOME-21` (form machinery) was deliberately deferred rather than blocked — it is invisible plumbing that S1/S2 will need, so it should share that turn and save a credit.
