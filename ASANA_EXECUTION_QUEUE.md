@@ -268,3 +268,77 @@ Their self-review does not replace §6. We independently read the diff, check th
 "Correct on the first attempt" and "never guess" are the same requirement viewed from two ends. An item with an unapproved value cannot be built correctly on the first attempt — only guessed at, then corrected, at the cost of two turns and the credibility of the pass.
 
 The 41 blocked items are what makes first-attempt-correct achievable for the 18. Each is blocked on a specific, answerable question, and every one of those questions is already posted in Asana.
+
+---
+
+## 8 · EXECUTION LOG — dispatch begun 2026-08-06 on `ВСЁ ОТПРАВЛЯЙ`
+
+One subtask per Lovable turn, each preceded by the §7.1 source read and followed by the §6 independent verification.
+
+| # | Ticket | GID | Outcome | Asana comment | Subtask state |
+|---|---|---|---|---|---|
+| Q1 | HOME-12 FAQ open on mount | `1217108466019416` | **Shipped & verified.** `useState(1)` → `null`. Section lands on 752 exactly — the R8 discrepancy resolved | posted | closed |
+| Q2 | HOME-11 header scroll | `1217108466019413` | **Shipped & verified** over 3 turns. Two real bugs caught in our own verification, not theirs | posted | closed |
+| Q3 | HOME-09 testimonial arrows | `1217108466019425` | **Shipped & verified.** Wrap-around cycling, arrows never disabled | posted | **left open** — photo/attribution half blocked |
+| Q4 | HOME-14 heading lines | `1217213785962834` | **Shipped & verified.** 3 lines at ≥1280. Residual 4-line band 1024–1280 documented | posted | closed |
+| Q5 | HOME-15 button label | `1217213785962837` | **Shipped & verified.** "View Amenities" → "View More" | posted | closed |
+| Q6 | SERV rail not clickable | `1217108466019422` | **Shipped & verified.** Rail is now a passive indicator; `<nav>` demoted to `<div>` | `1217268161803922` | **left open** — pinning half blocked |
+| Q7 | HOME-16 hero CTAs side by side | `1217213785962843` | **BLOCKED — reclassified.** Does not fit. See below | `1217265347900491` | open |
+| Q8 | HOME-17 hero badge inside photo | `1217213785962846` | **BLOCKED — reclassified.** Panel would cover 74% of the photo. See below | `1217272191854590` | open |
+| Q9 | HOME-19 testimonial card centred | `1217213785962852` | **Dispatched** `umsg_01kzdke95bfnwa01d98kh8p17j` | pending | open |
+
+**5 closed · 2 shipped-but-open · 2 reclassified as blocked · 1 in flight.**
+
+### 8.1 · Q7 and Q8 — why Rev 2 was still one bar too low
+
+Both passed the Rev 2 test ("is there an approved visual target?") on the strength of the annotated screenshot. The pre-dispatch read plus measurement showed the screenshot states the *intent* but not the *values*, and in both cases the intent cannot be executed at the stated values.
+
+**Q7.** Measured off the QA screenshot itself, which is a 390px viewport (confirmed three ways: side margin 33.2 vs 33.5 predicted, button height, photo aspect exactly 3:2):
+
+| | |
+|---|---|
+| "Explore Our Services" at the live 18px | 158.5px |
+| "Plan Your Visit" at the live 18px | 108.1px |
+| `px-7` per button | 56px |
+| `gap-4` | 16px |
+| **Row requires** | **398.6px** |
+| Available at 390 today | 323px |
+| Available at 390 with the gutter corrected | 358px |
+| At the design system's own 16px mobile button size | still ~366px |
+
+Short by ~40px at best. Side-by-side needs a decision on label text, font size, padding, or wrapping — all design values. Four options posted.
+
+**Q8.** Photo is 323 × 215 at 390. Panel content computes to ~160px tall × up to 275px wide. Inside the photo at the desktop's 24px inset it covers ~74% of the photo's height and ~85% of its width. Also noted: `bg-secondary-bg` equals the hero background, so the panel currently reads as loose text, and the desktop `lg:max-w-[340px]` exceeds the entire 323px mobile content width. Four options posted.
+
+**The lesson, recorded plainly.** An annotated screenshot proves a defect exists. It does not prove the fix is specified. Rev 2 conflated the two. The revised test: *can the target be built without choosing a number the design has not given?*
+
+### 8.2 · Two genuine defects found during the Q7 pre-dispatch read
+
+Neither was fixed — both are outside the tickets in hand and both need sign-off.
+
+**DEF-01 · `container-gutter` clamp intercept has the wrong sign.** `styles.css`:
+
+```
+padding-inline: clamp(1rem, 0.6095rem + 6.0952vw, 5rem)
+```
+
+For the documented 16px @ 390 → 80px @ 1440 the intercept must be **−0.4857rem**. It is **+0.6095rem**.
+
+| Viewport | Renders | Intended |
+|---|---|---|
+| 320 | 29.3 | 16 |
+| 390 | **33.5** | **16** |
+| 768 | 56.6 | 39.0 |
+| 1024 | 72.2 | 55.6 |
+| 1152 | 80 (clamps early) | 62.4 |
+| 1440 | 80 ✓ | 80 ✓ |
+
+Correct at 1440, which is why every desktop pass missed it. Confirmed against the screenshot: content measures 323.7px at 390 instead of 358. Affects all 9 routes below 1152px; reported on HOME-02 (`1217265139981647`), which asked "spacing differs a lot from Figma" and had never been pinned to a cause. **Not fixed unilaterally** — R1–R7 were QA'd against the current, too-wide gutters, so this needs its own scheduled change and its own full re-check.
+
+**DEF-02 · the `dark`/`light` button variants bypass the `text-button` token.** `ui/button.tsx` hard-codes `text-[18px] leading-[20px] tracking-[-0.18px]`, so the design system's own fluid button scale (`clamp(1rem …)` = 16px at 390 → 18px at 1440) never applies. Buttons render 18px at every width. Surfaced by Q7; not yet raised as its own ticket because HOME-18 (heading weights) is the live typography question and this belongs with it.
+
+### 8.3 · Figma access is live again — and we have no file link
+
+`whoami` now authenticates as oybekovj97@gmail.com across two plans ("Geek Brains", "Project"). Every Figma tool requires a `fileKey`, and there is **no Figma URL anywhere in our records** — the design measurements in `MASTER_IMPLEMENTATION_LEDGER.md` were reconstructed from Lovable history precisely because Figma was unreachable at the time.
+
+One file link would unblock Q7, Q8, HOME-19/20, the Playfair weight table (6 items across 4 pages), the CTA hex, and the Admissions IA frame. Requested in the Q7 and Q8 comments. **This is now the single highest-value outstanding request** — ahead of the four missing screenshots.

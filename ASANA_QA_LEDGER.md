@@ -862,3 +862,21 @@ Client ruling: no Lovable turn may be spent on an interpretation without an appr
 **The 18 survivors share one property:** every one is a removal, a re-order, an alignment, a boolean, an overflow fix, or the use of an asset already in the repo. None needs an unapproved value.
 
 `HOME-21` (form machinery) was deliberately deferred rather than blocked — it is invisible plumbing that S1/S2 will need, so it should share that turn and save a credit.
+
+### 14.2 · Queue revision 3 · 2026-08-07 — 18 → 16, and the test tightened again
+
+Two of the 18 failed at the pre-dispatch stage, both on Home's hero. Full arithmetic in `ASANA_EXECUTION_QUEUE.md` §8.1.
+
+- **HOME-16** (hero CTAs side by side) — the row needs **398.6px**; a 390px screen offers **323px** today, **358px** even with DEF-01 corrected. Short by ~40px. Side-by-side requires a decision on label text, font size, padding or wrapping.
+- **HOME-17** (badge inside the photo) — the panel computes to ~160 × 275 against a 323 × 215 photo, covering ~74% of its height.
+
+**The test is now:** *can this be built without choosing a number the design has not given?* Rev 2 asked whether an approved visual target existed and accepted an annotated screenshot as one. A screenshot proves the defect. It does not prove the fix is specified.
+
+### 14.3 · Two defects found while measuring HOME-16 — reported, not fixed
+
+- **DEF-01 · page gutter.** `container-gutter`'s clamp intercept has the wrong sign: `+0.6095rem` where 16px @ 390 → 80px @ 1440 requires `−0.4857rem`. Renders **33.5px at 390** instead of 16, and clamps to the 80px desktop value at 1152 instead of 1440. Correct at 1440, which is why every desktop pass missed it. Affects all 9 routes below 1152px. Posted to **HOME-02** (`1217265139981647`) — the ticket that reported "spacing differs a lot from Figma" and had never been pinned to a cause. Held for sign-off: R1–R7 were QA'd against the current gutters.
+- **DEF-02 · button type token bypassed.** The `dark`/`light` variants hard-code `text-[18px]`, so the `text-button` fluid scale (16px @ 390 → 18px @ 1440) never applies. Belongs with HOME-18.
+
+### 14.4 · Figma is reachable again — the file link is now the top ask
+
+`whoami` authenticates; every tool needs a `fileKey`; **no Figma URL exists in any of our records.** One link resolves HOME-16, HOME-17, HOME-19, HOME-20, the Playfair weight table, the CTA hex and the Admissions IA frame. Requested in the HOME-16 and HOME-17 comments.
