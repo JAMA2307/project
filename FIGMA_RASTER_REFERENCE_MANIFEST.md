@@ -1249,3 +1249,56 @@ Two cross-checks I ran rather than accept:
    arithmetic — the reconciliation above is.
 
 **H03 remains half-complete by design.** The mobile tail is still owed at H11, per §25.
+
+### 26.1 H04 — the eyebrow colour IS resolvable, by a different instrument
+
+§26 recorded the eyebrow colour as unresolved because the modal-dark-pixel method is
+dominated by antialiasing at 8px, and a stroke-interior probe returned only **7 pixels** —
+far too few to name a fill. Both of those remain true. The conclusion was still wrong,
+because a better instrument exists.
+
+**The section background is white, and antialiasing blends the fill toward the
+background. An antialiased pixel is therefore always LIGHTER than the fill, never darker.
+So any pixel strictly darker than a candidate fill, on all three channels, disproves that
+candidate.** No stroke interior is required.
+
+| element | ink px | strictly darker than `--blue-700` rgb(76,82,103) | darkest |
+|---|---|---|---|
+| eyebrow | 402 | **126 (31.3%)** | **rgb(44,46,69)** |
+| intro line 1 | 3418 | **1603 (46.9%)** | **rgb(44,46,69)** |
+
+Neither element can be `--blue-700`. Both are **#2C2E45 = `--blue-800`**. The shipped
+values are `text-eyebrow` (which hard-codes `--blue-700`) and `text-muted-foreground`
+(also `--blue-700`), so **both are wrong** — and unlike §24.3's token rounding these are
+plainly visible differences, not sub-perceptual ones.
+
+Method note worth keeping: **"darkest observed pixel bounds the fill" is a stronger
+instrument than "modal colour"** whenever the background is lighter than the text. It
+works on small type where stroke interiors do not exist.
+
+### 26.2 Measured, and believed already correct
+
+| property | Figma | shipped | |
+|---|---|---|---|
+| intro font-size / line-height | pitch 32, ink ~19 | `text-body-large` → 20px / 32px at 1440 | agree |
+| intro wrap | 5 lines: 712, **772**, 755, 719, 599 | `max-w-[774px]` | widest 772 vs 774 — 2px margin |
+| centring | 719.5, 720.5, 719.0, 719.0, 719.0 | centred flex column | on 720 = 1440/2 |
+| eyebrow → intro | ink gap **32** | `mt-7` = 28px margin | **not comparable** — ink vs margin |
+
+This corrects my own earlier inference: §26 estimated "~24px on a 32px line" from the
+pitch alone. `text-body-large` yields **20px** on 32px, and the 19px ink height supports
+20, not 24. **Font size is not a defect.** Dispatched as verify-only.
+
+### 26.3 A cascade trap flagged in advance
+
+`text-eyebrow` is an `@utility` that sets `color` inside itself. Adding `text-primary`
+alongside gives two single-class selectors of **equal specificity**, so the winner is
+decided by generated source order, not by className order. This project has already been
+bitten by that exact Tailwind behaviour (R7). The turn was told to measure the computed
+colour and escalate specificity if the utility wins, and not to report success until
+`getComputedStyle().color` actually reads rgb(44,46,68).
+
+The utility itself must **not** be edited: it is shared with pages whose eyebrow colour
+has not been verified against Figma. The turn must prove the other five pages' eyebrows
+still read rgb(76,82,103) — if any moved, the utility was edited and must be reverted.
+Whether `text-eyebrow` is wrong site-wide is a **separate audit**, not this correction.
