@@ -247,3 +247,57 @@ Only one of the two animated states appears in a static export, so the reveal se
 The About values section background samples **#F4F8FF** (244, 248, 255), consistently. Our token `--blue-50` is **#F2F7FF** (242, 247, 255) — 2 units off on two channels. The agency brief independently cited "very light section surface: approximately #F4F8FF."
 
 Flagged, **not changed**: a 2-unit difference is at the edge of PNG colour-management error, and this token is used across several sections. Needs sampling on more pages before any change.
+
+---
+
+## 10 · SERVICES PAGE — REBASE FINDINGS
+
+### 10.1 · Resolved from the rasters
+
+| Ticket | Resolution |
+|---|---|
+| **SERV-06** alignment | **Left-aligned.** The "services overview" eyebrow, heading and body are flush left in the mobile frame. Settles the ticket's *"справа"* (right) wording, which contradicted its own arrow. |
+| **SERV-04** Indian Program | **Bulleted list, same as the others.** All four mobile cards use `•` bullets — Short-Term Rehabilitation, Long-Term Care, Indian Program, Comprehensive Clinical Support. No chips anywhere. |
+| Services mobile hero order | Header → title → supporting copy → "Explore Our Services" → hero image → **"Scroll to Explore" centred below the image**. Confirms the brief. |
+| Mobile "Our Services" | **Four cards stacked**, each photo → serif heading → body → bullets. |
+| Mobile CTA placement | **No "Plan Your Visit" button between the last service card and Testimonials.** The section ends at the fourth card. |
+| Shared CTA mobile | Slate panel **above**, lifestyle image **below**, panel visibly **shorter** than the image. Confirms ABOUT-14 / ADM-08. |
+
+### 10.2 · Second deliberate divergence from Figma — the FAQ
+
+The Services mobile frame shows FAQ item **2 open** on load. HOME-12 asked for the accordion collapsed on mount, and we implemented that.
+
+This is the same pattern as HOME-15: **Figma and the pre-change build agreed; the agency's ticket asked to change it.** Under the authority order an explicit Asana instruction outranks the raster, so the collapsed state stands.
+
+Recorded so that a later raster comparison does not "correct" it back.
+
+**Running list of deliberate divergences from Figma, all Asana-instructed:**
+1. **HOME-15** — gallery button reads "View More"; Figma shows "View Amenities".
+2. **HOME-12** — FAQ collapsed on mount; Figma shows an item open.
+
+### 10.3 · BRAND LOCKUP SIZES — measured on every page
+
+| Element | Figma | We ship | Verdict |
+|---|---|---|---|
+| Header logo, desktop | **188 × 52** @ x 80 | 189.3 × 52 | ✅ correct |
+| Header logo, mobile | **145 × 40** @ x 16 | 160.2 × 44 | ⚠️ ours ~10% large |
+| **Footer logo, desktop** | **232 × 64** @ x 80 | h 28 (≈102 × 28) | ❌ **far too small** |
+| **Footer logo, mobile** | **232 × 64** @ x 16 | h 28 | ❌ **far too small** |
+
+Desktop footer verified identical on Home, About, Contact and Careers. Mobile verified on Services by row profile and visual crop: x 16…246, y 7356…7419 = **231 × 64**, the full lockup.
+
+### 10.4 · The footer logo has been shrunk away from the design, not toward it
+
+The `Logo` component's natural aspect is 233 : 64. Figma renders the footer lockup at **exactly natural size — height 64** — at both breakpoints, on every page.
+
+| State | Height | vs Figma 64 |
+|---|---|---|
+| Component default | 52 | already 19% small |
+| After the first "reduce 25–30%" request | 38 | 41% small |
+| **Current** | **28** | **56% small** |
+
+Both reduction requests were made on the stated premise that the logo was *"too large compared to the Figma design."* The measurement says the opposite: it was already undersized before either change, and the footer lockup should be **64px tall, 232 wide**.
+
+Those requests arrived through Lovable chat rather than Asana, so they are not "an explicit Asana instruction" in the authority order — and their stated goal was to match Figma. **Reported, not reverted.** The client decides; we do not unilaterally undo an instruction, nor leave a measured mismatch unreported.
+
+Note this is a *different* element from HOME-13, which concerns the large faint watermark at the footer's bottom centre.
