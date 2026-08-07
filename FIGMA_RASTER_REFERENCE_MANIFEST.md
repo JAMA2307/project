@@ -202,3 +202,48 @@ Two frames give two points. Everything between them is a choice to be argued for
 ### 8.3 · Standing rule
 
 **Measure target geometry first. Then choose the simplest robust implementation that reproduces it across responsive widths.** Never run the inference backwards — from a construction that happens to reproduce a screenshot, to a claim about how the design is built.
+
+---
+
+## 9 · ABOUT PAGE — REBASE FINDINGS
+
+### 9.1 · ABOUT-13 — the removal is MOBILE-ONLY
+
+The brief instructed: *"REMOVE the dark circular icon badges. DO NOT remove the value cards themselves."* Measuring both frames adds a scope qualifier the brief did not state:
+
+| Frame | Dark circular icon badge |
+|---|---|
+| **About mobile 393** | **ABSENT** — verified at full resolution on the "Personalized Support" card |
+| **About desktop 1440** | **PRESENT** — clearly visible top-left on the "Comfort & Wellbeing" card |
+
+Applying the removal globally would break the desktop design. **The badge is removed at mobile widths and retained on desktop.**
+
+### 9.2 · Measured mobile value card
+
+| | Value |
+|---|---|
+| Card | x 16…376, **w 361** — full content width, gutter **16** (third independent confirmation) |
+| Card padding | **24** — equals the existing `p-6` token, no new value |
+| Photo | **313** wide, inset 24 left/right, 24 from card top |
+| Order | photo → heading → body. No icon badge anywhere in the card |
+| Card background | alternates white / pale blue between cards |
+
+A first pass returned card x 20…372 (w 353). That was wrong — the tolerance test clipped the antialiased card edge. A luminance threshold gives x 16…376 at **every** row sampled. Recorded because it is the same failure mode as §8.1: a detector result is not evidence until it is stable across scanlines.
+
+### 9.3 · ABOUT-08 — our earlier reading of the photo was wrong
+
+From the 849 × 302 thumbnail we recorded *"photo flush to the card's right/top/bottom edges."* The full-resolution desktop frame shows the photo is **inset with card padding on all sides**, not flush.
+
+The block on ABOUT-08 was therefore correct on the merits — the thumbnail produced a wrong structural reading, exactly as argued. With the full-resolution frame now in hand, ABOUT-08 becomes measurable and can be unblocked once its card geometry is measured.
+
+### 9.4 · ABOUT-12 — mission copy confirmed
+
+Mobile frame shows: small centred ring mark, "Our Mission" heading, then **small, centred, sans-serif** supporting copy with generous whitespace before "What We Value". The site renders `font-serif text-[26px] leading-[36px]` — a large serif. The ticket's complaint is confirmed against the design.
+
+Only one of the two animated states appears in a static export, so the reveal sequence itself is not determinable from the raster.
+
+### 9.5 · Possible token discrepancy — `--blue-50`
+
+The About values section background samples **#F4F8FF** (244, 248, 255), consistently. Our token `--blue-50` is **#F2F7FF** (242, 247, 255) — 2 units off on two channels. The agency brief independently cited "very light section surface: approximately #F4F8FF."
+
+Flagged, **not changed**: a 2-unit difference is at the edge of PNG colour-management error, and this token is used across several sections. Needs sampling on more pages before any change.
