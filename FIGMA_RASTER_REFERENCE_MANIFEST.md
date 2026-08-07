@@ -59,22 +59,34 @@ The entire responsive system in this codebase interpolates its fluid values **fr
 | **1440 desktop** | **80** | Header logo left edge = 80 on Contact, Privacy, Terms, Services, Amenities, Home. Hero photo spans x 80…1360 = 1280 wide. |
 | **393 mobile** | **16** | Home mobile CTA row: left inset **16**, right inset **16**, and `16 + 188 + 16 + 157 + 16 = 393` exactly. A filled button edge is a hard geometric boundary — far more reliable than logo ink, which reads 17–19 because the mark's circle is inset within its box. |
 
-### The correct curve
+### VERIFIED: two endpoints only
 
-Design endpoints are **16 @ 393 → 80 @ 1440**:
+| | Value | Status |
+|---|---|---|
+| Gutter @ 393 | **16** | **verified** — hard button edge, `16+188+16+157+16 = 393` |
+| Gutter @ 1440 | **80** | **verified** — logo left edge on 6 pages; hero photo x 80…1360 |
+| Everything between | — | **NOT verified** |
+
+### HYPOTHESIS: the curve between them
+
+Only two frame widths were supplied — 393 and 1440. **No tablet frame exists**, and no Asana screenshot establishes an intermediate gutter. So the behaviour between the endpoints is a *choice*, not a measurement, and must not be presented as one.
+
+A straight line through the two verified endpoints gives:
 
 ```
-slope     = (80 − 16) / (1440 − 393) = 64 / 1047 = 0.0611270  →  6.1127vw
-intercept = 16 − 0.0611270 × 393     = −8.023px               →  −0.5014rem
+slope     = (80 − 16) / (1440 − 393) = 0.0611270  →  6.1127vw
+intercept = 16 − 0.0611270 × 393     = −8.023px   →  −0.5014rem
 
 padding-inline: clamp(1rem, -0.5014rem + 6.1127vw, 5rem)
 ```
 
-Verify: at 393 → −8.023 + 24.023 = **16.00** ✓ · at 1440 → −8.023 + 88.02 = **80.00** ✓
+It satisfies both endpoints exactly (393 → 16.00, 1440 → 80.00) and matches the fluid-interpolation convention already used throughout this codebase, so it is the least invasive option. **That is the argument for it — not evidence.** A stepped curve at existing breakpoints would satisfy the same two endpoints equally well.
+
+Before changing the token: confirm the codebase's existing breakpoint conventions, pick the simplest behaviour consistent with the two verified endpoints, and **verify intermediate widths for regressions** — R1–R7 were tuned against today's too-wide gutters, so 768 and 1024 are where breakage would appear.
 
 ### Correction to our own earlier proposal
 
-Before the rasters arrived we derived the fix from **390 → 1440**, giving an intercept of −0.4857rem. The design's mobile endpoint is **393**, giving **−0.5014rem**. Our earlier number was wrong — small, but this is a global token and we are not shipping an approximation. The current shipped value, `+0.6095rem`, remains wrong in the other direction and by far more: it renders **33.5px at 390** against a 16px target.
+We previously derived this from a **390** mobile endpoint (−0.4857rem). The verified design endpoint is **393** (−0.5014rem). The shipped `+0.6095rem` renders **33.5px at 390** against a 16px target — wrong in the other direction and by far more.
 
 **Per the agency's instruction this is a global atomic task** — measure, change once, verify every page at every breakpoint, then close the Asana spacing task. It must not be used to mask section-specific spacing defects.
 
@@ -112,23 +124,23 @@ The mobile frame shows the two buttons **side by side, on one row, with the full
 | Label ink — Plan | **98** | **112** |
 | Horizontal padding | **22** | **28** (= the shipped `px-7`) |
 
-### Cross-checks that make these trustworthy
+### VERIFIED vs HYPOTHESIS
 
-- Label ratio Explore ÷ Plan: Figma mobile **1.469**, Figma desktop **1.464**, our live site at 18px **1.466**. Agreement to 0.2% proves the typeface is the same in all three and only the *size* differs.
-- Implied mobile label size: 144/158.5 × 18 = **16.35px**; 98/108.1 × 18 = **16.32px**. Two independent labels agree.
-- The design system's own `text-button` token resolves to **16.0px at 393**. The measurement is 16.0–16.4 including ink-vs-advance error, so **the mobile label is the `text-button` token** — which the `dark`/`light` variants currently bypass by hard-coding `text-[18px]`. That is DEF-02, and the raster confirms it is a real defect rather than a stylistic quibble.
-- Row arithmetic closes exactly: 16 + 188 + 16 + 157 + 16 = **393**.
+**Verified** — external geometry, read directly off a 1:1 raster: button boxes, gap, height, label *ink* extents, and that the row closes at exactly 393.
 
-### Construction
+**Hypothesis — the label is 16px.** Reasoning: the ratio Explore ÷ Plan is 1.469 (Figma mobile), 1.464 (Figma desktop) and 1.466 (live site). Scaling 18px by the measured ratio gives 16.35 and 16.32 from the two labels independently, and the design system's own `text-button` token resolves to **16.0px at 393**.
 
-Two models reproduce the measurements; the second fits exactly:
+**This does not prove anything about the typeface.** A width ratio is invariant under uniform scaling, so it is *consistent with* the same family, weight and tracking at a smaller size — but it is equally consistent with a different family whose relative advance widths happen to be similar. Raster text width is also affected by **weight**, **letter-spacing** and **antialiasing**, none of which the ratio isolates. Our earlier claim that matching ratios "prove the typeface is identical" was overstated and is withdrawn.
 
-- padding 28, dark `flex-1`, light auto → dark 188 ✓, light **154** vs 157 measured
-- **padding 22, dark content-sized, light `flex-1`** → dark **188** ✓, light **157** ✓
+**How it gets settled — in the browser, not by arithmetic.** Render the two labels at 393 at each plausible design-system candidate (the `text-button` token at 16px, plus 16/17/18px at the shipped weight and tracking), screenshot, and measure the *ink* extents the same way the Figma ink was measured — so the comparison is like-for-like rather than layout-box vs ink. Target: **144** and **98**. Prefer a real token over a derived decimal; 16.3px is a calculation artefact and must not be shipped as a literal.
 
-Below 393 the design says nothing. The row must not overflow at 320, so the row wraps below the point where both fit. That is the one extrapolation here and it is confined to widths the design never specifies.
+### Construction is NOT inferred from the raster
 
----
+A raster proves external geometry and colour. It does not reveal CSS. We previously argued that one flex model "fits exactly" and therefore was the construction — that reasoning is withdrawn. Several constructions reproduce the same pixels, and picking one because it reproduces a screenshot is not evidence.
+
+The deliverable is the **target geometry** above. The implementation should be the simplest construction that reproduces it at 393 and stays robust across widths — chosen on engineering merit, then verified by measurement.
+
+Below 393 the design says nothing. The row must not overflow at 320, so it wraps below the width where both buttons still fit. That is an extrapolation, confined to widths the design never specifies.
 
 ## 6 · WHAT THE RASTERS RESOLVE
 
@@ -152,3 +164,41 @@ Below 393 the design says nothing. The row must not overflow at 320, so the row 
 5. Header background treatment when the revealed transparent header crosses light/dark content.
 6. Testimonial identity where author and date duplicate — no person may be invented.
 7. Poppins licensing/source.
+
+---
+
+## 8 · MEASUREMENT DISCIPLINE — what counts as evidence
+
+Added after three of our conclusions were correctly challenged as over-stated.
+
+### 8.1 · A detector result is not evidence until its bounds match the visible component
+
+Our first pass at the HOME-17 badge returned **x 16…376, w 361** — the full photo width. That was discarded as soon as it contradicted the visual, but it should never have been produced as a candidate at all.
+
+**Root cause:** the badge fill is **#E6F0FF**, byte-identical to the page background. Every "is this pixel background?" test therefore classifies the badge as background. Colour thresholding alone cannot find this element — the element and the negative space are the same colour.
+
+**The verification that settles it** — a detected rectangle is only accepted once it survives all of:
+
+1. High-magnification crop, edges identified visually first.
+2. Multiple horizontal scanlines, including rows that pass *between* text lines where the fill is uninterrupted — y 715 and 730 both give a single clean run **32…304**.
+3. Multiple vertical scanlines clear of interior content — x 36 and 300 both give **671…794**.
+4. Probe-anchored runs (the run *containing* a known interior point) rather than first-contiguous-run, which stops at the first unrelated feature. This is what made columns 40–280 report the photo ending at 669: they pass through the badge.
+5. Columns chosen to avoid the occluding element — x 330 and 350 sit right of the badge and give the true photo extent **384…811**.
+6. Cross-check against the other frame: badge 273/345 = 0.791 wide, 126/160 = 0.788 tall. Consistent scaling between mobile and desktop.
+
+Result: photo **361 × 428**, badge **273 × 126**, insets left 16 / bottom 16. Confirmed — and now actually proven.
+
+### 8.2 · What a raster can and cannot establish
+
+| Can establish | Cannot establish |
+|---|---|
+| External geometry — x, y, w, h, gaps, insets, radius | CSS construction — flex vs grid, which element grows |
+| Flat-area colour, sampled | Padding strategy, or which value is a token vs literal |
+| Relative proportion between frames | Font family, weight or letter-spacing from width alone |
+| Presence, absence and stacking order of elements | Behaviour between the supplied frame widths |
+
+Two frames give two points. Everything between them is a choice to be argued for and then verified, never a measurement to be asserted.
+
+### 8.3 · Standing rule
+
+**Measure target geometry first. Then choose the simplest robust implementation that reproduces it across responsive widths.** Never run the inference backwards — from a construction that happens to reproduce a screenshot, to a claim about how the design is built.
