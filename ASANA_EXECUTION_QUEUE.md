@@ -447,7 +447,8 @@ HOME-12 · HOME-14 (confirmed twice, from two different pages) · HOME-15 · HOM
 | 03 | CAR-03 `1217234006576183` | **Shipped, verified, CLOSED.** Button + 2 orphaned imports removed. 0 matches at 5 widths · 8 cards · 900 height · /about unaffected. Comment `1217270407553377` |
 | 04 | ABOUT-13 `1217234006576144` | **Shipped, verified, CLOSED.** Badge `hidden … sm:flex`, wrapper `mt-0 sm:mt-6`. Mobile gap exactly **24** · 639 none / 640 flex · desktop badge intact 48×48 navy, icon 20×20 white, card 440, stack preserved. Comment `1217270616549985` |
 | 05 | SERV-04 `1217234006576153` | **BLOCKED — content conflict.** See §R4-05. Comment `1217270618523911` |
-| 06 | ADM-07 `1217234006576170` | **Dispatched** `umsg_01kzdyb4gafngtap3mfpphg7ax` |
+| 06 | ADM-07 `1217234006576170` | **Shipped, verified, CLOSED.** `order-first md:order-none`. Photo first on both cards at 393 and 320 · order −9999→0 at 768 · photo left 475 > text right 455 · card 846×450 · arrow steps 866. Comment `1217270930956607` |
+| 07 | HOME-16 `1217213785962843` | **Dispatched** `umsg_01kzdyr1xrevy8jwsmh5mqdwft` |
 
 ### R4-01 · we corrected the implementer, not the other way round
 

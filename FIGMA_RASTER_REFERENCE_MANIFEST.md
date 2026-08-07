@@ -588,3 +588,37 @@ HOME-14 (twice, from two different pages) · HOME-19 · HOME-20 · desktop heade
 ### Still to measure before the affected items dispatch
 
 Careers intro section height and mobile order · Contact "Supported Transition" badge icon · Contact mobile in full · About values desktop card internals for ABOUT-08 · Playfair heading-weight calibration for HOME-18.
+
+---
+
+## 16 · CORRECTION — mobile button size is NOT uniform, and DEF-02 was overstated
+
+Measured while scoping R4-07. Every dark button in the Home mobile frame is **44 tall**, but their label sizes differ:
+
+| Button | Figma ink | Best-fit candidate | Size |
+|---|---|---|---|
+| Hero "Explore Our Services" | **146** | Medium 145.1 | **16px** |
+| Hero "Plan Your Visit" | **99** | Medium 100.5 | **16px** |
+| Service card ×4, "Explore Our Services" | **164** | Medium 163.6 | **18px** |
+| Form "Submit" | **49** | Medium 48.9 | **16px** |
+
+All four service-card buttons measure identically (button 329 wide, ink 164), so 18px there is systematic, not a one-off.
+
+### What this overturns
+
+We previously wrote that the `dark`/`light` variants hard-coding `text-[18px]` is a defect because "the design says 16px at mobile". **That was based on the hero buttons alone and is too broad.** For the service-card buttons the design *does* render 18px at mobile, which is exactly what the hard-coded value produces. The hero is the deviation, not the rule.
+
+**Revised position:**
+- The hero's mobile buttons are 16px. That is a hero-specific treatment — almost certainly because two buttons must share one 361px row.
+- The `text-button` token (16px @ 393 → 18px @ 1440) matches the hero and Submit but **not** the service buttons.
+- So the design is not internally consistent about mobile button size, and "apply the token globally" would be wrong.
+
+### Consequence for scope
+
+R4-07 is therefore **local to `home/Hero.tsx`**. Touching `ui/button.tsx` would shrink every button on nine routes to 16px at mobile and break the service cards. The brief says so explicitly, and carries a regression check on `/services` at 393 that must still report **18px** — that check exists precisely to catch a shared-component edit.
+
+Weight remains **Medium 500** everywhere; only the size varies. The earlier calibration stands.
+
+### Also measured, deliberately not fixed here
+
+Figma's mobile buttons are **44** tall and desktop **46**; we render **48** at both via `size="l"` (`h-12`). A real deviation, but height is not what HOME-16 asks for, so it is recorded for a separate item rather than folded in.
