@@ -402,7 +402,7 @@ Ordered shared-component-first, then by risk. One logical correction per turn.
 | 03 | CAR-03 `1217234006576183` | `careers/CareersTeam.tsx` | Remove "View full Team" — absent from both approved frames |
 | 04 | ABOUT-13 `1217234006576144` | `about/AboutValues.tsx` | Remove dark circular icon badge **at mobile widths only** — present on desktop |
 | 05 | SERV-04 `1217234006576153` | `services/ServicesList.tsx` | Indian Program → same bulleted list as the other three cards |
-| 06 | ADM mobile card order `1217108466019462` | `amenities/AmenitiesCarousel.tsx` | Mobile order **image → heading → body → list → Book a Call** |
+| 06 | **ADM-07** `1217234006576170` | `amenities/AmenitiesCarousel.tsx` | Mobile order **image → heading → body → list → Book a Call** |
 | 07 | HOME-16 `1217213785962843` | `home/Hero.tsx` + `ui/button.tsx` | 393: dark **188**, gap **16**, light **157**, h **44**. Label = `text-button` token |
 | 08 | HOME-17 `1217213785962846` | `home/Hero.tsx` | Photo **361 × 428**; badge **273 × 126**, insets 16/16, fill #E6F0FF, bottom-**left** |
 | 09 | CON-01 `1217234006576186` | `contact/ContactHero.tsx` | Left column block y **383…593** against photo y 100…819 |
@@ -447,6 +447,7 @@ HOME-12 · HOME-14 (confirmed twice, from two different pages) · HOME-15 · HOM
 | 03 | CAR-03 `1217234006576183` | **Shipped, verified, CLOSED.** Button + 2 orphaned imports removed. 0 matches at 5 widths · 8 cards · 900 height · /about unaffected. Comment `1217270407553377` |
 | 04 | ABOUT-13 `1217234006576144` | **Shipped, verified, CLOSED.** Badge `hidden … sm:flex`, wrapper `mt-0 sm:mt-6`. Mobile gap exactly **24** · 639 none / 640 flex · desktop badge intact 48×48 navy, icon 20×20 white, card 440, stack preserved. Comment `1217270616549985` |
 | 05 | SERV-04 `1217234006576153` | **BLOCKED — content conflict.** See §R4-05. Comment `1217270618523911` |
+| 06 | ADM-07 `1217234006576170` | **Dispatched** `umsg_01kzdyb4gafngtap3mfpphg7ax` |
 
 ### R4-01 · we corrected the implementer, not the other way round
 
@@ -522,3 +523,18 @@ Two further problems in the same answer, one of which **is live**:
 Not drafted or corrected by us: clinical and commercial claims are the client's to state.
 
 **Design-content defects now at five:** duplicated testimonial author · Amenities card lists disagreeing between frames · Privacy nav 10-entries-9-sections · ADM-04 naming · Brookwood in the FAQ.
+
+### R4-06 · second queue GID error caught by the pre-dispatch check
+
+The queue listed the Amenities mobile card-order item under **ADM-02** `1217108466019462`. That is wrong — ADM-02 is *"the card that's supposed to come next appeared in the middle"*, the carousel **arrangement** ticket, which is R4-10.
+
+The card-order item is **ADM-07** `1217234006576170` — *"Картинка вверх и вниз"* ("image up, text down"). Corrected.
+
+Two GID/path errors now caught this way (R4-02's component, R4-06's ticket). The mandatory read is earning its cost.
+
+**Evidence is unambiguous and triangulates three ways:**
+- The ticket text says image up, text down.
+- The screenshot draws **two curved arrows swapping** the photo and the text block.
+- The Figma mobile frame renders photo → heading → body → list → button.
+
+Our DOM has the text `<div>` first and the `<img>` second, which on `flex-col` puts the photo **last**. One ordering class fixes it; `md:order-none` keeps the photo on the right once the card becomes a row.
