@@ -285,9 +285,25 @@ One subtask per Lovable turn, each preceded by the §7.1 source read and followe
 | Q6 | SERV rail not clickable | `1217108466019422` | **Shipped & verified.** Rail is now a passive indicator; `<nav>` demoted to `<div>` | `1217268161803922` | **left open** — pinning half blocked |
 | Q7 | HOME-16 hero CTAs side by side | `1217213785962843` | **BLOCKED — reclassified.** Does not fit. See below | `1217265347900491` | open |
 | Q8 | HOME-17 hero badge inside photo | `1217213785962846` | **BLOCKED — reclassified.** Panel would cover 74% of the photo. See below | `1217272191854590` | open |
-| Q9 | HOME-19 testimonial card centred | `1217213785962852` | **Dispatched** `umsg_01kzdke95bfnwa01d98kh8p17j` | pending | open |
+| Q9 | HOME-19 testimonial card centred | `1217213785962852` | **Shipped & verified.** `[scroll-padding-left:16px]` — one class. Card now 16px from each edge at 390 and 320 | `1217270135177609` | **CLOSED** |
+| Q10 | HOME-20 gallery text left on mobile | `1217213785962855` | **Shipped & verified.** Left below 640, centred from 640 — the component's own existing breakpoint | `1217265816310193` | **CLOSED** |
+| Q11 | ABOUT-01 duplicate hero logo | `1217108466019431` | **Dispatched** `umsg_01kzdmgymmf4vt6rr4zyyc5r0z` | pending | open |
 
-**5 closed · 2 shipped-but-open · 2 reclassified as blocked · 1 in flight.**
+**7 closed · 2 shipped-but-open · 2 reclassified as blocked · 1 in flight.**
+
+Q9 and Q10 are the **first two of the 59 QA subtasks marked complete** in this engagement. Both had a single, fully specified outcome and no blocked half.
+
+### 8.4 · DEF-01 confirmed a third time, from a live browser
+
+The Q10 turn was asked to report the container's content-left edge as a reference point for the alignment assertion. It returned **33.52px at 390** and **29.26px at 320** — against the 33.5 and 29.3 predicted from the clamp, and the 33.2 measured off the QA screenshot. Three independent sources agree. DEF-01 is not a reading error.
+
+### 8.5 · Footer logo resized twice outside this queue — flagged, not actioned
+
+Between the Q5 and Q6 turns the client sent Lovable two direct requests, both worded "reduce the footer logo by roughly 25–30%". The first took `Logo` from its 52px default to `h-[38px]`; the second took it to `h-[28px]`. Net **52 → 28, a 46% reduction**.
+
+The second turn's baseline was ambiguous and the agent said so in its own reasoning before guessing — *"we don't have exact measurement… we don't have Figma."* If "25–30%" meant off the original, 38px was already correct and 28px overshoots by ~26%. Current source confirms `<Logo variant="dark" className="h-[28px]" />`.
+
+Raised with the client; **not reverted** — the baseline is theirs to state. Note this is *not* the element in HOME-13, which concerns the large faint watermark (`footer-logo-official.png`) at the bottom centre, not this wordmark.
 
 ### 8.1 · Q7 and Q8 — why Rev 2 was still one bar too low
 
