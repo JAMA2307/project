@@ -287,9 +287,35 @@ One subtask per Lovable turn, each preceded by the §7.1 source read and followe
 | Q8 | HOME-17 hero badge inside photo | `1217213785962846` | **BLOCKED — reclassified.** Panel would cover 74% of the photo. See below | `1217272191854590` | open |
 | Q9 | HOME-19 testimonial card centred | `1217213785962852` | **Shipped & verified.** `[scroll-padding-left:16px]` — one class. Card now 16px from each edge at 390 and 320 | `1217270135177609` | **CLOSED** |
 | Q10 | HOME-20 gallery text left on mobile | `1217213785962855` | **Shipped & verified.** Left below 640, centred from 640 — the component's own existing breakpoint | `1217265816310193` | **CLOSED** |
-| Q11 | ABOUT-01 duplicate hero logo | `1217108466019431` | **Dispatched** `umsg_01kzdmgymmf4vt6rr4zyyc5r0z` | pending | open |
+| Q11 | ABOUT-01 duplicate hero logo | `1217108466019431` | **Shipped & verified.** Hero glyph + import deleted; both scrims, photo and geometry intact | `1217272201128339` | **CLOSED** (both halves) |
+| Q12 | ABOUT-08 values card layout | `1217213785962840` | **BLOCKED — reclassified.** Design reference unreadable; component rebuilt after the ticket | `1217272203924879` | open |
+| Q13 | ABOUT-11 pill icons | `1217234006576138` | **BLOCKED — but diagnosed.** Icons load fine; they are white on #E5EEFF, contrast **1.17:1** | `1217272204703918` | open |
 
-**7 closed · 2 shipped-but-open · 2 reclassified as blocked · 1 in flight.**
+**8 closed · 2 shipped-but-open · 4 reclassified as blocked · 0 in flight.**
+
+### 8.6 · Q12 — three independent reasons, any one sufficient
+
+1. **The ticket specifies nothing.** ABOUT-08 reads in full: *"The card layout structure is broken here, please fix."*
+2. **The design reference cannot be measured.** The attached Figma frame is **849 × 302 px for a whole page**; an 847px card occupies ~238px in it, a 3.6× reduction. Error ≈ ±10% ≈ ±85px on the card. The arrangement is legible; no dimension is.
+3. **The component was rebuilt after the ticket was raised.** ABOUT-08 is from 03-Aug; R3 rewrote `AboutValues` on 05-Aug. The attached "live" screenshot no longer shows the current build — the text column is now `justify-center`, so the icon and text are centred as a group rather than pinned top and bottom.
+
+Confirmed from the 1:1 live capture: card **847** wide, photo **265** — matching `sm:w-[265px]`. Those two numbers are real; nothing else is.
+
+Also raised in the same comment: `AboutValues` renders **four Lucide icons** (`HandHeart`, `Home`, `Activity`, `Users`) where the standing rule forbids generic icons if official files exist. Asked whether official artwork exists for the four values.
+
+### 8.7 · Q13 — the ticket's premise was wrong, and we proved it
+
+ABOUT-11 reads *"The Figma icons are missing."* They are not.
+
+- Both pills reference the **official** assets (`about-icon-skilled-nursing`, `about-icon-medication-management`) — the queue's mandatory pre-dispatch check passed; no Lucide substitution.
+- The asset JSON resolves to a real 346-byte PNG.
+- Pixel analysis of the agency's own screenshot 12 finds the glyph **present** — a white cluster (rgb 254,255,255) inside a badge of rgb(229,238,255). Rendering the badge as ASCII shows the glyph outline plainly.
+
+**White on #E5EEFF = 1.17:1 contrast.** WCAG needs 3:1 for a graphic. The icons load and are invisible.
+
+Two possible fixes, visibly different — dark badge with the white icon (matching the Home hero's identical 40px `bg-accent` badge, which is legible), or a pale badge with dark icon files we do not have. Asked which; refused to invert the artwork in CSS, since that modifies an official mark.
+
+**Correction recorded:** our own §12 note claimed the pill overflows the photo's bottom edge on mobile. Re-checking, that was the phone's browser toolbar overlapping the page. The pill sits correctly inside the photo. Posted the correction rather than dropping it.
 
 Q9 and Q10 are the **first two of the 59 QA subtasks marked complete** in this engagement. Both had a single, fully specified outcome and no blocked half.
 
