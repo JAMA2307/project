@@ -1077,3 +1077,72 @@ that ink top. Fixing A first would guarantee re-breaking it.
 (gaps A and C). H10 covered the mobile CTA row and H11 covers the mobile badge, but
 nothing covers mobile hero rhythm. Flagged for a decision rather than silently folded
 into an adjacent correction.
+
+---
+
+## 24 · H02 — VERIFIED PASS (image already correct; one colour changed)
+
+### 24.1 Half 1 — the reception image was ALREADY CORRECT
+
+Verified without swapping anything, using a signature both sides could compute
+independently: crop the hero `<img>` box out of a 1440 screenshot, take the top 536 rows
+(above the badge overlay in both design and render, so the badge cannot contaminate it),
+resample to an 8×4 grid with a BOX filter, compare mean RGB per cell.
+
+**Max deviation 1/255 across all 96 channels; mean 0.354.** Recomputed here rather than
+taken from the report — the implementer stated 2, the true figure is 1.
+
+The rendered `<img>` box is left 80, top 442, 1280×720 — exact. The AMARA circular
+monogram and the "AMARA / REHAB AND NURSING" wall sign are present and intact, and the
+blue starlit ceiling is present. The agency's warning not to read the hand-drawn marks
+on the sign as an instruction to remove it was therefore never acted on wrongly.
+
+**No asset was touched.** This is the "ALREADY CORRECT — VERIFIED WITHOUT A CHANGE"
+outcome for half 1; only half 2 consumed an edit.
+
+### 24.2 Half 2 — one class, exactly as scoped
+
+```
+<span className="text-label text-label-brown">   ->   <span className="text-label text-primary">
+```
+
+Rendered heading colour is now `rgb(44, 46, 68)` against the Figma `#2C2E45` =
+`rgb(44, 46, 69)`. Body `rgb(76, 82, 103)` and icon tile `rgb(87, 104, 127)` confirmed
+**unchanged**, and the hero band scan still reports CTA `(314, 361)` and photo
+`(442, 1161)` — H01's rhythm is intact.
+
+### 24.3 New finding — the blue palette is stored as rounded HSL and is 0–2 units off
+
+The 1-unit residual on the heading is not a leftover of the old colour. Every blue token
+is stored as a rounded HSL triplet, and converting each back to RGB reproduces the
+rendered values exactly:
+
+| token | stored HSL | renders as | Figma hex | delta |
+|---|---|---|---|---|
+| `--blue-800` | 234 22% 22% | rgb(44, 46, **68**) | #2C2E45 = rgb(44,46,**69**) | 0, 0, −1 |
+| `--blue-700` | 226 15% 35% | rgb(**76, 82, 103**) | #4B5066 = rgb(**75, 80, 102**) | +1, +2, +1 |
+| `--blue-500` | 214 19% 42% | rgb(**87, 104, 127**) | #56677F = rgb(**86, 103, 127**) | +1, +1, 0 |
+
+So the deltas the implementer flagged on the *untouched* body and icon tile are real, and
+its diagnosis — HSL rounding, not an edit — is correct. It reported them instead of
+quietly "fixing" them, which was the right call.
+
+**Assessment: recorded, not actioned.** Maximum error is 2/255 on one channel (0.8%),
+which is below perceptual threshold and is not "a visible difference from Figma". The
+cause is storing brand colours as 3-significant-figure HSL rather than as the exact hex.
+Fixing it is a **single palette-precision item affecting every blue on the site**, and
+token changes are already blocked pending agency sign-off. It must not be slipped into a
+hero correction.
+
+### 24.4 Measured but deliberately not acted on
+
+Badge heading, Figma: ink **16 tall × 243 wide**, ink rows 1006–1021. Badge internals
+confirm the shipped markup independently — left padding 24 (`px-6`), icon tile 40×40
+(`h-10 w-10`), tile→heading gap 13 (`gap-3`).
+
+Rendered heading computed style: Poppins / 16px / weight 500 / line-height 22px. H02's
+scope is colour; **font family and weight were not verified against Figma** and were not
+touched. The agency wording "too black/heavy" could conceivably implicate weight as well
+as colour — but colour alone accounted for a delta of rgb(68,24,2) → rgb(44,46,69), and
+nothing may be changed on a guess. Flagged for a separate item if the client still reads
+it as heavy.
