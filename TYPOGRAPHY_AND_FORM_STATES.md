@@ -239,3 +239,69 @@ This corrects the Wave R6 report, which stated each field had *"a real `<label>`
 2. Attachment `1217234006576131` — needs `asanausercontent.com` allowed in the egress policy.
 
 Either one unblocks the work. Both together give the full picture.
+
+---
+
+## FONT CALIBRATION AGAINST THE FIGMA RASTERS · 2026-08-07
+
+Run on the Home hero button labels, because they are the one string that appears at a known size in **both** the 1440 and the 393 frame. Method per the agency's instruction: test real design-system candidates and compare rendered geometry, rather than trusting a ratio calculation.
+
+### Method
+
+Rendered `Explore Our Services` and `Plan Your Visit` from the **official Satoshi binaries** at 8× supersample, character-by-character with CSS letter-spacing applied between glyphs, then measured the ink bounding box. Compared against ink measured off the rasters with a **midpoint-luminance threshold** inside corner-safe boxes.
+
+Two measurement errors were found and corrected along the way, both of which had inflated earlier numbers:
+
+1. Boxes that clipped the buttons' rounded corners let the pale page background register as "white text", returning the **button width** (184, 218) instead of the ink.
+2. The earlier desktop figures (164 / 112) came from the gaps between button-fill runs, not from ink.
+
+Corrected targets, stable to ±1px across luminance thresholds from 200 to 248:
+
+| | Explore Our Services | Plan Your Visit |
+|---|---|---|
+| Desktop 1440 | **163** | **112** |
+| Mobile 393 | **146** | **99** |
+
+### Result — tracking fixed at the token's −0.01em ≈ −0.18px
+
+| Frame | Candidate | Explore | Plan | max error |
+|---|---|---|---|---|
+| **Desktop @ 18px** | Regular 400 | 158.4 (−4.6) | 109.4 (−2.6) | 4.62 |
+| | **Medium 500** | **163.6 (+0.6)** | **113.4 (+1.4)** | **1.38** |
+| | Bold 700 | 169.8 (+6.8) | 118.0 (+6.0) | 6.75 |
+| **Mobile @ 16px** | Regular 400 | 140.4 (−5.6) | 96.8 (−2.2) | 5.62 |
+| | **Medium 500** | **145.1 (−0.9)** | **100.5 (+1.5)** | **1.50** |
+| | Bold 700 | 150.5 (+4.5) | 104.5 (+5.5) | 5.50 |
+
+**Satoshi Medium (500) wins on both frames independently, by a factor of 3–4×.** The two frames are separate measurements of separate images, so agreeing on the same weight is a real cross-check rather than one fit.
+
+The sizes that work — **18px at 1440, 16px at 393** — are exactly the existing `text-button` token: `clamp(1rem, 0.9536rem + 0.1905vw, 1.125rem)`.
+
+### Conclusion
+
+| | |
+|---|---|
+| Family / weight | **Satoshi Medium 500** — already what `font-medium` asks for |
+| Size | **the `text-button` token**, unchanged |
+| Tracking | token's `-0.01em` (= −0.18px at 18px, −0.16px at 16px) |
+
+The defect is **not** the weight and **not** the token. It is that the `dark` and `light` button variants hard-code `text-[18px] font-medium leading-[20px] tracking-[-0.18px]` and therefore never apply `text-button` at all — so mobile renders 18px where the design says 16px.
+
+`text-button` already declares `font-sans`, `font-weight: 500`, `line-height: 1.25rem` (= the hard-coded 20px) and `-0.01em`. It is a **drop-in replacement** that changes only the size. No new value is introduced.
+
+### Two claims withdrawn
+
+- **"Matching width ratios prove the typeface is identical."** They do not — a ratio is invariant under uniform scaling and isolates neither weight nor tracking. Superseded by this calibration, which tests candidates directly.
+- **"Satoshi Medium is not loading; the site renders 400."** Wrong. `__root.tsx` loads `satoshi@400,500,700` from Fontshare — **500 is available**. That inference rested on a live-site width measured off a resampled phone screenshot, where ±3% is entirely plausible on a 158px string. It was not a reliable measurement and no conclusion should have been drawn from it.
+
+### Confirmed directly, for HOME-18
+
+`__root.tsx` requests `family=Playfair+Display:wght@400` — **400 only**. Every heading above regular weight is therefore unavailable, which is the documented root cause of the heading-weight ticket. Poppins is requested at `wght@500` only.
+
+The same calibration method now applies to the headings: render Playfair at 400/500/600/700 against the h1–h4 crops in these rasters and pick per level. That is the next calibration, and it needs no agency answer — the rasters supply the target.
+
+### Implementation note — construction is chosen, not measured
+
+Target at 393: dark **188**, gap **16**, light **157**, height **44**, row filling 361.
+
+Keeping `px-7` (28px) on both buttons and letting the dark one fill the remaining width reproduces this: light = 100.5 ink + 56 = **156.5 ≈ 157**, leaving 361 − 16 − 156.5 = **188.5 ≈ 188**. That is offered as the simplest implementation reproducing the measured geometry **without inventing a padding value** — not as a claim about how the Figma file is built.
