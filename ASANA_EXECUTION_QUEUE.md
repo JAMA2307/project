@@ -444,7 +444,9 @@ HOME-12 · HOME-14 (confirmed twice, from two different pages) · HOME-15 · HOM
 |---|---|---|
 | **01** | ABOUT-05 `1217108466019447` · ADM-05 `1217108466019473` | **Shipped, verified, both CLOSED.** Panel → `bg-accent`; overlay → `bg-accent/[0.98]`. Computed `rgb(87,104,127)` on all 3 routes · 630×660 · contrast 5.44:1 · mobile 440/320 untouched. Comments `1217269743142533`, `1217269767268478` |
 | 02 | SERV-06 `1217234006576159` | **Shipped, verified, CLOSED.** Left below 1024, centred from 1024. 393: container edge and all three text elements at **33.70**. 1023 left / 1024 centred. 1440 unchanged — offsets 330/330, collage 306/621/313, row 460. Comment `1217269745205600` |
-| 03 | CAR-03 `1217234006576183` | **Dispatched** `umsg_01kzdx0abqefwvhk2gzkdz95pa` |
+| 03 | CAR-03 `1217234006576183` | **Shipped, verified, CLOSED.** Button + 2 orphaned imports removed. 0 matches at 5 widths · 8 cards · 900 height · /about unaffected. Comment `1217270407553377` |
+| 04 | ABOUT-13 `1217234006576144` | **Shipped, verified, CLOSED.** Badge `hidden … sm:flex`, wrapper `mt-0 sm:mt-6`. Mobile gap exactly **24** · 639 none / 640 flex · desktop badge intact 48×48 navy, icon 20×20 white, card 440, stack preserved. Comment `1217270616549985` |
+| 05 | SERV-04 `1217234006576153` | **BLOCKED — content conflict.** See §R4-05. Comment `1217270618523911` |
 
 ### R4-01 · we corrected the implementer, not the other way round
 
@@ -484,3 +486,39 @@ Desktop measured centred — eyebrow 719.0, heading 720.0, body 719.0 against a 
 `CareersTeam.tsx` uses `Link` and `Button` **only** inside the "View full Team" block. Removing the block orphans both imports, so the brief names them explicitly and requires the implementer to verify no other use before deleting.
 
 Also caught: the Figma frame renders **"Director of Houskeeping"** — a typo in the design. Our source has the correct "Housekeeping". The brief explicitly forbids "correcting" our spelling to match the raster. The authority order makes Figma the visual reference, not a licence to copy its spelling mistakes into production.
+
+### R4-05 · blocked — the raster would delete four services
+
+SERV-04 asks for **list treatment** consistency: the Indian Program card uses chips where the other three use bullets. Confirmed, and the styling fix is trivial.
+
+But the Figma mobile frame does not just change the treatment, it **changes the content**:
+
+| | Site | Figma mobile |
+|---|---|---|
+| Indian Program | **10** discrete items | **3** combined bullets |
+| Dropped entirely | — | Indian Cooks · Indian Snacks · Indian Newspapers · Indian Environment |
+| Body copy ends | "…language, and daily experiences." | "…language, and **meals**." |
+| Comprehensive Clinical Support | **6** items | **3** items |
+| Its body copy | "may receive a range of clinical care services" | "receive expert clinical support to aid stroke, orthopedic, or cardio recovery" |
+
+**Desktop cannot arbitrate.** The desktop frame uses the rail-plus-active-panel layout, so only the Short-Term Rehabilitation panel is drawn — the Indian Program panel is absent from the export. The mobile frame is the sole evidence and may simply be a shortened mobile treatment.
+
+Deleting four offerings from a care home's cultural programme is a **service claim**, not styling. Blocked with three options; (a) keep all ten and convert to bullets is recommended, since it satisfies the ticket exactly and loses nothing.
+
+### FIFTH design-content defect — another company's name in the approved file
+
+The Figma FAQ answer to *"Do you accept Medicare or private insurance?"* reads:
+
+> **"Brookwood** provides a full spectrum of senior care services, including rehabilitation, skilled nursing, **memory care**, and wellness programs…"
+
+**Brookwood is not Amara.** Template copy from another project, sitting in the approved design.
+
+Our build already reads "Amara Care Center" — corrected earlier — so the live site is clean. But anyone rebuilding this section from the raster would put a competitor's name onto the site. Raised on the Services DEV task (`1217269774939145`).
+
+Two further problems in the same answer, one of which **is live**:
+- It never mentions Medicare or insurance — it answers a different question than the one asked.
+- It claims **"memory care"** as a service. On a healthcare site that is a factual claim about what the provider offers, and it needs confirming or removing.
+
+Not drafted or corrected by us: clinical and commercial claims are the client's to state.
+
+**Design-content defects now at five:** duplicated testimonial author · Amenities card lists disagreeing between frames · Privacy nav 10-entries-9-sections · ADM-04 naming · Brookwood in the FAQ.
