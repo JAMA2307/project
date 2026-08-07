@@ -430,3 +430,58 @@ The Careers frame again shows an FAQ item expanded on load, as Services does. Co
 ### 12.6 · Testimonial names — third sighting
 
 Careers desktop again shows **"— Oliver W." on both visible cards**. The duplication is systematic across the design, not a one-frame slip. Reinforces that this is a content question for the agency, not something to resolve in code.
+
+---
+
+## 13 · CONTACT PAGE — REBASE FINDINGS
+
+### 13.1 · CON-01 — hero left column, measured
+
+Hero section is **y 0…899 = 900 tall**.
+
+| | Figma |
+|---|---|
+| Photo | **630 × 720**, x 730…1359, y 100…819 — right margin **80** ✅ matches what we ship |
+| Left column heading | y **383…429**, x 83…382 |
+| Left column body | y **472…508**, x 80…468 (389 wide) |
+| Left column button | y **546…593**, x 80…239 (160 wide) |
+| "Scroll to Explore" | y 804…816 |
+
+The heading/body/button block spans **y 383…593**, centre **488**, against a photo centred at 459.5 — so it sits low in the hero, **283px below the photo's top edge**, not anchored to the top. That is the defect CON-01 reports ("column top-anchored, h1 collides with the header row").
+
+Stated as measured positions rather than as "centred": the block's centre is 28.5px below the photo's centre, so a strict centring rule would land it slightly high. The scroll indicator sits separately at the hero's bottom, which is why the column is not a simple centred stack.
+
+### 13.2 · Insurance panel — full target
+
+| | Value |
+|---|---|
+| Panel | **738 × 434**, x 622…1359, right margin **80** |
+| Panel fill | **#8CA1C1** |
+| Panel padding | **32** |
+| Layout | **two columns**; column 1 at panel-relative x 32, column 2 at x **421** |
+| Check circle | **28 × 28**, fill **#FFFFFF**, check drawn in the panel blue |
+| Heading | "Accepted insurances include, but are not limited to:" in white |
+
+### 13.3 · TWO COLOUR TOKEN DEFECTS — both now on two independent sightings
+
+**`#8CA1C1` vs our `#8FA8CE`.** The insurance panel samples **#8CA1C1** — byte-identical to the 404 page background measured earlier. Two different pages, two different components, same value: this is a real design token.
+
+Our `--blue-300` is **#8FA8CE** (143, 168, 206), and `ContactInsurance` additionally hard-codes the same literal (recorded as COD-02). Measured is (140, 161, 193).
+
+| Channel | Ours | Figma | Δ |
+|---|---|---|---|
+| R | 143 | 140 | 3 |
+| G | 168 | 161 | **7** |
+| B | 206 | 193 | **13** |
+
+A 13-unit difference on blue is far outside antialiasing or colour-management noise. **This is a genuine token error**, and it affects the 404 background and the insurance panel together.
+
+**`#F4F8FF` vs our `#F2F7FF`.** Second independent sighting — the Contact insurance section background and the About values section background both sample **#F4F8FF** (244, 248, 255) against our `--blue-50` of **#F2F7FF** (242, 247, 255). Two units on two channels, now confirmed on two pages.
+
+Both are reported, **neither changed**: they are shared tokens, and per the agency's own instruction a token change is a global atomic task requiring verification on every route.
+
+### 13.4 · Still to measure on Contact before dispatch
+
+- The **"Supported Transition" badge icon** inside the admissions-steps photo — the brief requires the official icon rather than a generic substitute. Present in the frame; not yet measured or matched against the asset inventory.
+- Mobile Contact layout in full — the hero, the insurance panel's mobile arrangement, and the form.
+- The contact form's field set is visible (Name*, Email*, Phone Number*, Your question, privacy checkbox, Submit) and matches what we ship, but S1/S2 states remain blocked on copy hidden under the annotation digits.
