@@ -1362,3 +1362,60 @@ nav 10-entries/9-sections, ADM-04 naming, "Brookwood" in the FAQ answer).
 **The site must NOT adopt this typo.** Recorded for the agency; the shipped text stays.
 It also means the two texts differ by one space, which is far too small to explain the
 515px discrepancy above — so it does not rescue the wrap measurement.
+
+### 26.6 H04 — the intro IS too small. My "size is already correct" was wrong.
+
+Settled offline against the **official Satoshi OTFs in `design-sources/fonts/Satoshi/`** —
+no Lovable credit needed, and it answers all six properties the agency listed.
+
+**Desktop.** Dividing each measured Figma line width by that string's advance width at a
+reference size gives the implied font size. Five independent lines, Satoshi **Regular**:
+
+| Figma width | implied size |
+|---|---|
+| 712 | 23.98 |
+| 772 | 23.96 |
+| 755 | 23.97 |
+| 719 | 23.93 |
+| 599 | 23.93 |
+
+**Mean 23.96, spread 0.06 → 24px.** Satoshi *Medium* gives 23.24 with the same tightness —
+internally consistent but not a design-plausible value, so the face is Regular.
+
+Re-wrapping the shipped copy at Regular 24px in a 774px box reproduces Figma's line
+breaks exactly: **712.3 / 773.1 / 755.8 / 727.5 / 600.7** vs **712 / 772 / 755 / 719 / 599**.
+Line 4's 8px gap is exactly the "on community" vs "oncommunity" space from §26.5.
+
+**Mobile.** Greedy-wrapping at the 361px content width, only **16px** reproduces the seven
+measured lines: simulated **314, 358, 315, 359, 333, 351, 338** against measured
+**313, 356, 315, 358, 333, 351, 337** — deltas 0–2px on every line.
+
+**The answer to all six properties:**
+
+| property | Figma | shipped (`text-body-large`) | |
+|---|---|---|---|
+| family | Satoshi | Satoshi | correct |
+| **size** | **16 @393 → 24 @1440** | **18 → 20** | **WRONG at both ends** |
+| weight | 400 | 400 | correct |
+| **line-height** | **20 @393 → 32 @1440** | **26 → 32** | **mobile wrong** |
+| letter-spacing | 0 | 0 | correct |
+| container width | 774 | `max-w-[774px]` | correct |
+
+Fitted curves, both landing exactly on their clamp bounds:
+
+```
+font-size:   clamp(1rem,    0.8123rem + 0.7641vw, 1.5rem)
+line-height: clamp(1.25rem, 0.9685rem + 1.1461vw, 2rem)
+```
+
+**Corrections to my own record.** §26.2 claimed the font size was already correct,
+inferred from line pitch alone; that inference was wrong and the agency's "too small" was
+right. The "thin" half was the colour, already fixed. And §26.4 was wrong to conclude the
+*implementer's* wrap measurement was unsound — simulating Satoshi Medium at 20px
+reproduces their numbers (764/730/753/747/73 vs their 763/722/749/737/71) almost exactly.
+Their measurement was fine; **my Figma-side assumption of 20px was the error.**
+
+`text-body-large` must **not** be edited — it is shared. The fix is local, and because an
+`@utility` sets both properties, a plain override would lose the equal-specificity race
+exactly as `text-eyebrow` did; the element should therefore state its own typography
+outright, as the badge and "Guided care" paragraphs already do in this codebase.
