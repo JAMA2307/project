@@ -841,3 +841,49 @@ Two consequences:
    currently routes to `/amenities`", but the underlying fact is that `/amenities` is
    the only target that exists. Recorded as evidence for R01. Per the instruction,
    R01 is **investigate only — not mutated.**
+
+---
+
+## 20 · HOME HERO BADGE — MEASURED FOR H02 (prep, not yet dispatched)
+
+`Home Page _ Desktop.png` at 1440. Hero photo occupies x 80–1359, y 440–1159.
+
+| property | measured |
+|---|---|
+| badge bounds | x **991–1335**, y **976–1135** |
+| badge size | **345 × 160** |
+| inset from photo right | **24** |
+| inset from photo bottom | **24** |
+| badge fill | **#E6F0FF** — identical to the page background |
+
+The 24/24 insets match the shipped `lg:bottom-6 lg:right-6` exactly. Shipped
+`lg:max-w-[340px]` against a measured 345 is a 5px difference — noted, not asserted,
+and not part of H02's colour scope.
+
+The fill being byte-identical to the page background is the same property that
+invalidated the first HOME-17 badge detector run; any future badge measurement must be
+probe-anchored rather than fill-detected.
+
+### 20.1 Text colours — the three treatments the brief asks to check separately
+
+Ink bands inside the badge, and the dominant exact colour in each:
+
+| element | band | measured colour | shipped | verdict |
+|---|---|---|---|---|
+| icon tile | y 992–1031 | **#56677F** (`--blue-500`) | `bg-accent` → `--blue-500` | **correct** |
+| heading "Where Healing Feels Like Home" | y 992–1031 | **#2C2E45** (`--blue-800`) | `text-label-brown` → **#441802** | **WRONG** |
+| body, 3 lines | 1054–1070 · 1078–1094 · 1102–1118 | **#4B5066** (`--blue-700`) | `text-muted-foreground` → `--blue-700` | **correct** |
+
+Body line pitch is 1078 − 1054 = **24**, matching the shipped `leading-[24px]`.
+
+So the agency's "the text reads too black/heavy" resolves to **one** element, not the
+card: the heading is rendered in brand brown **#441802** where Figma uses navy
+**#2C2E45**. Body colour and icon treatment are already right.
+
+This is exactly why the brief says "Do NOT apply one blanket opacity to the entire
+card" — a blanket change would have wrecked two correct values to fix one wrong one.
+H02 must change the heading colour only.
+
+Note this is the colour half of H02. The other half — "use the approved reception image,
+preserve the crop, and do not read the hand-drawn marks on the AMARA wall sign as an
+instruction to remove the sign" — is a separate check to run when H02 is dispatched.
