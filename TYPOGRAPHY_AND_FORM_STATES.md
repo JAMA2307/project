@@ -305,3 +305,33 @@ The same calibration method now applies to the headings: render Playfair at 400/
 Target at 393: dark **188**, gap **16**, light **157**, height **44**, row filling 361.
 
 Keeping `px-7` (28px) on both buttons and letting the dark one fill the remaining width reproduces this: light = 100.5 ink + 56 = **156.5 ≈ 157**, leaving 361 − 16 − 156.5 = **188.5 ≈ 188**. That is offered as the simplest implementation reproducing the measured geometry **without inventing a padding value** — not as a claim about how the Figma file is built.
+
+### CORRECTION — the swap is NOT "only the size"
+
+Claim checked property by property rather than asserted. Current `dark`/`light` variants declare `font-sans text-[18px] font-medium leading-[20px] tracking-[-0.18px]`.
+
+| Property | Current (variant) | `text-button` | Same? |
+|---|---|---|---|
+| font-family | `var(--font-sans)` | `var(--font-sans)` | ✅ |
+| font-weight | 500 | 500 | ✅ |
+| line-height | 20px | `1.25rem` = 20px | ✅ |
+| font-size | **18px fixed** | `clamp(1rem, 0.9536rem + 0.1905vw, 1.125rem)` | ❌ 16px @393 → 18px @1440 |
+| letter-spacing | **−0.18px absolute** | **−0.01em relative** | ❌ −0.18px @18px, **−0.16px @16px** |
+
+**Two properties change, not one.** Letter-spacing moves from an absolute value to a relative one, so it only coincides at 18px. At the mobile 16px it becomes −0.16px — a 0.02px difference per gap, or **0.38px** across the 19 gaps of "Explore Our Services".
+
+That does not overturn the calibration (145.5 vs 145.1 predicted, against a 146 target — still inside 1.5px), and a size-relative tracking is arguably the more correct construction. But the earlier "changes only the size" phrasing was wrong and is withdrawn.
+
+**Additional hazard found while checking.** The base `cva` string still carries `text-sm`, which sets font-size *and* line-height. Today `text-[18px]` and `leading-[20px]` override it. Swap those for `text-button` and whether the token wins over `text-sm` depends on generated-CSS order, not class order — the same collision class R7 catalogued. This must be verified from **computed styles in the browser**, not from reading the diff.
+
+Mandatory acceptance: capture `getComputedStyle` for `font-family`, `font-size`, `font-weight`, `line-height` and `letter-spacing` on both buttons at 393, 768 and 1440, **before and after**, and show the two tables side by side. Only font-size and letter-spacing may differ, and only in the directions above.
+
+### CONFIDENCE LABEL — Satoshi Medium 500
+
+Classified **high-confidence raster calibration**, not Figma style metadata. It wins independently on two separate frames by 3–4×, which is strong. But the Figma text-style panel is unavailable, so no claim is made about what the file literally declares. If the panel later becomes readable and disagrees, the panel wins.
+
+### SCOPE — HOME-16 and HOME-18 stay separate
+
+They are different tickets with different components and different risk. HOME-16 is button typography in `ui/button.tsx`; HOME-18 is Playfair heading weights across the type scale, affecting 9 routes. Sharing the hero is not a reason to couple them.
+
+**HOME-16 does not depend on the heading calibration and must not wait for it.** An earlier note said its brief "needs the heading calibration alongside it" — withdrawn. One ticket, one turn.
