@@ -443,7 +443,8 @@ HOME-12 · HOME-14 (confirmed twice, from two different pages) · HOME-15 · HOM
 | # | Ticket(s) | Outcome |
 |---|---|---|
 | **01** | ABOUT-05 `1217108466019447` · ADM-05 `1217108466019473` | **Shipped, verified, both CLOSED.** Panel → `bg-accent`; overlay → `bg-accent/[0.98]`. Computed `rgb(87,104,127)` on all 3 routes · 630×660 · contrast 5.44:1 · mobile 440/320 untouched. Comments `1217269743142533`, `1217269767268478` |
-| 02 | SERV-06 `1217234006576159` | **Dispatched** `umsg_01kzdwp1dsfhe8gzpsntv00z6c` |
+| 02 | SERV-06 `1217234006576159` | **Shipped, verified, CLOSED.** Left below 1024, centred from 1024. 393: container edge and all three text elements at **33.70**. 1023 left / 1024 centred. 1440 unchanged — offsets 330/330, collage 306/621/313, row 460. Comment `1217269745205600` |
+| 03 | CAR-03 `1217234006576183` | **Dispatched** `umsg_01kzdx0abqefwvhk2gzkdz95pa` |
 
 ### R4-01 · we corrected the implementer, not the other way round
 
@@ -471,3 +472,15 @@ Neither is fixable inside a colour ticket: (1) is a shared token — the pending
 ### Queue correction
 
 R4-02's component was listed as `services/ServicesList.tsx`. The pre-dispatch read shows the "services overview" block lives in **`services/CareApproach.tsx`**. Corrected above. Caught by the mandatory read, which is what it is for.
+
+### R4-02 · the ticket's own contradiction, resolved by the raster
+
+SERV-06 read *"справа"* (right), but its arrow pointed **left** and the equivalent Home block was asked to go left. We flagged the contradiction rather than guessing. The mobile frame settles it: eyebrow ink at x 17, heading at x 18, both on the 16px gutter. **Left.**
+
+Desktop measured centred — eyebrow 719.0, heading 720.0, body 719.0 against a 720 centre — so the shape is identical to HOME-20, and the switch was tied to this component's own 1024 collage breakpoint rather than a new one. The 1023/1024 pair proves it lands there.
+
+### R4-03 · pre-dispatch read found a second-order deletion
+
+`CareersTeam.tsx` uses `Link` and `Button` **only** inside the "View full Team" block. Removing the block orphans both imports, so the brief names them explicitly and requires the implementer to verify no other use before deleting.
+
+Also caught: the Figma frame renders **"Director of Houskeeping"** — a typo in the design. Our source has the correct "Housekeeping". The brief explicitly forbids "correcting" our spelling to match the raster. The authority order makes Figma the visual reference, not a licence to copy its spelling mistakes into production.
