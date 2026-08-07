@@ -622,3 +622,222 @@ Weight remains **Medium 500** everywhere; only the size varies. The earlier cali
 ### Also measured, deliberately not fixed here
 
 Figma's mobile buttons are **44** tall and desktop **46**; we render **48** at both via `size="l"` (`h-12`). A real deviation, but height is not what HOME-16 asks for, so it is recorded for a separate item rather than folded in.
+
+---
+
+## 17 · HOME HERO — CTA ROW GEOMETRY, AND THE GUTTER ROOT CAUSE
+
+Measured for correction **H10**. Both frames read at 1:1, probe-anchored: horizontal
+extents taken on a scanline through the button's vertical middle, vertical extents
+taken down a column that is clear of glyphs. Mid-row extents alone are unusable here
+because the dark button holds white text and the light button holds navy text, so each
+button's fill colour reappears inside the other.
+
+### 17.1 Mobile — `Home Page _ Desktop (1).png` (393 wide), scanline y = 321
+
+| x range | content |
+|---|---|
+| 0–15 | page background `#E6F0FF` |
+| **16–203** | dark button `#2C2E45` — **188 wide** |
+| 204–219 | page background — **gap 16** |
+| **220–376** | light button `#FFFFFF` — **157 wide** |
+| 377–392 | page background |
+
+Vertical: both buttons **y 300–343 = 44 tall**. Corner inset is 14px at the top row,
+so the radius is roughly 16–18 — *not* a pill. Radius is not asserted further; it was
+not needed for H10.
+
+The row spans **16 → 376 = 361**, which is the full content width at a **16px gutter**.
+The hero photo below it spans the same 16 → 376 (solid 361-wide runs at y 430, 440, 620),
+so row and photo share both edges in the design.
+
+Label ink: dark **x 37–182 = 146**, light **x 249–349 = 101**.
+
+### 17.2 Desktop — `Home Page _ Desktop.png` (1440 wide), scanline y = 335
+
+| x range | content |
+|---|---|
+| **516–737** | dark button — **222 wide** |
+| 738–753 | **gap 16** |
+| **754–923** | light button — **170 wide** |
+
+Row centre = (516 + 923) / 2 = 719.5 ≈ **720**, i.e. centred on the 1440 frame.
+
+Vertical, probed clear of glyphs at x = 600 (dark) and x = 860 (light):
+both **y 312–359 = 48 tall**.
+
+### 17.3 Correction to §16
+
+§16 recorded "Figma's mobile buttons are **44** tall and desktop **46**". The mobile
+figure is confirmed. **The desktop figure was wrong — it is 48, not 46**, verified by
+two independent glyph-free column probes. We render 48 on desktop, so desktop height
+is *correct as shipped* and there is no desktop height item to raise. The mobile 44
+remains a real deviation and was folded into H10.
+
+### 17.4 A padding error of mine, and why it happened
+
+For H10 I specified `px-[22px]`, derived from the raster as (188 − 146 ink) / 2 = 21.
+That is wrong. **CSS padding applies to the advance box, not the ink box.** With the
+label's ~2.7px total side bearing the advance width is 151.4, giving (188 − 151.4) / 2
+= **18.3 → `px-[18px]`**, which is what the implementer measured in-browser and used.
+
+Rule going forward: **never convert a raster ink extent straight into a CSS padding
+value.** Ink → advance first, or measure the advance in-browser.
+
+The light button does not share that padding: content-sizing it would give
+104.3 + 36.6 = 140.9, not 157. One construction that reproduces the measured 157 is
+letting it absorb the remaining track width. Per the standing rule, that is recorded as
+*a* construction consistent with the measurement, **not** as proof of the Figma
+implementation.
+
+### 17.5 DEF-01 — root cause found, and it is a transcription slip
+
+```css
+/* Fluid page gutter: 16px at 390 → 80px at 1440, clamped at both ends. */
+@utility container-gutter { padding-inline: clamp(1rem, 0.6095rem + 6.0952vw, 5rem); }
+```
+
+The comment states the correct intent and the **slope is right**: 64 / 1050 = 0.060952
+→ `6.0952vw`. The intercept should then be 16 − 0.060952 × 390 = −7.771px =
+**−0.4857rem**. The shipped value is **+0.6095rem** — the slope's own leading digits,
+with the wrong sign and the wrong magnitude. That single slip is the whole of DEF-01:
+it yields **33.71px at 393 instead of 16px**.
+
+Refit to the canonical 393 endpoint (§2) rather than 390:
+
+- slope = 64 / (1440 − 393) = 0.0611270 → **6.1127vw**
+- intercept = 16 − 0.0611270 × 393 = −8.0229px → **−0.5014rem**
+
+```css
+/* Fluid page gutter: 16px at 393 → 80px at 1440, clamped at both ends. */
+@utility container-gutter { padding-inline: clamp(1rem, -0.5014rem + 6.1127vw, 5rem); }
+```
+
+393 → 16.00 and 1440 → 80.00, and **both land exactly on the clamp bounds**, so the
+floor and ceiling do real work instead of masking the fit.
+
+**Evidence status.** Both endpoints are now *measured*, not assumed: 16 @ 393 from
+§17.1 above, 80 @ 1440 previously verified. **Linearity between them remains a choice**,
+not a measurement — every official frame is either 393 or 1440, so nothing constrains
+the interior. It matches the form the token already used. Widths 1152–1440 change most
+against the previous build (the old curve saturated at 80 from 1152 up; the new one
+reaches 80 only at 1440) and are the place to look first if an intermediate width
+regresses.
+
+### 17.6 Why the first H10 turn was rejected
+
+The implementer reached the target numbers with
+`mx-[calc(1rem-clamp(1rem,0.6095rem+6.0952vw,5rem))]` = **−17.71px per side at 393**.
+Two independent grounds for rejection:
+
+1. It is a negative margin used as layout architecture — prohibited outright.
+2. It introduced a **new visible defect**: the CTA row moved to a 16px page margin
+   while the hero photo directly beneath it stayed at 33.71px, so the buttons overhung
+   the photo by ~17.7px per side across 320–639. Before that turn they were aligned.
+
+The diagnosis behind it was sound — the gutter really is wrong — but the fix belonged
+in the token, not in the section.
+
+---
+
+## 18 · HOME DESKTOP HERO — VERTICAL GEOMETRY (H01 / H03)
+
+`Home Page _ Desktop.png`, 1440 wide. Text rows are ink bounds; the CTA row, the photo
+and the section boundary are hard edges. Both a strict ink threshold and a loose
+antialiasing envelope are given, because a text gap measured ink-to-ink and a gap
+measured box-to-box are not the same number and must not be compared across methods.
+
+| element | ink (strict) | envelope | height |
+|---|---|---|---|
+| header / nav | 28–71 | 24–75 | 44 |
+| H1 "Comfort You Can Trust" | 168–200 | 165–200 | 33 |
+| paragraph line 1 | 238–251 | 237–254 | 14 |
+| paragraph line 2 | 262–275 | 261–278 | 14 |
+| CTA row (hard edge) | **312–359** | — | **48** |
+| hero photo (hard edge) | **440–1159** | — | **720** |
+| blue hero section ends (hard edge) | **1199** | — | — |
+
+Derived gaps, strict ink to strict ink except where both sides are hard edges:
+
+| gap | Figma |
+|---|---|
+| header ink bottom → H1 ink top | **97** (envelope 90) |
+| H1 ink bottom → paragraph ink top | **38** (envelope 37) |
+| paragraph ink bottom → CTA row top | **37** (envelope 34) |
+| **CTA row bottom → photo top** | **81** (both hard edges — exact) |
+| **photo bottom → blue section end** | **40** (both hard edges — exact) |
+
+Paragraph line pitch is 238 → 262 = **24**, matching `text-body`'s 1.5rem line-height
+at 1440. H1 ink height 33 is consistent with Playfair Display at the 44px `text-h1`
+clamp maximum, so **H1 size is already correct** — H01 is spacing only.
+
+Rows 1166–1188 carry a faint `#E3EDFC` band under the photo. That is a **drop shadow on
+the photo**, not a section boundary; the section boundary is the hard `#E6F0FF` →
+`#FFFFFF` step between y 1199 and y 1200. Recorded, not actioned.
+
+### 18.1 Where H01's defect actually sits
+
+The shipped chain at 1440 reconstructs exactly from the measured H1 box and the source
+spacing utilities: H1 box 162–214, `mt-6` → paragraph 238–286, `mt-6` → CTA 310–358,
+`mt-10` → photo top **398**. That reproduces the implementer's independently measured
+photo top of 398, so the reconstruction is sound.
+
+Against Figma: the CTA row is within **2px** of target (310 vs 312), but the photo top
+is **398 vs 440 — 42px short**. The agency's note that "the current CTA → hero-image gap
+is visibly too small" is therefore correct and *localised*: the `mt-10` (40px) between
+the CTA row and the photo needs to become **81px**, and the remaining three gaps are
+close to correct already.
+
+This is exactly why the brief says to tune the four gaps individually and **not** to
+translate the hero group as a whole — a group translation would move three correct gaps
+to fix one wrong one.
+
+### 18.2 Mobile hero vertical geometry (393), for comparison
+
+| element | ink / hard edge |
+|---|---|
+| header | 20–51 |
+| H1 line 1 | 106–134 |
+| H1 line 2 | 151–178 |
+| paragraph lines | 216–223 · 236–243 · 256–263 |
+| CTA row (hard edge) | **300–343** |
+| hero photo top (hard edge) | **384** |
+
+| gap | mobile | desktop |
+|---|---|---|
+| header → H1 | 54 | 97 |
+| H1 → paragraph | **38** | **38** |
+| paragraph → CTA row | **37** | **37** |
+| CTA row → photo | **40** | **81** |
+
+The middle two gaps are **identical across both frames**; only the header offset and the
+CTA→photo gap are viewport-dependent. The mobile CTA→photo gap of 40 is exactly the
+`mt-10` already shipped, so **mobile is already correct** and H01 is a desktop-only
+change. Any fix must not move the mobile values.
+
+Ink gaps are **not** comparable to CSS margins — the 38 and 37 above include the
+descender space of the block above and the ascender space of the block below. The only
+sound way to compare is to measure the shipped render as a raster with the same scan,
+and that is how H01 is being verified.
+
+---
+
+## 19 · ROUTE INVENTORY — established while verifying H10
+
+`src/routes/` contains exactly: `index.tsx`, `about.tsx`, `amenities.tsx`,
+`careers.tsx`, `contact.tsx`, `services.tsx`, **`privacy-policy.tsx`**,
+**`terms-of-use.tsx`**, `$.tsx` (catch-all 404), `__root.tsx`.
+
+Two consequences:
+
+1. **The legal pages exist**, at `/privacy-policy` and `/terms-of-use`. The H10 turn
+   reported that "`/privacy` and `/terms` don't exist as routes and render the 404
+   page" — that was the implementer guessing the paths and hitting the catch-all, not
+   a finding about the site. Corrected here so it does not propagate. It does mean the
+   H10 regression sweep covered the catch-all twice and **never covered the two real
+   legal routes**; that gap is carried into the H01 turn rather than re-spending a
+   credit on two prose pages.
+2. **There is no `/admissions` route at all.** R01 is filed as "Admissions navbar
+   currently routes to `/amenities`", but the underlying fact is that `/amenities` is
+   the only target that exists. Recorded as evidence for R01. Per the instruction,
+   R01 is **investigate only — not mutated.**
