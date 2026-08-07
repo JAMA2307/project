@@ -301,3 +301,64 @@ Both reduction requests were made on the stated premise that the logo was *"too 
 Those requests arrived through Lovable chat rather than Asana, so they are not "an explicit Asana instruction" in the authority order — and their stated goal was to match Figma. **Reported, not reverted.** The client decides; we do not unilaterally undo an instruction, nor leave a measured mismatch unreported.
 
 Note this is a *different* element from HOME-13, which concerns the large faint watermark at the footer's bottom centre.
+
+---
+
+## 11 · AMENITIES / ADMISSIONS — REBASE FINDINGS
+
+### 11.1 · ADM-04 stays open — the raster deepens the conflict rather than settling it
+
+All four signals sit in a single frame:
+
+| Signal | Says |
+|---|---|
+| Header navigation | **Admissions** |
+| Section eyebrow | **admissions** |
+| Hero heading | **Life at Amara Care Center** |
+| Hero CTA | **Explore Amara Amenities** |
+| Route | `/amenities` |
+
+The approved design contains the exact mismatch the ticket reports. **No inference is possible.** Route and navigation naming stay untouched until the agency answers. Every Amenities item that does not depend on the naming continues.
+
+### 11.2 · ADM-02 — the carousel target, measured
+
+| | Figma desktop | We ship |
+|---|---|---|
+| Active card | x **299…1140** — left margin 299, right margin 299 | starts at the 80px container gutter |
+| Card size | **842…846 × 450** | `min-[1280px]:w-[846px] h-[450px]` ✅ |
+| Next card | starts x **1165**, clipped by the viewport edge | peeks, clipped by container |
+| Gap | ~20–24 | `gap-5` = 20 ✅ |
+| Arrows | centred **below** the carousel | centred below ✅ |
+
+**The one real difference: the active card is centred in the viewport, not aligned to the container gutter.** Left and right margins are 299 and 299 — exact. Our track sits inside `Container`, so card 1 begins at x 80, a 219px offset from the design.
+
+Card size and gap are already correct. Height measures **exactly 450**.
+
+### 11.3 · Amenities mobile card order — defect confirmed
+
+| | Order |
+|---|---|
+| **Figma mobile** | **image** → heading → body → bulleted list → "Book a Call" |
+| **We ship** | heading → body → list → "Book a Call" → **image** |
+
+The card is `flex-col` on mobile with the text `<div>` before the `<img>` in the DOM, so the photo lands last. Desktop is `md:flex-row` with the image right, which is correct and must not move.
+
+Mobile is **stacked full cards** — no peeking card, no carousel mechanics. Desktop carousel behaviour must not be forced onto mobile.
+
+### 11.4 · Gallery — "1 and 3" is literal, confirmed
+
+Centred eyebrow and heading, then small image labelled **01** left, large image centre, small image labelled **03** right, with "Serene Courtyard Retreat" and its supporting line centred **below** the centre image. Only 01 and 03 appear. Confirms the brief.
+
+### 11.5 · Content inconsistency inside the design — flagged, not resolved
+
+Our three cards are Accommodations, Services and Community. Card content matches the **desktop** frame exactly for Accommodations and Services.
+
+But the **mobile** frame shows a card headed **"Accommodations"** carrying the **Community** bullet list — large dayrooms and lounges, recreational activities, special dining events, musical entertainment, weekly dog-therapy visits. The desktop frame pairs "Accommodations" with private rooms, cable & WiFi, courtyard, air conditioning.
+
+**The two approved frames disagree about which list belongs to which heading.** Same class as the testimonial names: the ambiguity originates in the design. We keep the desktop pairing, which is what we ship, and raise it as a content question. No list is invented, moved or merged.
+
+### 11.6 · Noted for consistency — carousel arrows
+
+`AmenitiesCarousel` still disables its arrows at the track ends (`disabled={atStart}` / `atEnd`). The Home testimonial arrows were changed to wrap-around and never disable, on an explicit agency ticket (HOME-09).
+
+Both frames render the two arrows in the same enabled style, so the raster does not settle it. Raising it rather than assuming the Home decision generalises.
