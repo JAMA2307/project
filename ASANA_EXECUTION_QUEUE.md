@@ -384,3 +384,56 @@ Correct at 1440, which is why every desktop pass missed it. Confirmed against th
 `whoami` now authenticates as oybekovj97@gmail.com across two plans ("Geek Brains", "Project"). Every Figma tool requires a `fileKey`, and there is **no Figma URL anywhere in our records** — the design measurements in `MASTER_IMPLEMENTATION_LEDGER.md` were reconstructed from Lovable history precisely because Figma was unreachable at the time.
 
 One file link would unblock Q7, Q8, HOME-19/20, the Playfair weight table (6 items across 4 pages), the CTA hex, and the Admissions IA frame. Requested in the Q7 and Q8 comments. **This is now the single highest-value outstanding request** — ahead of the four missing screenshots.
+
+---
+
+# QUEUE REVISION 4 — rebuilt on the official Figma rasters · 2026-08-07
+
+Rev 3's test stands: *can this be built without choosing a number the design has not given?* The rasters changed the answer for a lot of items, in both directions.
+
+## R4 · DISPATCHABLE — 13 turns
+
+Ordered shared-component-first, then by risk. One logical correction per turn.
+
+| # | Ticket(s) | Component | Target — all measured, none invented |
+|---|---|---|---|
+| **01** | ABOUT-05 `1217108466019447` · ADM-05 `1217108466019473` | `sections/Cta.tsx` | Panel **#56677F** = existing `--blue-500`/`accent` token. Watermark delta ≤4 units (design: 2). **3 routes, 2 GIDs, one implementation.** |
+| 02 | SERV-06 `1217234006576159` | `services/ServicesList.tsx` | "services overview" block **left-aligned** on mobile |
+| 03 | CAR-03 `1217234006576183` | `careers/CareersTeam.tsx` | Remove "View full Team" — absent from both approved frames |
+| 04 | ABOUT-13 `1217234006576144` | `about/AboutValues.tsx` | Remove dark circular icon badge **at mobile widths only** — present on desktop |
+| 05 | SERV-04 `1217234006576153` | `services/ServicesList.tsx` | Indian Program → same bulleted list as the other three cards |
+| 06 | ADM mobile card order `1217108466019462` | `amenities/AmenitiesCarousel.tsx` | Mobile order **image → heading → body → list → Book a Call** |
+| 07 | HOME-16 `1217213785962843` | `home/Hero.tsx` + `ui/button.tsx` | 393: dark **188**, gap **16**, light **157**, h **44**. Label = `text-button` token |
+| 08 | HOME-17 `1217213785962846` | `home/Hero.tsx` | Photo **361 × 428**; badge **273 × 126**, insets 16/16, fill #E6F0FF, bottom-**left** |
+| 09 | CON-01 `1217234006576186` | `contact/ContactHero.tsx` | Left column block y **383…593** against photo y 100…819 |
+| 10 | ADM-02 `1217108466019462` | `amenities/AmenitiesCarousel.tsx` | Active card **centred in the viewport** — margins 299/299, not the 80 gutter |
+| 11 | Careers hero scrim (CAR-01 half) | `careers/CareersHero.tsx` | Rendered luminance to match: bottom-left **143**, mid-left **99**, right **75** |
+| 12 | Services mobile hero order | `services/ServicesHero.tsx` | "Scroll to Explore" **below** the image |
+| 13 | 404 rebuild `1217234006576196` | `NotFoundPage.tsx` | Full geometry, both breakpoints — §14 |
+
+### Needs one more measurement first — then dispatchable
+
+| Ticket | Missing |
+|---|---|
+| CAR-02 | Intro section height vs our `min-h-[590px]`; mobile order. Layout itself measured: photo **360 × 350**, gap **290**, text **630** |
+| ABOUT-14 · ADM-08 | Mobile CTA panel/image heights from the raster. Direction confirmed: panel **shorter** than image; we currently have it inverted (440 vs 320) |
+| ABOUT-08 | Desktop values-card internals. Photo confirmed **inset**, not flush — our thumbnail reading was wrong |
+| HOME-18 | Playfair weight calibration against the h1–h4 crops. Method proven on the button labels. **Needs no agency answer** |
+
+## R4 · BLOCKED — and why
+
+| Blocker | Items | Needs |
+|---|---|---|
+| **ADM-04 IA** | all Admissions naming | Agency decision. Raster deepens the conflict — nav says "Admissions" on a page designed as Amenities |
+| **Legal copy verification** | Privacy, Terms | Transcribed in full, but read off an image. Our own May 28 → **May 26** date error proves the risk. Agency must send text or verify |
+| **Form S1/S2 copy** | HOME-21, CON-03 | Copy hidden under the annotation digits |
+| **Testimonial identity** | HOME-09 | Design shows "Oliver W." twice on three pages, "Olivia T." on mobile Home. Ambiguity is in the design |
+| **Token changes** | gutter, `--blue-300`, `--blue-50` | Global atomic per the agency's own instruction — measure, change once, verify every route |
+| **Footer logo** | — | Figma says **232 × 64**; we ship h 28 after two reduction requests. Client decision |
+| **ABOUT-11 badge** | icons invisible at 1.17:1 | Dark badge, or dark icon files? |
+| **Amenities card content** | — | Desktop and mobile frames pair different lists with the same heading |
+| **Privacy nav duplicate** | — | 10 nav entries, 9 sections |
+
+## R4 · CLOSED — confirmed correct against the rasters, no turn to be spent
+
+HOME-12 · HOME-14 (confirmed twice, from two different pages) · HOME-15 · HOME-19 · HOME-20 · ABOUT-01 · plus verified-correct geometry: desktop header logo 188×52, Amenities card 846×450 with gap 20 and arrows below, Contact hero photo 630×720, Careers hero 900.
