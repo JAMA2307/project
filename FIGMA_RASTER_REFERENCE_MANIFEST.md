@@ -1214,3 +1214,38 @@ magnification before any claim is made.
 Font size is likewise **inferred from line pitch, not measured** — 32px line-height is
 consistent with ~24px type, but the shipped value has not yet been compared. Both are
 H04's job.
+
+### 25.1 H03 — VERIFIED PASS (desktop half)
+
+Landed: `md:pb-[60px]` → `md:pb-[40px]`, one file, no generated file. Cost 2.9 credits.
+
+Every pinned criterion met, and the section height matched the **pre-computed 1202
+exactly** — the prediction was recorded before the turn ran, so this is confirmation
+rather than post-hoc agreement.
+
+| check | predicted / target | measured |
+|---|---|---|
+| hero `<section>` height | 1202 | **1202** |
+| last blue row | 1201 | **1201** |
+| photo band | 442–1161 | **442–1161** |
+| tail | **40** | **40** |
+| header / H1 / CTA bands | (26,73) (170,202) (314,361) | **all unchanged** |
+| next section marginTop / paddingTop | 0 / 0 | **0 / 0** |
+
+The centring stayed inert, so H01's four gaps are untouched. The next section starts at
+1202 with no negative margin — the technique the agency explicitly prohibited.
+
+Two cross-checks I ran rather than accept:
+
+1. The band list ends `(1202, 1299)`. White registers as *ink* against a `#E6F0FF`
+   background — deltas 25/15/0, max 25 > the threshold of 18 — so the white section
+   scanning as a band starting exactly at 1202 independently confirms the boundary.
+2. The mobile badge appeared to move: 646.69 here against 671.7 in H02. It did not.
+   Different elements were measured. Reconstructing from source:
+   `630.69 photo bottom + 16 (mt-4) = 646.69` is the wrapper's border-box top, and
+   `646.69 + 16 (p-4) + (40 − 22)/2 = 671.69` is the heading span's top, centred in the
+   40px icon row. Both figures are the same layout. The implementer reached the right
+   conclusion but attributed it to "+24px card padding", which is not the actual
+   arithmetic — the reconciliation above is.
+
+**H03 remains half-complete by design.** The mobile tail is still owed at H11, per §25.
