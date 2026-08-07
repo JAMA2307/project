@@ -1302,3 +1302,63 @@ The utility itself must **not** be edited: it is shared with pages whose eyebrow
 has not been verified against Figma. The turn must prove the other five pages' eyebrows
 still read rgb(76,82,103) — if any moved, the utility was edited and must be reverted.
 Whether `text-eyebrow` is wrong site-wide is a **separate audit**, not this correction.
+
+### 26.4 H04 — colour VERIFIED PASS; wrap and gap UNRESOLVED
+
+**Passed and closed:**
+
+| check | result |
+|---|---|
+| eyebrow computed colour | **rgb(44, 46, 68)** ✅ |
+| intro computed colour | **rgb(44, 46, 68)** ✅ |
+| A — font-size / line-height | 20px / 32px — **agree** |
+| C — line centres | all 720.0 — **agree** |
+| cards, pills, glyphs | grid 80/1562/1280×460, cards 460 tall — unchanged |
+| shared utility not altered | `/about` `/services` `/amenities` `/careers` `/contact` eyebrows all still **rgb(76,82,103)** ✅ |
+| regression | 45/45, tsgo clean, one file |
+
+**The cascade trap fired exactly as predicted.** Plain `text-primary` would have lost to
+the `@utility`'s own `color`; `[&]:text-primary` was required. Prediction validated.
+
+**Open — B (wrap) and D (eyebrow→intro gap).** Neither is closed, and H04 therefore is
+**not** closed: BATCH 2 explicitly requires "Preserve Figma wrapping".
+
+| line | Figma | rendered |
+|---|---|---|
+| 1 | 712 | 763 |
+| 2 | 772 | 722 |
+| 3 | 755 | 749 |
+| 4 | 719 | 737 |
+| 5 | **599** | **71** |
+| **total** | **3557** | **3042** |
+
+Same copy, same 20px font, same 774px box — the totals **must** be near-equal. They
+differ by 515, so **one of the two measurements is unsound**, and the 71px final line is
+the tell. Mine counts painted pixels in the official raster. Theirs groups
+*per-character* `Range` rects by `top`, iterating a JSX text node that contains newlines
+and indentation — a well-known way to mis-split at a line boundary.
+
+**The correct instrument is `range.selectNodeContents(textNode)` then
+`range.getClientRects()`, which returns one rect per line box directly.** They reached
+for the manual loop only because `element.getClientRects()` returns a single rect for a
+block, which is expected and not a reason to hand-roll line detection.
+
+So B is **re-measure before judging**, not a confirmed defect. D (41 vs 32) is suspect
+for the same reason and is additionally marginal: a `>= 20 ink px per row` threshold on a
+129px-wide lowercase eyebrow sits near its detection floor, which the implementer
+fairly flagged itself.
+
+### 26.5 A sixth design-content defect inside the approved Figma
+
+Reading the intro at magnification, the Figma frame reads:
+
+> "the moment you arrive, the focus is **oncommunity**, consistency, and a"
+
+**"oncommunity" — the space is missing.** The shipped copy has the correct "on
+community". This joins the catalogue of defects inside the approved design itself
+(duplicated testimonial author, Amenities card lists disagreeing between frames, Privacy
+nav 10-entries/9-sections, ADM-04 naming, "Brookwood" in the FAQ answer).
+
+**The site must NOT adopt this typo.** Recorded for the agency; the shipped text stays.
+It also means the two texts differ by one space, which is far too small to explain the
+515px discrepancy above — so it does not rescue the wrap measurement.
