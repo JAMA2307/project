@@ -887,3 +887,37 @@ H02 must change the heading colour only.
 Note this is the colour half of H02. The other half — "use the approved reception image,
 preserve the crop, and do not read the hand-drawn marks on the AMARA wall sign as an
 instruction to remove the sign" — is a separate check to run when H02 is dispatched.
+
+---
+
+## 21 · HOME HERO BLUE TAIL — MEASURED FOR H03 (prep, not yet dispatched)
+
+The agency note is that the light-blue hero background "continues too far downward"
+after the hero image. Measured at both viewports, using column probes rather than a
+row-dominant-colour scan.
+
+| | desktop 1440 | mobile 393 |
+|---|---|---|
+| hero photo bottom (last painted row) | **1159** | **811** |
+| blue section last row | **1199** | **851** |
+| **blue tail below the photo** | **40** | **40** |
+
+**The tail is 40px at both viewports.** The boundary is a hard `#E6F0FF` → `#FFFFFF`
+step with no gradient, so both numbers are exact.
+
+Method note, recorded because it cost a wrong reading first: taking the *dominant*
+colour of each row fails here. The photo covers 92% of the row but is continuous-tone,
+so no single photo colour repeats often, while the flat page background wins the mode
+on the ~7 remaining samples. The dominant-colour scan therefore reported the photo as
+"background" and produced spurious boundaries. **Column probes inside and outside the
+photo are the reliable instrument.**
+
+### 21.1 A separate defect surfaced by the same scan
+
+The mobile hero photo measures **361 × 428** (x 16–376, y 384–811), independently
+confirming the geometry quoted in the H11 brief. Its aspect ratio is 361 / 428 = **0.843**.
+
+The shipped photo is `aspect-[3/2]` on mobile — **1.5**. At the correct 361px width that
+renders roughly **241px tall against a required 428**. This is a large, visible defect,
+but it belongs to the hero photo / badge composition (H11), **not** to H01 or H03, and
+is recorded here rather than folded into either.
