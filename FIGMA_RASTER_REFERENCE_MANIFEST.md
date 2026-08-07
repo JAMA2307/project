@@ -1146,3 +1146,71 @@ touched. The agency wording "too black/heavy" could conceivably implicate weight
 as colour — but colour alone accounted for a delta of rgb(68,24,2) → rgb(44,46,69), and
 nothing may be changed on a guess. Flagged for a separate item if the client still reads
 it as heavy.
+
+---
+
+## 25 · H03 — DISPATCHED, ACCEPTANCE CRITERIA PINNED
+
+Change: `md:pb-[60px]` → `md:pb-[40px]`, desktop only, one file.
+
+| | pb 60 (before) | pb 40 (target) |
+|---|---|---|
+| section height | 1222 | **1202** |
+| photo bottom | 1162 | 1162 (unchanged) |
+| tail | 60 | **40** |
+| does min-h 1200 bind? | no | **no** |
+
+The last row is the one that matters. The section is `flex flex-col justify-center` with
+`min-[1440px]:min-h-[1200px]`; if the total ever fell *below* 1200 the centring would
+re-engage and redistribute the slack across every gap H01 just fixed. At 1202 it stays
+inert with 2px to spare. Bands must be unchanged: header (26,73), H1 (170,202),
+CTA (314,361), photo (442,1161).
+
+**Mobile deliberately excluded.** The mobile badge still sits *below* the photo
+(photo bottom 630.7, badge top 671.7), so the space under the mobile photo is badge +
+padding, not padding. Figma has no badge below the photo there — it is an overlay inside
+the image, which is H11. The mobile tail therefore cannot be measured against Figma until
+H11 lands, and `pb-20` stays untouched until then. H03 is consequently **half-complete by
+design**, and the mobile half is owed at H11 — recorded so it cannot be quietly dropped.
+
+---
+
+## 26 · WHAT SETS US APART — INTRO MEASURED (H04 prep, not dispatched)
+
+`Home Page _ Desktop.png` at 1440, white background, ink threshold 18.
+
+| element | ink band | height |
+|---|---|---|
+| eyebrow | 1288–1295 | 8 |
+| intro line 1 | 1327–1348 | — |
+| intro line 2 | 1359–1377 | 19 |
+| intro line 3 | 1391–1409 | 19 |
+| intro line 4 | 1424–1441 | 18 |
+| intro line 5 | 1455–1473 | 19 |
+| cards begin | 1560 | — |
+
+Line pitch is 32 (1327 → 1359 → 1391 → 1424 → 1455), ink ~19 per line.
+
+| element | x extent | width | centre | colour |
+|---|---|---|---|---|
+| eyebrow | 656–782 | 127 | 719 | #46485C (see caveat) |
+| intro line 1 | 364–1075 | 712 | 719.5 | **#2C2E45** |
+| intro line 5 | 420–1018 | 599 | 719 | **#2C2E45** |
+
+Everything is centred on 720 = 1440/2.
+
+So the "intro" is a **centred five-line paragraph in #2C2E45 (`--blue-800`) at roughly
+24px on a 32px line**, not a heading — pitch 32 rules out `text-h2`, whose line-height at
+1440 is 52. The section's actual heading is not in this band group; only an eyebrow
+precedes the paragraph.
+
+**Caveat on the eyebrow colour.** #46485C is the modal dark pixel across an 8px-tall
+band, which for text that small is dominated by antialiasing rather than the true fill.
+`text-eyebrow` sets `--blue-700`, which renders rgb(76,82,103). The measured mode is
+darker than that, but an 8px ink band is not a sound instrument for a fill colour —
+**recorded as unresolved, not as a defect.** It needs a probe on a stroke interior at
+magnification before any claim is made.
+
+Font size is likewise **inferred from line pitch, not measured** — 32px line-height is
+consistent with ~24px type, but the shipped value has not yet been compared. Both are
+H04's job.
