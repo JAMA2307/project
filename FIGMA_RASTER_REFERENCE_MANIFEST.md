@@ -362,3 +362,71 @@ But the **mobile** frame shows a card headed **"Accommodations"** carrying the *
 `AmenitiesCarousel` still disables its arrows at the track ends (`disabled={atStart}` / `atEnd`). The Home testimonial arrows were changed to wrap-around and never disable, on an explicit agency ticket (HOME-09).
 
 Both frames render the two arrows in the same enabled style, so the raster does not settle it. Raising it rather than assuming the Home decision generalises.
+
+---
+
+## 12 · CAREERS PAGE — REBASE FINDINGS
+
+### 12.1 · Careers hero scrim — our overlay is provably incompatible with the design
+
+Hero height measures exactly **900**, matching what we ship.
+
+`CareersHero.tsx` stacks **two** full-bleed gradients:
+
+```
+linear-gradient(to top right, rgba(0,0,0,0.92), rgba(0,0,0,0.65) 45%, rgba(0,0,0,0.30))
+linear-gradient(to top,       rgba(0,0,0,0.85), rgba(0,0,0,0))            /* bottom 2/3 */
+```
+
+At the bottom-left, where the heading, body and CTA sit, those compose to **1 − (1−0.92)(1−0.85) = 98.8% black**.
+
+| Region | Figma mean luminance | Max our scrim can produce |
+|---|---|---|
+| **bottom-left, behind the CTA** | **143.3** | 255 × 0.012 = **3.1** |
+| mid-left, behind body copy | 98.9 | ~39 |
+| right, at text height | 74.8 | ~63 |
+
+**This does not depend on the photograph.** A 98.8% black overlay cannot yield luminance 143 from any source image whatsoever — the ceiling is 3.1. The design's hero shows scrubs, shoes, tarmac and planting all clearly legible, with white text carried by the naturally darker lower third of the photo rather than by an overlay.
+
+The fix is a scrim measurement, not a taste call: reduce until the rendered luminance in each region matches the raster. Both gradients are in scope; the bottom one is the larger offender.
+
+### 12.2 · CAR-02 — no longer target-less, and the mismatch is large
+
+The brief said the "Why Amara" desktop target is now supplied. Measured:
+
+| | Figma | We ship |
+|---|---|---|
+| Photo | **360 × 350** at x 80 | **630 × 430** (`aspect-[630/430]`) |
+| Gap | **290** | `gap-5` = **20** |
+| Text column | **630**, ending at the right gutter | 630 |
+| Grid | 80 + 360 + 290 + 630 + 80 = **1440** ✅ | `grid-cols-2` → two equal 630 columns |
+
+Our photo is **nearly double the design width**, and the 290px gap — the "large white breathing room" the brief describes — is currently 20px. `min-[768px]:grid-cols-2` forces two equal columns, which is the root cause.
+
+This is why CAR-02's screenshot carried no annotation: the whole block is proportioned differently, so there was nothing specific to circle.
+
+**Still to measure before dispatch:** the section's own height against our `min-[1440px]:min-h-[590px]`, and the mobile stacking order.
+
+### 12.3 · CAR-03 confirmed — no "View Full Team"
+
+The desktop team grid runs straight into Testimonials. No button of any kind sits between them. Confirms the removal, desktop and mobile.
+
+### 12.4 · HOME-14 independently confirmed from a second page
+
+The Careers desktop frame carries the same shared contact block, and its heading renders on **exactly three lines**:
+
+```
+Contact our team
+to learn more about
+our services
+```
+
+"our", not "out". This is a second, independent confirmation of HOME-14's target from a different page's frame — so HOME-14 **stays closed**.
+
+### 12.5 · FAQ open-state — third sighting
+
+The Careers frame again shows an FAQ item expanded on load, as Services does. Consistent with the recorded deliberate divergence: HOME-12 asked for collapsed, and an Asana instruction outranks the raster. No change.
+
+### 12.6 · Testimonial names — third sighting
+
+Careers desktop again shows **"— Oliver W." on both visible cards**. The duplication is systematic across the design, not a one-frame slip. Reinforces that this is a content question for the agency, not something to resolve in code.
