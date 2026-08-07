@@ -398,7 +398,7 @@ Ordered shared-component-first, then by risk. One logical correction per turn.
 | # | Ticket(s) | Component | Target — all measured, none invented |
 |---|---|---|---|
 | **01** | ABOUT-05 `1217108466019447` · ADM-05 `1217108466019473` | `sections/Cta.tsx` | Panel **#56677F** = existing `--blue-500`/`accent` token. Watermark delta ≤4 units (design: 2). **3 routes, 2 GIDs, one implementation.** |
-| 02 | SERV-06 `1217234006576159` | `services/ServicesList.tsx` | "services overview" block **left-aligned** on mobile |
+| 02 | SERV-06 `1217234006576159` | `services/CareApproach.tsx` | "services overview" block **left-aligned** on mobile, centred from 1024 |
 | 03 | CAR-03 `1217234006576183` | `careers/CareersTeam.tsx` | Remove "View full Team" — absent from both approved frames |
 | 04 | ABOUT-13 `1217234006576144` | `about/AboutValues.tsx` | Remove dark circular icon badge **at mobile widths only** — present on desktop |
 | 05 | SERV-04 `1217234006576153` | `services/ServicesList.tsx` | Indian Program → same bulleted list as the other three cards |
@@ -437,3 +437,37 @@ Ordered shared-component-first, then by risk. One logical correction per turn.
 ## R4 · CLOSED — confirmed correct against the rasters, no turn to be spent
 
 HOME-12 · HOME-14 (confirmed twice, from two different pages) · HOME-15 · HOME-19 · HOME-20 · ABOUT-01 · plus verified-correct geometry: desktop header logo 188×52, Amenities card 846×450 with gap 20 and arrows below, Contact hero photo 630×720, Careers hero 900.
+
+## R4 · EXECUTION LOG
+
+| # | Ticket(s) | Outcome |
+|---|---|---|
+| **01** | ABOUT-05 `1217108466019447` · ADM-05 `1217108466019473` | **Shipped, verified, both CLOSED.** Panel → `bg-accent`; overlay → `bg-accent/[0.98]`. Computed `rgb(87,104,127)` on all 3 routes · 630×660 · contrast 5.44:1 · mobile 440/320 untouched. Comments `1217269743142533`, `1217269767268478` |
+| 02 | SERV-06 `1217234006576159` | **Dispatched** `umsg_01kzdwp1dsfhe8gzpsntv00z6c` |
+
+### R4-01 · we corrected the implementer, not the other way round
+
+The turn reported the pattern overlay as **"visually inert"** — that its opacity no longer modulates the watermark because the panel's `background-image` stacks above a `-z-10` child — and offered to restructure the layer.
+
+That is wrong, and the arithmetic settles it. With `bg-accent` = `rgb(87,104,127)` and a **white** pattern showing through at 2% (overlay `0.98`):
+
+```
+R: 87  + 0.02 × 168 = 90.4  → 5A
+G: 104 + 0.02 × 151 = 107.0 → 6B
+B: 127 + 0.02 × 128 = 129.6 → 82
+```
+
+**#5A6B82** — the measured dominant tone, to the unit. The overlay is doing exactly what it was set to do; the knob is live. Accepting the report would have authorised a needless restructure of a component shared by three routes.
+
+### R4-01 · residual, and a fourth token defect
+
+Rendered surface **#5A6B82** vs target **#56677F** — 4 units, imperceptible, two causes:
+
+1. **`--blue-500` is stored as `214 19% 42%`, which converts to `#57687F`** — 1 unit off #56677F before anything else. **This is a fourth token defect**, alongside `--blue-300`, `--blue-50` and the gutter.
+2. The pattern contributes +3 against Figma's +2.
+
+Neither is fixable inside a colour ticket: (1) is a shared token — the pending global atomic change; (2) is a 1-unit tuning not worth a build cycle. Both reported to the agency rather than buried.
+
+### Queue correction
+
+R4-02's component was listed as `services/ServicesList.tsx`. The pre-dispatch read shows the "services overview" block lives in **`services/CareApproach.tsx`**. Corrected above. Caught by the mandatory read, which is what it is for.
