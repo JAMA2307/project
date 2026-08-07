@@ -485,3 +485,106 @@ Both are reported, **neither changed**: they are shared tokens, and per the agen
 - The **"Supported Transition" badge icon** inside the admissions-steps photo — the brief requires the official icon rather than a generic substitute. Present in the frame; not yet measured or matched against the asset inventory.
 - Mobile Contact layout in full — the hero, the insurance panel's mobile arrangement, and the form.
 - The contact form's field set is visible (Name*, Email*, Phone Number*, Your question, privacy checkbox, Submit) and matches what we ship, but S1/S2 states remain blocked on copy hidden under the annotation digits.
+
+---
+
+## 14 · 404 PAGE — REBASE FINDINGS
+
+Both frames are exactly one viewport: desktop **1440 × 900**, mobile **393 × 852**. Full composition measurable.
+
+### 14.1 · Background
+
+**#8CA1C1**, identical on both frames and identical to the Contact insurance panel. Our `--blue-300` is `#8FA8CE` — see §13.3, the same token defect.
+
+**Independent confirmation of the ground colour.** Deriving the watermark's alpha as white-over-background gives per-channel values of 0.061 / 0.064 / 0.065 for the faint tone and 0.191 / 0.191 / 0.194 for the stronger one. Three channels agreeing to ~0.003 is only possible if the assumed ground is correct and the overlay is pure white. A wrong background would produce three disagreeing alphas.
+
+### 14.2 · Desktop 1440 × 900 — measured
+
+| Element | y | x | size |
+|---|---|---|---|
+| Header row | 24…76 | 80…1359 | logo at the 80 gutter, "Get Started" pill ending at 1359 |
+| **"404"** | **266…472** | **492…944** | **453 × 207**, centred (718 vs 720) |
+| "Page was not found" | 523…549 | 598…842 | 245 wide |
+| Body copy, 2 lines | 566…607 | 534…905 | 372 wide |
+| "Back to Home Page" pill | 640…688 | 614…826 | **213 × 49** |
+
+Vertical gaps: 404 → heading **51**, heading → body **17**, body → pill **33**.
+
+Content block spans y 266…688 (423 tall), centre **477** against a viewport centre of 450 — so the block sits **27px below centre**, not vertically centred.
+
+Nav: About Us · Services · **Admissions** · Careers · Contact.
+
+### 14.3 · Mobile 393 × 852 — measured
+
+| Element | y | size |
+|---|---|---|
+| Header | 20…52 | logo left, burger right |
+| **"404"** | **267…399** | **291 × 133**, centred |
+| "Page was not found" | 444…466 | 210 wide |
+| Body copy, 2 lines | 484…519 | 330 wide |
+| "Back to Home Page" pill | 552…596 | **197 × 45** |
+
+Vertical gaps: **45 / 18 / 33** — against desktop's 51 / 17 / 33.
+
+### 14.4 · Watermark treatment differs by breakpoint
+
+| | Treatment |
+|---|---|
+| **Desktop** | **Two** oversized translucent AMARA marks bleeding in from the **left and right** edges. Span x 0…1438, y 24…796; more coverage in the left half (7685 px vs 5186), so the two are not mirror images. |
+| **Mobile** | **One** mark rising from the **bottom** edge. x 97…295 (199 wide), y 687…851, centred at x 196. |
+
+Watermark fill: **white** at **α ≈ 0.06** for the faint areas and **α ≈ 0.19** for the stronger areas.
+
+### 14.5 · Exact copy
+
+```
+404
+Page was not found
+The page you're looking for couldn't be found.
+Let's get you back on track.
+[ Back to Home Page ]
+```
+
+Body copy breaks to **two lines** on both breakpoints, at the same point. Apostrophes render as straight `'` in the frame — confirm before shipping whether typographic `’` is intended.
+
+### 14.6 · Note on the "404" numeral
+
+Recorded as its measured glyph box — **453 × 207** desktop, **291 × 133** mobile — rather than as an inferred font-size. Per §8.3 the deliverable is target geometry; the type size that produces it can be calibrated against the Playfair binaries the same way the button labels were, and verified in the browser.
+
+---
+
+## 15 · PAGE-BY-PAGE REBASE — COMPLETE
+
+All nine designed surfaces reconciled against the official rasters: Home, About, Services, Amenities, Careers, Contact, Privacy Policy, Terms of Use, 404.
+
+### What the rasters resolved
+
+HOME-16 · HOME-17 · HOME-02 (horizontal) · SERV-06 · SERV-04 · Services mobile hero order · ABOUT-13 (scoped to mobile) · ABOUT-08 · ABOUT-12 · ADM-02 · Amenities mobile card order · Amenities gallery · ABOUT-14 / ADM-08 · ABOUT-05 / ADM-05 colour · CAR-02 · CAR-03 · Careers hero scrim · CON-01 · AUX legal copy · 404 rebuild.
+
+### Confirmed already correct — no turn to be spent
+
+HOME-14 (twice, from two different pages) · HOME-19 · HOME-20 · desktop header logo · Amenities card size, gap and arrow placement · Contact hero photo 630×720 · Careers hero height 900.
+
+### Deliberate divergences from Figma — all Asana-instructed, all recorded
+
+1. **HOME-15** — "View More"; Figma shows "View Amenities".
+2. **HOME-12** — FAQ collapsed on mount; Figma shows an item open (seen on Services *and* Careers).
+
+### Inconsistencies **inside** the approved design — flagged, never resolved in code
+
+1. Testimonial author duplicated — "Oliver W." on both cards, on three separate pages; mobile Home shows "Olivia T." instead.
+2. Amenities card content — desktop and mobile frames pair different bullet lists with the same heading.
+3. Privacy nav — 10 entries, 9 sections, "Your rights" duplicated.
+4. ADM-04 — nav says "Admissions" on a page designed as Amenities.
+
+### Token defects found — reported, none changed
+
+| Token | Ours | Figma | Sightings |
+|---|---|---|---|
+| `--blue-300` | #8FA8CE | **#8CA1C1** | 404 background, Contact insurance panel |
+| `--blue-50` | #F2F7FF | **#F4F8FF** | About values, Contact insurance section |
+| `container-gutter` | 33.5px @390 | **16 @393** | measured on 3 pages |
+
+### Still to measure before the affected items dispatch
+
+Careers intro section height and mobile order · Contact "Supported Transition" badge icon · Contact mobile in full · About values desktop card internals for ABOUT-08 · Playfair heading-weight calibration for HOME-18.
