@@ -21,7 +21,7 @@ For ordinary marketing copy that would be fine. This is a **healthcare provider'
 | | Value |
 |---|---|
 | Page title | "Privacy Policy", serif, x 81, y ~186 |
-| Date line | "Date of last revision: May 28, 2026", directly beneath |
+| Date line | "Date of last revision: May 26, 2026", directly beneath |
 | Left "Content" nav card | x **80…384** (w **305**), y 338…653 (h 316), pale-blue fill, rounded |
 | Content column | x **513…1349** (w **837**), right margin ~**90** |
 | Footer | standard site footer |
@@ -110,6 +110,116 @@ By using this website, you acknowledge that you have read and understood this Pr
 
 1. **The duplicate "Your rights" nav entry** — remove it, or supply the missing section.
 2. **"Service Providers:" is followed by two spaces** in the frame before "We may work". Transcribed as one; confirm.
-3. **"Date of last revision: May 28, 2026"** — confirm this is the date to ship, or supply the correct one. We will not invent a revision date.
+3. **"Date of last revision: May 26, 2026"** — confirm this is the date to ship, or supply the correct one. We will not invent a revision date.
+
+   ⚠️ We first transcribed this as **May 28** from a low-resolution overview strip. Re-reading at high magnification gives **May 26**. The corrected value is above. This is a live example of why §0 requires verification — a wrong revision date on a published policy is exactly the class of error a raster read-back produces.
 4. **Contact details** — the address, email and phone above must be confirmed as correct for publication.
 5. Whether the nav is a live in-page anchor list or static text.
+
+---
+
+# TERMS OF USE
+
+| | |
+|---|---|
+| Source | `design-sources/figma-reference/Terms of Use _ Desktop.png` (1440 × 2990) |
+| Status | ⚠️ **TRANSCRIPTION — REQUIRES AGENCY VERIFICATION BEFORE IT SHIPS** (see §0) |
+
+Same template as Privacy: serif title, revision date, pale-blue "Content" nav card left, content column right.
+
+**Title:** Terms of Use
+**Date line:** Date of last revision: **May 26, 2026** — same date as the Privacy Policy.
+
+## Left nav — 10 entries, all distinct
+
+```
+• Introduction          ← active, bulleted
+  Acceptance of Terms
+  Use of the Website
+  Medical Disclaimer
+  Intellectual Property
+  Limitation of Liability
+  Third-Party Links
+  User Responsibilities
+  Termination
+  Contact Us
+```
+
+Nav and body agree — 10 entries, 10 sections. **No duplicate here**, unlike the Privacy nav.
+
+## Transcribed copy
+
+### Introduction
+Welcome to Amara Care Center. By accessing or using our website, you agree to comply with these Terms of Use. If you do not agree with these terms, please discontinue use of this website.
+
+### Acceptance of Terms
+By using this website, you acknowledge that you have read, understood, and agreed to these Terms of Use and our Privacy Policy.
+
+We reserve the right to update these Terms of Use at any time. Continued use of the website after changes are posted constitutes your acceptance of the revised terms.
+
+### Use of the Website
+You agree to use this website only for lawful purposes. You may not:
+
+- Violate any applicable laws or regulations.
+- Attempt to gain unauthorized access to our systems, networks, or data.
+- Copy, reproduce, or distribute website content without prior written permission.
+- Upload malicious software or interfere with the operation or security of the website.
+- Use the website in any manner that could impair its functionality or availability.
+
+### Medical Disclaimer
+The information provided on this website is for general informational purposes only and should not be considered medical advice, diagnosis, or treatment.
+
+The content on this website is not intended to replace consultation with qualified healthcare professionals. Always seek the advice of your physician or another licensed healthcare provider regarding any medical condition or treatment decisions.
+
+Use of this website does not establish a patient-provider relationship with Amara Care Center.
+
+### Intellectual Property
+All content on this website, including text, graphics, photographs, logos, icons, videos, and other materials, is the property of Amara Care Center or its licensors and is protected by applicable intellectual property laws.
+
+Unauthorized copying, reproduction, modification, or distribution of any content is prohibited without prior written permission.
+
+### Limitation of Liability
+To the fullest extent permitted by applicable law, Amara Care Center shall not be liable for any direct, indirect, incidental, special, or consequential damages arising from or related to your use of this website, including but not limited to:
+
+- Errors or omissions in website content.
+- Temporary interruptions or unavailability of the website.
+- Loss of data or unauthorized access to transmitted information.
+- Reliance on information published on this website.
+
+### Third-Party Links
+Our website may include links to third-party websites for your convenience. These websites are not controlled by Amara Care Center, and we are not responsible for their content, privacy practices, or availability.
+
+Accessing third-party websites is at your own discretion and risk.
+
+### User Responsibilities
+You agree to provide accurate information when contacting us through the website.
+
+If any portion of the website requires account credentials, you are responsible for maintaining the confidentiality of your login information and for all activities conducted under your account.
+
+Please notify us immediately if you believe your account has been accessed without authorization.
+
+### Termination
+We reserve the right to restrict, suspend, or terminate access to this website at any time, without prior notice, if we believe these Terms of Use have been violated or if required by applicable law.
+
+### Contact Us
+If you have any questions regarding these Terms of Use, please contact us.
+
+- Address: 25 5th Avenue, Haskell, NJ 07420
+- Email: info@amaracarecenter.com
+- Phone: 973-839-6000
+
+By accessing and using this website, you acknowledge that you have read, understood, and agreed to these Terms of Use.
+
+---
+
+## AUX-01 — the ticket's own confusion is now explained
+
+AUX-01 recorded that both legal subtasks carried **one byte-identical image**, that it showed **Terms** rather than Privacy, and that it showed **our placeholder** rather than approved copy. All three observations hold, and the export resolves the underlying block: both pages now have complete approved copy, and they are genuinely different documents with different navs and different section sets.
+
+## Both pages — what still needs the agency
+
+1. **Verify both transcriptions**, ideally by sending the copy as text. Our own Privacy date error above shows why.
+2. **The duplicate "Your rights" nav entry** on Privacy — remove it, or supply the missing section.
+3. Confirm the shared revision date **May 26, 2026** is what ships.
+4. Confirm the published address, email and phone.
+5. Confirm whether the "Content" nav is a live in-page anchor list or static text.
