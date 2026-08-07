@@ -921,3 +921,73 @@ The shipped photo is `aspect-[3/2]` on mobile — **1.5**. At the correct 361px 
 renders roughly **241px tall against a required 428**. This is a large, visible defect,
 but it belongs to the hero photo / badge composition (H11), **not** to H01 or H03, and
 is recorded here rather than folded into either.
+
+---
+
+## 22 · H01 — THE HERO'S FOUR GAPS ARE COUPLED, AND WHY
+
+Found while the H01 turn was in flight. It changes how H01 must be solved, so it is
+recorded before the result comes back rather than after.
+
+The hero section is:
+
+```
+<section class="... flex flex-col justify-center ... min-[1440px]:min-h-[1200px]">
+  <Container class="... pb-20 pt-[152px] md:pb-[60px] md:pt-[140px]">
+```
+
+At 1440 the CSS box stack sums to:
+
+```
+140 pt + 52 h1 + 24 + 48 para + 24 + 48 CTA + 40 mt-10 + 720 photo + 60 pb = 1156
+```
+
+1156 is **less than the 1200 min-height**, so `justify-center` distributes the slack:
+(1200 − 1156) / 2 = **22px** added above. That is precisely why the H1 box measures
+**162** and not the 140 its padding implies — and it reconciles the implementer's
+independently measured H1 box top of 162 with the source.
+
+**Consequence: the four gaps are not independent.** Growing gap D by 41px grows the
+content to 1197, which shrinks the centring offset from 22 to 1.5 and pulls the whole
+block *up* by ~20px. A naive `md:mt-[81px]` therefore lands the photo near **418**,
+not 440, and breaks gap A while "fixing" gap D. This is the "do not translate the
+group" trap arriving through the back door — via a layout property rather than a margin.
+
+### 22.1 Closed form
+
+Requiring photo top 440 and photo height 720:
+
+```
+pt + 52 + 24 + 48 + 24 + 48 + mtD = 440      ->   pt + mtD = 244
+```
+
+Splitting it by gap A (H1 ink top 168, with a ~6px box→ink offset for Playfair 44/52):
+
+```
+pt  = 162
+mtD = 82
+```
+
+Total content then = 162 + 52 + 24 + 48 + 24 + 48 + 82 + 720 + 60 = **1220**, which is
+**above** the 1200 min-height, so `justify-center` becomes inert and every gap is
+controlled purely by its own margin. That is the property that makes H01 and H03
+separable:
+
+- **H01** sets `pt` and `mtD` with the tail left at 60 → total 1220, centring inert.
+- **H03** later sets the tail 60 → 40 → total exactly 1200, centring still contributes
+  zero. No interaction.
+
+### 22.2 An off-by-one in my own H01 targets
+
+The gaps I dispatched — A 97, B 38, C 37, D 81 — are each **1px high**. I computed them
+as `next_band_first − prev_band_last`, i.e. subtracting a last-painted-*index* from a
+first-painted-*index* without the +1. In CSS-edge terms they are **96 / 37 / 36 / 80**.
+
+It is the same index-vs-edge slip caught on H10's button padding, and it is worth
+noting that I made it again one correction later.
+
+**It does not invalidate the dispatched turn**: the instruction was to measure the
+shipped render with the *same* scan and the *same* subtraction, so both sides carry the
+identical convention and the comparison stays self-consistent — and the ±2px tolerance
+on ink gaps covers it regardless. It would only matter if a target were converted
+straight into a CSS value, which is exactly what the H10 lesson forbids.
