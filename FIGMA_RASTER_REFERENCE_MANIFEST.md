@@ -991,3 +991,89 @@ shipped render with the *same* scan and the *same* subtraction, so both sides ca
 identical convention and the comparison stays self-consistent — and the ±2px tolerance
 on ink gaps covers it regardless. It would only matter if a target were converted
 straight into a CSS value, which is exactly what the H10 lesson forbids.
+
+---
+
+## 23 · H01 — VERIFIED PASS, AND TWO THINGS IT UNCOVERED
+
+### 23.1 Independent confirmation
+
+Landed: `md:pt-[158px]`, CTA row `md:mt-8`, photo wrapper `md:mt-20`.
+
+The CSS box stack at 1440 predicts, from source alone:
+
+```
+158 + 52 + 24 + 48 + 32 + 48 + 80 + 720 + 60 = 1222   (> 1200, so justify-center is inert)
+CTA  [314, 362)      photo [442, 1162)
+```
+
+The implementer's independently rastered bands are **(314, 361)** and **(442, 1161)** —
+the identical boxes in index form. Source arithmetic and raster measurement agree
+exactly, so the result is confirmed rather than taken on report.
+
+Measured gaps, same convention on both sides: **A 97 · B 38 · C 38 · D 81** against
+targets 97 / 38 / 37 / 81. D is exact; C is +1 inside the ±2 ink tolerance.
+
+The §22 prediction held: the fix had to push the total *above* 1200 for the gaps to
+become independently controllable, and it did. The implementer reached the same
+conclusion empirically after the centring bit it once, and re-measured after every edit
+instead of deriving — the right instinct.
+
+### 23.2 A +2px absolute offset that is NOT H01's
+
+Every hero element sits exactly 2px lower than Figma in absolute terms even though all
+four gaps are correct. The cause is upstream:
+
+| | Figma | rendered |
+|---|---|---|
+| header ink band | 28–71 (**44** tall) | 26–73 (**48** tall) |
+
+Gap A is anchored on the header's ink *bottom*. Matching A = 97 against a bottom edge of
+73 rather than 71 necessarily places the H1 two pixels low, and the offset then
+propagates through the whole hero. **Gap A itself is correct**; the header's own
+geometry is a separate component and outside H01. Recorded so the 2px is not later
+misread as an H01 defect — and so H03's tail is measured against the rendered section
+bottom, not Figma's absolute y.
+
+### 23.3 An error of mine: "mobile is already correct"
+
+I instructed the implementer that mobile vertical spacing was already correct and must
+not move. **That was unfounded.** I verified only gap D (`mt-10` = 40 = Figma 40) and
+generalised from it. What I actually established was that the *Figma* mobile targets
+equal the *Figma* desktop targets for B and C — which says nothing about whether the
+render matches. Measured at 393:
+
+| gap | Figma | rendered | |
+|---|---|---|---|
+| A | 54 | **95** | **41px too much** |
+| B | 38 | 37 | ok |
+| C | 37 | **30** | **7px short** |
+| D | 40 | 41 | ok |
+
+So two real mobile defects were left in place by an instruction of mine. H01 is scoped
+"Home **desktop** hero vertical spacing", so not fixing them in this turn was correct —
+but they must not be lost.
+
+### 23.4 The mobile H1 renders on one line where Figma has two
+
+| | Figma (393) | rendered (393) |
+|---|---|---|
+| H1 ink | **two** bands: 106–134 and 151–178 | **one** band: 162–185 |
+| ink height per line | 29 / 28 | **24** |
+| line pitch | **45** | n/a (single line) |
+
+Two separate bands 17 rows apart cannot merge into one, so this is a genuine
+single-line/two-line difference, not a scan artefact. Ink ratio 29/24 = 1.21 against a
+shipped `text-h1` mobile clamp minimum of **32px / 40px line-height** implies Figma's
+mobile H1 is roughly **40px on a 45px line** — which is why it wraps to two lines there
+and not here.
+
+This is heading typography, so it is evidence for **G01** (heading typography/weight
+audit), not for H01. It also means **§23.3's mobile gap A cannot be fixed before G01**:
+gap A is measured to the H1's ink top, and changing the H1's size and line count moves
+that ink top. Fixing A first would guarantee re-breaking it.
+
+**Not covered by any item in the current queue:** Home *mobile* hero vertical spacing
+(gaps A and C). H10 covered the mobile CTA row and H11 covers the mobile badge, but
+nothing covers mobile hero rhythm. Flagged for a decision rather than silently folded
+into an adjacent correction.
