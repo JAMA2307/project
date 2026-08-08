@@ -1992,3 +1992,40 @@ So the two readings give genuinely different work:
 
 Either is defensible; the choice is the client's, not mine. **Not dispatched.** The logo
 half needs nothing; the submit half waits on this ruling.
+
+### 33.4 H09 first turn — FAILED, corrective turn dispatched
+
+Classed **functional** by the client. Lovable's first turn got `Footer.tsx` right and then
+touched a second file it was told not to.
+
+**`Footer.tsx` — correct, and verified against every criterion:**
+
+| criterion | result |
+|---|---|
+| valid submit | clears input, sets success message |
+| invalid submit | retains value, sets error message |
+| `aria-live="polite"` + `role="status"` | on a wrapper that is **always mounted** — only the inner `<p>` is conditional, so the live region persists and will actually announce |
+| reserved space | `mt-2 min-h-[24px]` — footer cannot shift height |
+| tokens | `font-sans text-[16px]` with `text-brand-white/70`–`/80`. **No new colour, no red/green, no icon, no badge** |
+| untouched | watermark, `<Logo>`, link columns, socials, back-to-top, placeholder, `socials` prop |
+
+`noValidate` was added to the form. That is a **defensible** choice, not drift: it suppresses
+the browser's native validation bubble so the custom, announced message is what the user
+gets. `type="email"` and `required` are retained as semantics, and the regex catches the
+empty case.
+
+**`src/routeTree.gen.ts` — out of scope, and a real regression.** The commit deleted the
+TanStack Start module augmentation:
+
+```ts
+declare module '@tanstack/react-start' {
+  interface Register { ssr: true; router: …; config: … }
+}
+```
+
+That drops the `ssr: true` flag and the router/config type registration, degrading type
+inference app-wide. This project already treats generated-file churn as a quality signal —
+the H03 record's praise reads *"one file, no generated file"*.
+
+**H09 STATUS: FAILED — corrective turn dispatched**, restore-only, with `Footer.tsx`
+explicitly frozen. Not closed, and H10 is not started.
