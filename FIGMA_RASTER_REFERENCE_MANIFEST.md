@@ -1747,3 +1747,73 @@ deployed page, and the distinction should stay on the record.
    agency question later: either the cards should link somewhere, or the arrow should go.
 
 **H05 STATUS: VERIFIED PASS.**
+
+---
+
+## 30 · H06 (= HOME-07) — STORYBOARD RECOVERED · BLOCK NARROWED, NOT CLEARED
+
+`1217108334767511` · "7 Safari/Chrome". Ticket body is one line — *"В этой части анимация"*
+("Animation in this part") — one attachment, no comments.
+
+### 30.1 The "5-frame storyboard" is the ticket screenshot itself
+
+`design-sources/asana-qa-screenshots/Home/7 SafariChrome.png`, 1086 × 168, is a single
+strip of **five Figma prototype frames hand-numbered 1–5 in red marker**. It had been
+described in `ASANA_QA_LEDGER.md` §695 but never opened. It reads:
+
+| frame | content |
+|---|---|
+| 1 | monogram ring, barely visible |
+| 2 | ring, stronger |
+| 3 | ring at full strength — **still no text** |
+| 4 | "Our Mission" heading + full paragraph, ring reduced and at top |
+| 5 | as 4, with Figma selection chrome |
+
+### 30.2 An opacity measurement was attempted and is DISCARDED
+
+Per-stage ring opacity was sampled to try to convert half the block from invented to
+measured. It failed: every frame returned `darkest = 0.0`, i.e. the sample was picking up
+frame borders and anti-aliased red marker, not ring ink. At ~208 × 156 per frame, over
+hand-drawn annotation, the instrument is far too crude to name an opacity.
+
+**Recorded as a failed measurement, not quietly dropped.** It would not have cleared the
+block in any case — see §30.3.
+
+### 30.3 What the storyboard DOES establish, without inference
+
+Frames 1–3 contain **only** the ring. Text appears **only** in 4–5. That is sequence and
+grouping, read directly off the image, requiring no numeric inference:
+
+> **The text stages must not begin until the ring's reveal has completed.**
+
+The shipped `home/Mission.tsx` violates this, and the violation is arithmetic rather than
+aesthetic:
+
+| element | delay | duration | |
+|---|---|---|---|
+| ring `rise(0)` | 0 | 0.5s | completes at **0.50s** |
+| `<h2>` `rise(0.12)` | **0.12s** | 0.5s | starts while the ring is **24% through its fade** |
+| paragraph `rise(0.24)` | **0.24s** | 0.5s | starts at 48% |
+
+All three overlap. The storyboard shows them strictly sequential.
+
+### 30.4 What remains genuinely blocked
+
+**Scroll distance.** Five still frames cannot encode how much scroll maps to each stage,
+and the current reveal is `whileInView` time-based rather than scrub-linked. Whether the
+agency wants a scroll-scrubbed 5-stage reveal — and over what distance — is not in the
+design. This is the Rev-2 finding (*"the frames show end states, not the interpolation"*)
+re-confirmed against the actual artefact rather than inherited.
+
+Rev 4 rebuilt the queue on the official rasters and did **not** promote HOME-07 into the
+dispatchable 13. That judgment survives this inspection.
+
+### 30.5 Consequence — the item splits
+
+| part | status |
+|---|---|
+| **Phase ordering** — text must not start until the ring completes | **Dispatchable.** Invents nothing; reuses the file's existing 0.5s and `EASE`, changing only delays so phases stop overlapping |
+| **5-stage scroll-scrubbed reveal** with per-stage scroll distances/opacities | **BLOCKED** — agency must supply distances, or explicitly delegate them |
+
+Not dispatched. The split is a scope decision, and narrowing a ticket unilaterally is the
+failure this protocol exists to prevent.
