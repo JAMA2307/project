@@ -1855,3 +1855,48 @@ Not a defect.
 
 **H06 STATUS: phase ordering VERIFIED PASS. The 5-stage scroll-scrubbed reveal remains
 BLOCKED** on agency scroll distances, per §30.4 — the ticket is not closed.
+
+---
+
+## 31 · H07 (= HOME-08 pinning half) — EVIDENCE OPENED · NOT DISPATCHED
+
+`1217108466019422` · "8 safari/chrome". Agency text, translated:
+
+> It should stick **in this state** — right now only the shrunken headings are visible.
+> Also make the buttons in this section non-clickable: the scroll-to-card isn't smooth and
+> is basically unnecessary.
+
+### 31.1 The screenshot is a pinned-STATE specification
+
+`design-sources/asana-qa-screenshots/Home/8 safarichrome.png`, 1983 × 981 — a live Chrome
+capture with **two red horizontal brackets**. They run from just above the `our services`
+eyebrow to just below the active panel's lower edge, enclosing:
+
+- eyebrow + `Personalized Care for Every Stage` heading
+- the four-item rail, active item marked, the other three greyed
+- **the full active panel** — title, body, photo, watermark, `Explore Our Services`
+
+So the brackets say *what must remain on screen while pinned*. Today the pin holds only the
+rail, which is the reported defect.
+
+### 31.2 The item splits the same way H06 did
+
+| part | status |
+|---|---|
+| **Pinned composition** — the active panel must stay visible with the rail, not just shrunken headings | Non-inventive in principle: the brackets name the composition directly |
+| **Scroll release point / per-panel scroll distance** | **BLOCKED** — a single still cannot encode it. This is the Rev-2 finding (*"the scroll release point"*), re-confirmed against the artefact rather than inherited |
+| **Rail non-interactive** (= H08 in the session queue) | Buildable, needs no numbers — a removal, not a value |
+
+### 31.3 NOT DISPATCHED — pre-dispatch is incomplete
+
+`home/Services.tsx` has **not** been read, so there is no defect statement at source level,
+no current-pin-boundary measurement, and no ScrollTrigger inventory. Dispatching on a
+screenshot reading alone would be exactly the "build from an impression" failure the
+protocol forbids, and this session no longer has the context budget to run
+inspect → dispatch → verify to completion.
+
+Next session resumes here: read `home/Services.tsx`, establish where the pin currently
+starts and ends, then decide whether the composition half can be dispatched without naming
+a release point. **H08 (rail non-interactive) is the cheaper, fully-unblocked item and may
+be the better next dispatch** — it is a deletion of behaviour the agency explicitly asked
+to remove.
