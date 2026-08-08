@@ -1419,3 +1419,53 @@ Their measurement was fine; **my Figma-side assumption of 20px was the error.**
 `@utility` sets both properties, a plain override would lose the equal-specificity race
 exactly as `text-eyebrow` did; the element should therefore state its own typography
 outright, as the badge and "Guided care" paragraphs already do in this codebase.
+
+### 26.7 H04 — VERIFIED PASS, and the wrap anomaly was headless font hinting
+
+A no-code probe turn settled it. Computed values after the fix:
+
+| | 1440 | 393 | target |
+|---|---|---|---|
+| font-size | **23.9998px** | **16px** | 24 / 16 ✅ |
+| line-height | **31.9998px** | **20.0002px** | 32 / 20 ✅ |
+| weight | 400 | 400 | 400 ✅ |
+| letter-spacing | normal | normal | 0 ✅ |
+| box width | 774 | 361 | ✅ |
+
+Per-line widths with `--font-render-hinting=none`, via `selectNodeContents` +
+`getClientRects()`:
+
+| | line 1 | 2 | 3 | 4 | 5 |
+|---|---|---|---|---|---|
+| rendered | 712 | 772.8 | 755.4 | 727.2 | 600.4 |
+| my offline Satoshi sim | 712.3 | 773.1 | 755.8 | 727.5 | 600.7 |
+| **Figma** | **712** | **772** | **755** | **719** | **599** |
+
+Three independent instruments agree to within 0.5px. Line 4's +8 is exactly the
+"on community" / "oncommunity" space from §26.5. Mobile likewise: 313.6, 357.6, 314.9,
+359.1, 332.7, 355.2, 338.2 against measured 313, 356, 315, 358, 333, 351, 337.
+
+**Why the earlier numbers looked impossible.** With default hinting the same page renders
+**6** lines summing 3674. A canvas probe of the identical string isolates the cause:
+
+| size | em width, default hinting | em width, hinting off |
+|---|---|---|
+| 16px | 150.000 | 149.862 |
+| **24px** | **154.542** | 149.862 |
+| 48px | 150.229 | 149.862 |
+| 256px | 150.059 | 149.862 |
+
+A 3.1% inflation **at 24px only** — non-linear, therefore hinting quantisation in headless
+Chromium, not a property of the font or the CSS. It vanishes with hinting disabled.
+
+**Method rule to carry forward: never measure text advances in headless Chromium without
+`--font-render-hinting=none`.** Un-hinted headless output is what agrees with both the
+Figma raster and the OTF metrics. This also explains why default-hinted Regular at 20px
+mimicked Medium metrics in §26.6 — that agreement was partly coincidence.
+
+**H04 STATUS: VERIFIED PASS.** Colours (§26.4), size and line-height all land, and the
+shared `text-body-large` and `text-eyebrow` utilities were never edited.
+
+Residual, flagged not actioned: a real browser on a hinting-heavy platform could wrap to
+6 lines. That is a rendering-environment property, not a reason to alter a measured
+design value.
