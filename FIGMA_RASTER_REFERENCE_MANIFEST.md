@@ -2029,3 +2029,43 @@ the H03 record's praise reads *"one file, no generated file"*.
 
 **H09 STATUS: FAILED — corrective turn dispatched**, restore-only, with `Footer.tsx`
 explicitly frozen. Not closed, and H10 is not started.
+
+### 33.5 H09 — VERIFIED PASS after one corrective turn
+
+The corrective diff touches **one file** and restores the deleted block byte-for-byte at the
+end of `src/routeTree.gen.ts`:
+
+```ts
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
+```
+
+`src/components/Footer.tsx` does not appear in the diff at all, so the verified newsletter
+response from §33.4 is intact. No other file changed.
+
+**H09 STATUS: VERIFIED PASS.** Both halves of HOME-13 are now satisfied — the logo half was
+already correct (§33.1) and the submit half works, announces, and shifts nothing.
+
+Evidence quality: source + diff, as with H06 — not measured, because the Lovable origins
+remain unreachable. The claims here are structural (which files changed, which lines
+returned), and a diff is the right instrument for exactly that.
+
+### 33.6 The method finding worth carrying forward
+
+Three turns this session shipped **correct primary work with incorrect collateral or
+undersold reporting**:
+
+| turn | reported | actual |
+|---|---|---|
+| H05 | "Added data-info-layer probe" | the entire card transformation |
+| H09 | Footer newsletter response | Footer **plus** a gutted generated file |
+
+In both cases the commit message and the agent's own summary were an unreliable guide, in
+opposite directions — once too modest, once too narrow. **`get_diff` is what closed the gap
+both times, and it should be run on every turn, not only suspicious ones.** It is cheap,
+and it is the only instrument that answers "what else changed?".
