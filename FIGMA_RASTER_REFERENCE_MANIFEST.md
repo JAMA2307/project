@@ -2069,3 +2069,54 @@ In both cases the commit message and the agent's own summary were an unreliable 
 opposite directions — once too modest, once too narrow. **`get_diff` is what closed the gap
 both times, and it should be run on every turn, not only suspicious ones.** It is cheap,
 and it is the only instrument that answers "what else changed?".
+
+---
+
+## 34 · H11 (= HOME-17) — PRE-DISPATCH COMPLETE · PROMPT READY, NOT SENT
+
+The mobile tail H03 deliberately left owed (§25). Target is already **proven**, not
+estimated — §189 and R4 dispatchable item 08: photo **361 × 428**, badge **273 × 126**,
+insets left 16 / bottom 16, fill `#E6F0FF`, anchored bottom-**left**.
+
+### 34.1 Current source — `home/Hero.tsx`
+
+```
+<img className="aspect-[4/5] w-full rounded-card object-cover sm:aspect-[3/2] md:aspect-[16/9]" />
+<div className="absolute inset-x-3 bottom-3 rounded-lg bg-secondary-bg p-4
+                lg:inset-x-auto lg:bottom-6 lg:right-6 lg:max-w-[340px] …">
+```
+
+### 34.2 Four defects at 393, all arithmetic
+
+| # | property | shipped | target | note |
+|---|---|---|---|---|
+| 1 | photo aspect | `aspect-[4/5]` = 0.800 → **451.25** tall | **428** → ratio **361/428 = 0.843** | §918 states the ratio explicitly |
+| 2 | badge width | `inset-x-3` ⇒ 361 − 24 = **337**, full-bleed | **273** | it is stretched edge-to-edge, not a bottom-left card |
+| 3 | insets | **12 / 12** (`inset-x-3`, `bottom-3`) | **16 / 16** | |
+| 4 | anchoring | stretched both edges | **bottom-left**, intrinsic width | `inset-x-3` must become `left-4` + width, not a max-width |
+
+Defect 1 is the one the ticket title does not mention: the photo is **23px too tall** at
+393 before the badge is touched at all. Fixing only the badge would leave the composition
+wrong, so H11 is a photo *and* badge correction.
+
+### 34.3 Desktop must not move — and one desktop discrepancy is logged, not actioned
+
+`lg:` keeps bottom-**right** (§150 confirms desktop is bottom-right, mobile bottom-left) and
+`md:aspect-[16/9]`. Both stay.
+
+Logged: §853–854 measure the **desktop** badge at **345 × 160**; the shipped value is
+`lg:max-w-[340px]`, a 5px shortfall. That is desktop, therefore **outside H11's mobile
+scope** — recorded for a later item rather than folded in, because widening H11 silently is
+the failure §32.1 warns about.
+
+### 34.4 NOT DISPATCHED — deliberately
+
+`qa/H11_PROMPT.md` is written and dispatch-ready. It is **not sent** because this session
+has no remaining context to run inspect → dispatch → verify to completion, and a dispatched
+turn nobody verifies is worse than a prompt that is ready to send. §33.4 is the argument:
+that turn shipped correct primary work **and** gutted a generated file, and only `get_diff`
+caught it. An unwatched turn here could do the same.
+
+Next session: send `qa/H11_PROMPT.md`, then verify with `get_diff` **and** a 393 render —
+the harness in `qa/` already measures at 393, and §29.3's traps apply (`is_mobile` needs the
+viewport meta or you measure 980px).
