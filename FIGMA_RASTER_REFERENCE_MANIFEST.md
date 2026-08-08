@@ -1900,3 +1900,44 @@ starts and ends, then decide whether the composition half can be dispatched with
 a release point. **H08 (rail non-interactive) is the cheaper, fully-unblocked item and may
 be the better next dispatch** — it is a deletion of behaviour the agency explicitly asked
 to remove.
+
+---
+
+## 32 · H08 (= HOME-08 rail-interactivity half) — CLOSED, NO TURN SPENT
+
+Agency: *"Also make the buttons in this section non-clickable: the scroll-to-card isn't
+smooth and is basically unnecessary."*
+
+**Already satisfied in the shipped source.** `home/Services.tsx` renders each rail entry as:
+
+```tsx
+<li key={service.id}>
+  <span aria-current={isActive ? "true" : undefined} className="flex items-start ...">
+```
+
+A plain `<span>`. No `onClick`, no `scrollIntoView`, no `href`, no `role="button"`, no
+`tabIndex`, nothing focusable. The scroll-to-card jump the agency asked to remove does not
+exist. Active state comes solely from the `IntersectionObserver` + `pickActive()` scoring,
+which only *reads* scroll position and never drives it.
+
+Source is definitive here — "is this clickable" is answered by the element and its handlers,
+so no render was required and none was run.
+
+**Dispatching this would have spent a credit to change nothing.** Filed alongside the R4
+CLOSED items (HOME-12, HOME-14, HOME-15, HOME-19, HOME-20, ABOUT-01) — confirmed correct
+against the requirement, no turn owed. The QA ledger's line 112 still describes HOME-08 as
+"two distinct changes"; the second was evidently done in an earlier wave and never
+reconciled. **`ASANA_QA_LEDGER.md` line 112 should be updated to reflect that.**
+
+### 32.1 Scope warning for whoever picks this up
+
+The ticket says "buttons", but the Russian is *"скролл до карточки"* — scroll **to the
+card**. That is the rail. The `Explore Our Services` CTA inside panel 1 is a `<Link to="/services">`,
+navigates to another route, performs no scroll-jump, and is present in both the approved
+Figma raster and the agency's own annotated screenshot.
+
+**Do not disable it.** Reading "buttons" literally would delete an approved CTA and turn a
+no-op ticket into a regression.
+
+**H08 STATUS: CLOSED — requirement already met.** HOME-08 remains open only on its pinning
+half (§31), which stays blocked on the scroll release point.
