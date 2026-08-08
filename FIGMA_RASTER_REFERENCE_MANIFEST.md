@@ -1941,3 +1941,54 @@ no-op ticket into a regression.
 
 **H08 STATUS: CLOSED — requirement already met.** HOME-08 remains open only on its pinning
 half (§31), which stays blocked on the scroll release point.
+
+---
+
+## 33 · H09 (= HOME-13) — PRE-DISPATCH · ONE HALF DONE, ONE NEEDS A RULING
+
+`1217108466019476` · "13 safari/chromr": *"The response after filling in and submitting your
+email doesn't work here; also the logo is wrong."* Two defects.
+
+### 33.1 Logo half — already fixed, no turn owed
+
+`Footer.tsx` imports `@/assets/brand/footer-logo-official.png` and renders it twice: as the
+bottom-centred watermark at `w-[min(70vw,557px)]`, and via `<Logo variant="dark" />` for the
+lockup. The container carries `min-[1280px]:min-h-[580px]`.
+
+That is exactly the Wave 8 delivery recorded in `MASTER_IMPLEMENTATION_LEDGER.md` —
+*"footer-logo-official.png as both the footer lockup and a 557px bottom-cropped watermark,
+footer height exactly 580"*. The red-X'd wrong mark is gone. **Same pattern as H08: the
+ledger was never reconciled after the fix.**
+
+### 33.2 Submit half — defect confirmed at source
+
+```tsx
+const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  event.preventDefault();
+};
+```
+
+That is the whole handler. No state, no message, no field reset, no `aria-live`. Submitting
+the form does **nothing observable**. The agency's report is exactly right, and this is also
+a plain accessibility failure — a form that silently discards input announces nothing to a
+screen reader.
+
+### 33.3 The ruling this needs — unchanged since Rev 2, still unanswered
+
+Rev 2 dropped this item with a standing question: *"the ticket reports broken **function**,
+but implementing it creates an undesigned UI element. If you class this as functional rather
+than visual, say so and it returns to the queue."*
+
+`TYPOGRAPHY_AND_FORM_STATES.md` §204 independently confirms the design side is empty: the
+eight states — default, focus, filled, error, disabled, loading, **success**, hover —
+**cannot be documented as designed**. There is no approved confirmation appearance.
+
+So the two readings give genuinely different work:
+
+| reading | work |
+|---|---|
+| **Functional** | Make submit respond using only existing tokens — no new visual language. Invents an *arrangement*, not a design |
+| **Visual** | Blocked. A designed confirmation must come from the agency first |
+
+Either is defensible; the choice is the client's, not mine. **Not dispatched.** The logo
+half needs nothing; the submit half waits on this ruling.
