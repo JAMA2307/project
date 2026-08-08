@@ -1569,3 +1569,77 @@ because measured evidence beat a plausible guess.
 **H05 STATUS: BLOCKED — pre-dispatch complete, awaiting approved copy.** Everything that
 does not depend on the copy is done: defect confirmed at source, geometry banked, mobile
 resolved as static, photo candidate identified, prompt drafted. Nothing is dispatched.
+
+---
+
+## 28 · H05 — VERIFICATION HARNESS BUILT AND BASELINE BANKED
+
+Both Lovable hosts (`amara-care-site.lovable.app`, the `id-preview--…` origin) are a
+**403 CONNECT** denial from this environment, so the live site cannot be driven directly.
+Verification is therefore done the way H04's was: reconstruct the section locally from the
+Lovable source, the real tokens in `src/styles.css` and the real OTFs in
+`design-sources/fonts/`, then drive it in headless Chromium.
+
+Committed as `qa/wsua-harness.html` + `qa/measure.py`, run as
+`python3 qa/measure.py wsua-harness.html <label>`. Chromium launches from
+`/opt/pw-browsers/chromium-1194` (the pip `playwright` expects build 1234; do **not**
+`playwright install`). `--font-render-hinting=none` per the H04 method rule.
+
+Photos are solid-colour stand-ins at the true intrinsic sizes. Card geometry is
+`object-cover` into a fixed box, so image content cannot reach any number recorded here.
+
+### 28.1 One instrument defect found and fixed before any verdict was taken
+
+The first run reported card 1 and card 3 "MOVED" by hundreds of pixels while card 2 was
+hovered at 393, and "return-to-default identical: False". **Neither was real.** At 393 the
+section is 1884 tall in a 1000-tall viewport, so Playwright's `hover()` scrolls the page,
+and viewport-relative `getBoundingClientRect()` then reads pure scroll offset as layout
+shift. The probe now converts every rect to **document coordinates** (`+scrollX/+scrollY`).
+Both widths came back clean immediately afterwards.
+
+Recording it because it is the same failure mode as H04's hinting artefact: an instrument
+producing a confident, entirely false discrepancy. **Validate the instrument on the
+unchanged state before trusting it on the changed one.**
+
+### 28.2 Harness validated against the H04 verified values
+
+The reconstruction reproduces H04's closed numbers exactly, which is what licenses its use
+on H05:
+
+| | 1440 | 393 |
+|---|---|---|
+| intro font-size / line-height | **23.9998 / 31.9998** | **16 / 20.0002** |
+| weight · letter-spacing | 400 · normal | 400 · normal |
+| intro box | **774** | **361** |
+
+### 28.3 Pre-change baseline — H05 must leave every one of these untouched
+
+| | 1440 | 393 |
+|---|---|---|
+| section height | **900** | 1884 |
+| grid width | **1280** | 361 |
+| card box | **413 × 460** | 361 × 470 |
+| card x origins | 80 · 513.33 · 946.66 | 16 (stacked) |
+| scrollWidth vs innerWidth | 1440 = 1440 | 393 = 393 |
+| console errors | none | none |
+| hover: hovered card Δy | **−2** (approved `hover-card` lift) | −2 |
+| hover: neighbour + section | unchanged | unchanged |
+| return to default | identical | identical |
+
+**413 × 460 is the Figma card size, and the shipped grid already produces it** —
+1280 − 2×20 gap = 1240, ÷ 3 = 413.33. H05 requires no geometry change whatsoever, and the
+acceptance test is invariance, not adjustment.
+
+Note for the post-change run: the hovered card legitimately moves **−2px** because
+`hover-card` applies an approved `translateY(-2px)` (charter §4). The criteria are the
+hovered card's `offsetWidth`/`offsetHeight`, the **neighbours'** document rects, and the
+section height — not raw rect equality on the hovered card.
+
+### 28.4 Prompt drafted and held
+
+`qa/H05_PROMPT.md` is dispatch-ready with two `‹PENDING›` copy slots. It pins the layer
+model (two `absolute inset-0` layers inside the existing fixed-height article, so nothing
+in flow can move), gates the transformation on `@media (hover: hover) and (pointer: fine)`
+rather than a width breakpoint so touch devices keep the approved static presentation,
+keeps the informational paragraph in the accessibility tree in both states, and carries the
+H04 preservation clause. **Not sent.**
