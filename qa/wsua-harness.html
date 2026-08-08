@@ -1,4 +1,5 @@
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>WSUA harness</title>
 <style>
 @font-face{font-family:"Satoshi";src:url("FONTDIR/Satoshi/Satoshi-Regular.otf") format("opentype");font-weight:400;font-display:block}
@@ -76,6 +77,30 @@ article img.photo{height:100%;width:100%;object-fit:cover;display:block}
     transition-duration:.001ms!important;scroll-behavior:auto!important}
   article:hover{transform:none}
 }
+
+/* ---- H05 layer model (mirrors the shipped Card component) ---- */
+article{position:relative;isolation:isolate}
+article.info{background:none;padding:0}
+.photo-layer{position:absolute;inset:0;z-index:0}
+.photo-layer img{height:100%;width:100%;object-fit:cover;display:block}
+.info-layer{position:absolute;inset:0;z-index:10;background:hsl(var(--secondary-bg));padding:1.5rem;
+  transition-property:opacity;transition-duration:var(--dur-hover);transition-timing-function:var(--ease-premium)}
+.pill{z-index:20}
+.infotext{position:relative;transition-property:transform;transition-duration:var(--dur-hover);
+  transition-timing-function:var(--ease-premium)}
+
+/* touch / no-hover default */
+.info-layer.hover-only{opacity:0}
+.info-layer.default-on{opacity:1}
+.infotext.para-hover-only{transform:translateY(4px)}
+.infotext.para-default-on{transform:translateY(0)}
+
+@media (hover:hover) and (pointer:fine){
+  .info-layer.hover-only,.info-layer.default-on{opacity:0}
+  .group:hover .info-layer,.group:focus-within .info-layer{opacity:1}
+  .infotext.para-hover-only,.infotext.para-default-on{transform:translateY(4px)}
+  .group:hover .infotext,.group:focus-within .infotext{transform:translateY(0)}
+}
 </style>
 
 <section id="wsua">
@@ -93,23 +118,30 @@ article img.photo{height:100%;width:100%;object-fit:cover;display:block}
     </div>
 
     <div class="grid" id="grid">
-      <article id="card1">
-        <img class="photo" src="PH1" width="1086" height="1448" alt="Great room lounge">
+      <article id="card1" class="group" tabindex="0">
+        <div class="photo-layer"><img class="photo" src="PH1" width="1086" height="1448" alt="Great room lounge"></div>
+        <div class="info-layer hover-only" data-info-layer>
+          <div class="ring"><img src="RING" width="165" height="205" alt="" aria-hidden="true"><img class="plane" src="PLANE" width="21" height="21" alt="" aria-hidden="true"></div>
+          <p class="infotext para-hover-only">Our newly renovated setting is designed to feel comfortable and easy to navigate, helping residents feel more at ease each day.</p>
+        </div>
         <div class="pill"><span>Inviting spaces</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M7 17 17 7M7 7h10v10"/></svg></div>
       </article>
 
-      <article id="card2" class="info">
-        <div class="ring">
-          <img src="RING" width="165" height="205" alt="" aria-hidden="true">
-          <img class="plane" src="PLANE" width="21" height="21" alt="" aria-hidden="true">
+      <article id="card2" class="group" tabindex="0">
+        <div class="photo-layer"><img class="photo" src="PH3" width="1086" height="1448" alt="Nurse walking with a resident using a walker"></div>
+        <div class="info-layer default-on" data-info-layer>
+          <div class="ring"><img src="RING" width="165" height="205" alt="" aria-hidden="true"><img class="plane" src="PLANE" width="21" height="21" alt="" aria-hidden="true"></div>
+          <p class="infotext para-default-on">We take the time to understand each resident, creating care plans that reflect their individual needs and preferences.</p>
         </div>
-        <p class="infotext">We take the time to understand each resident, creating care plans that reflect
-          their individual needs and preferences.</p>
         <div class="pill"><span>Guided care</span></div>
       </article>
 
-      <article id="card3">
-        <img class="photo" src="PH2" width="1086" height="1448" alt="Care team">
+      <article id="card3" class="group" tabindex="0">
+        <div class="photo-layer"><img class="photo" src="PH2" width="1086" height="1448" alt="Care team"></div>
+        <div class="info-layer hover-only" data-info-layer>
+          <div class="ring"><img src="RING" width="165" height="205" alt="" aria-hidden="true"><img class="plane" src="PLANE" width="21" height="21" alt="" aria-hidden="true"></div>
+          <p class="infotext para-hover-only">Our team works together to provide coordinated care, with access to on-site therapy and ongoing medical oversight.</p>
+        </div>
         <div class="pill"><span>Connected support</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M7 17 17 7M7 7h10v10"/></svg></div>
       </article>
     </div>

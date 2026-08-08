@@ -1643,3 +1643,107 @@ in flow can move), gates the transformation on `@media (hover: hover) and (point
 rather than a width breakpoint so touch devices keep the approved static presentation,
 keeps the informational paragraph in the accessibility tree in both states, and carries the
 H04 preservation clause. **Not sent.**
+
+---
+
+## 29 · H05 — VERIFIED PASS
+
+Landed as Lovable commit `398e95b1`, one file, `src/components/home/WhatSetsUsApart.tsx`.
+The commit message ("Added data-info-layer probe") badly undersells the change; the source
+is the full correction.
+
+### 29.1 The dispatch needed re-driving, and why
+
+The first turn (08:22:04Z) was `accepted` but produced no agent run, no assistant message
+and no edit after ~25 minutes. The MCP client caps at 60s while `send_message` defaults to
+waiting, so the aborted HTTP call most likely took the run with it. Re-dispatched with
+`wait=false`, which returns a real `message_id` immediately and cannot be cut off. The
+re-send opened with an explicit "if you already applied this, do not apply it twice"
+guard in case the original ever woke.
+
+**Method rule: drive Lovable with `wait=false` and poll `list_edits`.** Never poll
+`list_messages` — it returns the full H04 probe dump (~76k chars) and will eat the context
+the verification itself needs.
+
+### 29.2 What shipped
+
+A `Card` component with two `absolute inset-0` layers inside the unchanged article:
+photo at `z-0`, informational panel at `z-10` carrying `data-info-layer`, and the pill
+lifted to `z-20` outside both so it never fades or moves. Hover/focus is gated on
+`[@media(hover:hover)_and_(pointer:fine)]`, **not** a width breakpoint, and card 2 carries
+`infoByDefault` so no-hover devices keep the approved informational panel.
+
+### 29.3 Two instrument defects caught before any verdict was read
+
+Both would have produced a confident false result, and both are the same class as §28.1.
+
+1. **Headless Chromium reports `hover:hover, pointer:fine` at every viewport width.**
+   Measuring 393 in a plain context exercises the *desktop* branch, so "mobile is static"
+   would have been confirmed without ever testing the touch path. The 393 pass now runs
+   with `has_touch`/`is_mobile` and **asserts the media features actually flipped** before
+   trusting anything downstream.
+2. **`is_mobile=True` enables viewport-meta emulation, and the harness had no viewport
+   meta**, so Chromium fell back to its 980px default layout viewport: the first touch run
+   reported `innerWidth=980` and cards `428×470`. Adding
+   `<meta name="viewport" content="width=device-width, initial-scale=1">` restored 393.
+
+### 29.4 Measured — `qa/verify_h05.py`, evidence in `qa/measured_h05.json`
+
+| | desktop 1440 | touch 393 | 1440 reduced-motion |
+|---|---|---|---|
+| media features | hover ✓ fine ✓ | **hover ✗ coarse ✓** | reduced ✓ |
+| section height | **900** | 1884 | **900** |
+| card box ×3 | **413 × 460** | 361 × 470 | **413 × 460** |
+| intro size / line-height | **23.9998 / 31.9998** | **16 / 20.0002** | **23.9998 / 31.9998** |
+| intro weight · tracking · colour | 400 · normal · **rgb(44,46,68)** | 400 · normal · rgb(44,46,68) | 400 · normal · rgb(44,46,68) |
+| intro box | **774** | **361** | **774** |
+| default info opacity | **[0, 0, 0]** | **[0, 1, 0]** | [0, 0, 0] |
+| transition-duration | **0.26s** = `--dur-hover` | 0.26s | **1e-06s** |
+| `display` on info layer | **block** | block | block |
+| scrollWidth ≤ innerWidth | 1440 = 1440 | 393 = 393 | 1440 = 1440 |
+| console errors | none | none | none |
+
+Per-card state, desktop — hover **and** keyboard focus each isolate exactly one layer:
+
+| action | info-layer opacity | hovered Δy | neighbours | section |
+|---|---|---|---|---|
+| hover / focus card 1 | **[1, 0, 0]** | −2 / 0 | unchanged | 900 |
+| hover / focus card 2 | **[0, 1, 0]** | −2 / 0 | unchanged | 900 |
+| hover / focus card 3 | **[0, 0, 1]** | −2 / 0 | unchanged | 900 |
+| return to default | [0, 0, 0] | — | identical | 900 |
+
+Every acceptance criterion holds:
+
+- outer card box identical before and during hover — **413 × 460**, matching the Figma card
+- no neighbour moved on any hover; section height never left 900
+- the −2px on the hovered card is `hover-card`'s **approved** lift (charter §4), and it
+  correctly becomes **0** under reduced motion
+- **`display` stays `block` and duration is a real 0.26s** — this is a genuine cross-fade,
+  not the `display:none` swap the brief prohibited, and the probe proves it rather than
+  assuming it
+- keyboard focus reaches the same state as hover, so the copy is not mouse-exclusive; the
+  paragraph is never `display:none` and never `aria-hidden`, so it stays in the a11y tree
+- reduced motion collapses the transition to 1e-06s via the existing global block —
+  nothing added escapes it
+- **touch shows photo / informational / photo**, the approved 393 frame, with no hover or
+  tap-to-reveal reachable
+- H04's intro is untouched at both widths, colour included
+
+### 29.5 Scope limit on this evidence, stated plainly
+
+`amara-care-site.lovable.app` and the preview origin are both a 403 CONNECT denial here, so
+these numbers come from a **local reconstruction** that mirrors the shipped component's
+class semantics — not from the live site. What licenses it is that the same harness
+reproduces H04's independently-confirmed values exactly. It is a faithful model, not the
+deployed page, and the distinction should stay on the record.
+
+### 29.6 Two observations logged, not actioned — both outside H05
+
+1. `tabIndex={0}` on three `<article>` elements adds three tab stops to Home. That is the
+   deliberate cost of making the informational copy keyboard-reachable, which the brief
+   required; noting the trade rather than reversing it.
+2. Cards 1 and 3 carry `ArrowUpRight` in the pill, but the card is not a link and navigates
+   nowhere. This **predates H05** and the turn was told not to touch arrows. Worth an
+   agency question later: either the cards should link somewhere, or the arrow should go.
+
+**H05 STATUS: VERIFIED PASS.**
