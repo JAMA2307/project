@@ -1469,3 +1469,103 @@ shared `text-body-large` and `text-eyebrow` utilities were never edited.
 Residual, flagged not actioned: a real browser on a hinting-heavy platform could wrap to
 6 lines. That is a rendering-environment property, not a reason to alter a measured
 design value.
+
+---
+
+## 27 · H05 (= HOME-06) — PRE-DISPATCH INSPECTION · BLOCKED ON AGENCY COPY
+
+H05 in the session numbering is ledger item **HOME-06**, Asana `1217108334767508`
+("6 Safari/Chrome"), the **only ticket in the project carrying a follow-up comment**
+(`1217213785962832`, 2026-08-06 07:34, *"Тут нету этих анимаций"* — "these animations
+aren't here").
+
+### 27.1 The ticket, read from Asana rather than from our paraphrase
+
+Original notes, verbatim Russian, translated:
+
+> There should be a hover animation on the card.
+> Look — first the image shows, and then if you move the cursor onto it, it becomes
+> **like the card in the middle** and text appears.
+> **I added the texts in Figma.**
+> And for the image, take another one **from the same Figma** and insert something
+> similar in theme.
+
+Two things this settles that the English paraphrase left ambiguous:
+
+1. *"она станет как карточка по середине"* — the hover state is **the existing middle
+   card's treatment**, not a new design. We already ship the target state; it is simply
+   pinned to card 2 permanently instead of being the hover state of all three.
+2. *"Текста добавил в фигме"* is **plural**. Separate paragraphs exist for card 1 and
+   card 3. They are not derivable from card 2's paragraph.
+
+### 27.2 Current implementation — `src/components/home/WhatSetsUsApart.tsx`
+
+One file, three sibling `<article>` elements in a
+`grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 items-stretch` grid, each
+`h-[470px] lg:h-[460px] rounded-card overflow-hidden`, each carrying `hover-card`.
+
+| card | default state today | informational state today |
+|---|---|---|
+| 1 · Inviting spaces | `wsua-inviting-spaces.png`, `object-cover`, white pill + arrow | **none** |
+| 2 · Guided care | **none — no photo exists for this slot** | permanent: `bg-secondary-bg`, paragraph, ring + plane watermark, pill |
+| 3 · Connected support | `wsua-connected-support.png`, `object-cover`, white pill + arrow | **none** |
+
+**The defect, confirmed from source rather than inferred:** `hover-card` resolves in
+`src/styles.css` to `translateY(-2px)` plus a shadow, and nothing else. There is no
+photo→informational transition anywhere in the component. The agency's second report is
+correct.
+
+### 27.3 Geometry baseline that must survive
+
+Banked at H04 (§26.4) and re-confirmed here from source: grid `80 / 1562 / 1280×460`,
+cards 460 tall at ≥1024, gap 20. Figma calls the card **413×460**; 1280 − 2×20 gap = 1240,
+÷3 = 413.33. **The shipped grid already produces the Figma card width** — no geometry
+change is required or permitted by H05.
+
+One subtlety to carry into acceptance: `hover-card` applies an **approved** −2px
+`translateY` (charter §4). So the hovered card's `getBoundingClientRect().top` legitimately
+moves 2px. The criteria must therefore be *layout* invariance — `offsetWidth`/`offsetHeight`
+unchanged, **neighbour** rects unchanged, section height unchanged — not raw rect equality
+on the hovered card itself.
+
+### 27.4 Mobile — resolved, and it is *static*
+
+`Home Page _ Desktop (1).png` is mislabelled: it is the **393** frame. Its WSUA band stacks
+photo / informational / photo in exactly the shipped arrangement, pills carrying the ↗ on
+cards 1 and 3. **No mobile hover or tap-to-reveal exists in the approved design.** H05 is a
+desktop-only behaviour; the mobile presentation is already correct and must not be touched.
+
+### 27.5 The middle card's photo — solvable, and the filename is not the evidence
+
+ASSET_MAP §245 records that the `.webp` files are **not** official Figma exports; every
+official delivery is a `.png`. The candidate must therefore come from the official `.png`
+set.
+
+`about-values-1-personalized-support.png` — read off `About Page _ Desktop.png` at 1:1,
+**not** from its filename — is a nurse in navy scrubs walking a resident who is using a
+walker, down a sunlit corridor. That is literally guided care, and it is an official Figma
+export. It is currently used once, on About. Recommended, pending the agency's confirmation
+that reuse across pages is what *"take another one from the same Figma"* licensed.
+
+### 27.6 BLOCKED — the two hover paragraphs
+
+The paragraphs for **Inviting spaces** and **Connected support** exist only inside the
+Figma file. Every route to them is closed from this session:
+
+| route | result |
+|---|---|
+| Figma MCP `get_metadata` | **hard quota** — "reached the tool call limit for your View seat" |
+| Asana attachment `1217108334767510` | **403 CONNECT** — `asanausercontent.com` denied by network policy |
+| The 18 supplied rasters | 9 pages × {1440, 393}. **No hover-state frame exists in the set** — verified by scanning every frame |
+| Lovable project knowledge | charter only, no WSUA hover copy |
+
+This is the same class as the two blocks already standing in the R4 register — *Legal copy
+verification* and *Form S1/S2 copy* — and it takes the same answer. The charter's rule is
+explicit: **"If something is unclear: STOP and ask. Do not guess."** Inventing two
+paragraphs of care-facility marketing copy for a **published** healthcare site is the one
+failure mode this project has consistently refused, and the H04 record exists precisely
+because measured evidence beat a plausible guess.
+
+**H05 STATUS: BLOCKED — pre-dispatch complete, awaiting approved copy.** Everything that
+does not depend on the copy is done: defect confirmed at source, geometry banked, mobile
+resolved as static, photo candidate identified, prompt drafted. Nothing is dispatched.
