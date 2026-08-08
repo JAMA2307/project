@@ -55,16 +55,22 @@ PROBE = """() => {
     pills:   [...document.querySelectorAll('.pill')].map(r),
     intro:   {rect: r(intro), type: cs(intro), width: intro.getBoundingClientRect().width},
     doc:     {scrollWidth: document.documentElement.scrollWidth, innerWidth: window.innerWidth},
+    layers:  [...document.querySelectorAll('[data-info-layer]')].map(el => {
+               const c = getComputedStyle(el);
+               return {opacity:c.opacity, transitionDuration:c.transitionDuration, display:c.display,
+                       visibility:c.visibility}; }),
   };
 }"""
 
-def run(page_file, widths, label):
+def run(page_file, widths, label, reduced=False):
     results = {}
     with sync_playwright() as pw:
         browser = pw.chromium.launch(executable_path="/opt/pw-browsers/chromium-1194/chrome-linux/chrome",
                                      args=["--font-render-hinting=none", "--force-color-profile=srgb"])
         for w in widths:
-            pg = browser.new_page(viewport={"width": w, "height": 1000}, device_scale_factor=1)
+            ctx = browser.new_context(viewport={"width": w, "height": 1000}, device_scale_factor=1,
+                                      reduced_motion="reduce" if reduced else "no-preference")
+            pg = ctx.new_page()
             errors = []
             pg.on("console", lambda m: errors.append(m.text) if m.type == "error" else None)
             pg.on("pageerror", lambda e: errors.append(str(e)))
@@ -88,9 +94,11 @@ def run(page_file, widths, label):
 
 if __name__ == "__main__":
     src = sys.argv[1] if len(sys.argv) > 1 else "wsua-harness.html"
-    label = sys.argv[2] if len(sys.argv) > 2 else "baseline"
+    label = sys.argv[2] if len(sys.argv) > 2 and not sys.argv[2].startswith("--") else "baseline"
     page = build(src, f"built_{label}.html")
-    res = run(page, [1440, 393], label)
+    reduced = "--reduced" in sys.argv
+    res = run(page, [1440, 393], label, reduced=reduced)
+    if reduced: print("*** prefers-reduced-motion: reduce ***")
 
     for w, d in res.items():
         b, a = d["base"], d["after_return"]
@@ -113,7 +121,10 @@ if __name__ == "__main__":
             if hd["section"]["h"] != b["section"]["h"]:
                 deltas.append(f"section h {b['section']['h']}->{hd['section']['h']}")
             dy = round(hd[hovered]["y"] - b[hovered]["y"], 2)
-            print(f"  hover {hovered}: hovered dy={dy}  " + ("OK" if not deltas else "!! " + "; ".join(deltas)))
+            lay = hd.get("layers") or []
+            op = ",".join(l["opacity"] for l in lay) if lay else "n/a"
+            print(f"  hover {hovered}: hovered dy={dy}  info-opacity=[{op}]  "
+                  + ("OK" if not deltas else "!! " + "; ".join(deltas)))
         ret = all(a[c] == b[c] for c in ("card1", "card2", "card3")) and a["section"]["h"] == b["section"]["h"]
         print(f"return-to-default identical: {ret}")
         print(f"console errors: {d['console_errors'] or 'none'}")

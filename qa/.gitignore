@@ -1,0 +1,9 @@
+# Derived by measure.py on each run.
+# built_*.html embeds absolute file:// font URIs and is machine-specific.
+# The stub PNGs are regenerated solid-colour stand-ins.
+built_*.html
+measured_*.json
+!measured_baseline.json
+ph*.png
+ring.png
+plane.png

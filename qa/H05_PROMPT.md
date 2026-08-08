@@ -1,7 +1,7 @@
-# H05 — LOVABLE DISPATCH PROMPT (held, pending approved copy)
+# H05 — LOVABLE DISPATCH PROMPT
 
-Status: **drafted, NOT sent.** Blocked only on the two Figma hover paragraphs (§27.6).
-Everything else is resolved. Fill the two `‹PENDING›` slots and dispatch verbatim.
+Status: **DISPATCHED 2026-08-08.** The §27.6 copy block was cleared by the client, who
+recovered both paragraphs from the Figma comments. No slots remain pending.
 
 ---
 
@@ -81,10 +81,15 @@ walker, which is literally guided care. Give it accurate `alt` text describing t
 
 ## COPY — use verbatim, do not rewrite
 
-- card 1 · Inviting spaces — `‹PENDING: approved Figma hover paragraph›`
+- card 1 · Inviting spaces — "Our newly renovated setting is designed to feel comfortable
+  and easy to navigate, helping residents feel more at ease each day."
 - card 2 · Guided care — "We take the time to understand each resident, creating care
   plans that reflect their individual needs and preferences." *(unchanged, already approved)*
-- card 3 · Connected support — `‹PENDING: approved Figma hover paragraph›`
+- card 3 · Connected support — "Our team works together to provide coordinated care, with
+  access to on-site therapy and ongoing medical oversight."
+
+Recovered from the Figma comments by the client, 2026-08-08. Verbatim — no paraphrase, no
+shortening, no rewrite, no smart-quote or punctuation substitution.
 
 Pill labels stay exactly "Inviting spaces", "Guided care", "Connected support". Card 1 and
 card 3 keep their `ArrowUpRight`; card 2 keeps none. Do not add or remove an arrow.
