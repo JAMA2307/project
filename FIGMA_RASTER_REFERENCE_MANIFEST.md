@@ -1817,3 +1817,41 @@ dispatchable 13. That judgment survives this inspection.
 
 Not dispatched. The split is a scope decision, and narrowing a ticket unilaterally is the
 failure this protocol exists to prevent.
+
+### 30.6 H06 phase-ordering half — VERIFIED PASS
+
+Landed as Lovable commit `7d9b6d90`, one file, `src/components/home/Mission.tsx`.
+
+| element | before | after |
+|---|---|---|
+| ring | delay **0**, dur 0.5 → ends 0.50 | delay **0**, dur 0.5 → ends 0.50 |
+| `<h2>` | delay **0.12** — ring 24% faded | delay **0.5** — starts exactly as the ring completes |
+| paragraph | delay **0.24** — ring 48% faded | delay **0.5** — same phase as the heading |
+
+Both text elements share one delay, matching the storyboard's grouping of heading and
+paragraph in frame 4. No phase overlaps another. `EASE`, the 0.5s duration, the `rise()`
+shape and `viewport={{ once: true, amount: 0.25 }}` are all unchanged.
+
+**Reduced motion now actually applies.** These are framer-motion JS animations, so the
+global CSS `prefers-reduced-motion` block never governed them — and lengthening the
+sequence to 1.0s would have made that worse, not better. `useReducedMotion()` now returns
+final-state variants (`hidden {opacity:1, y:0}`, `show` at `duration: 0`), so the section
+renders complete with no delay. This is a **pre-existing gap this turn closed**, not
+something H06 introduced.
+
+**Evidence quality, stated honestly.** Verified by source and by full diff, **not** by
+measuring rendered animation timing — the local harness has no framer-motion, and both
+Lovable origins remain a 403 CONNECT denial. The delays are literal constants, so reading
+them is strong evidence for the sequencing claim, but this is **weaker than H05's measured
+invariants** and should not be recorded as equivalent.
+
+Geometry needs no re-measurement here, and for a better reason than convenience: the diff
+touches **no markup, no className, no copy** — only the `framer-motion` import, the `rise()`
+body, and three `variants={}` call sites. Layout is unchanged by construction.
+
+Residual, flagged not actioned: `useReducedMotion()` is typed `boolean | null` and the
+`null` case falls to the animated branch. On a hydrated client that resolves immediately.
+Not a defect.
+
+**H06 STATUS: phase ordering VERIFIED PASS. The 5-stage scroll-scrubbed reveal remains
+BLOCKED** on agency scroll distances, per §30.4 — the ticket is not closed.
